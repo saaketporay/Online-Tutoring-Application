@@ -1,8 +1,5 @@
-import Header from './components/Header'
-import Signin from './pages/Signin'
-import { ThemeProvider } from '@emotion/react';
-import theme from './theme';
-import { Typography } from '@mui/material';
+import Header from './components/Header';
+import Signin from './pages/Signin';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -13,20 +10,16 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route path="signin" element={<Signin />}/>
+      <Route path="signin" element={<Signin />} />
     </Route>
   )
-)
+);
 
 function App() {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <Typography color="textPrimary">
-          <Header />
-          <RouterProvider router={router}/>
-        </Typography>
-      </ThemeProvider>
+      <Header />
+      <RouterProvider router={router} />
     </>
   );
 }

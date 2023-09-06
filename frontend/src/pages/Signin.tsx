@@ -4,28 +4,33 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
 import { createTheme } from '@mui/material';
+import SvgIcon from '@mui/material/SvgIcon';
+import EmailIcon from '../assets/icons/Email.svg';
+import GoogleIcon from '../assets/icons/Google-Icon.svg';
+import FacebookIcon from '../assets/icons/Facebook-Icon.svg';
+import AppleIcon from '../assets/icons/Apple-Icon.svg';
 
 const theme = createTheme({
   components: {
     MuiButton: {
-        defaultProps: {
-            variant: 'contained'
-        },
-        styleOverrides: {
-            root: {
-                borderRadius: 50,
-                textTransform: 'none',
-                fontSize: 16,
-            }
+      defaultProps: {
+        variant: 'contained'
+      },
+      styleOverrides: {
+        root: {
+          borderRadius: 50,
+          textTransform: 'none',
+          fontSize: 16,
         }
+      }
     },
     MuiSvgIcon: {
-        defaultProps: {
-            className: 'absolute left-4'
-        }
+      defaultProps: {
+        className: 'absolute left-4'
+      }
     }
   }
-})
+});
 
 function Signin() {
   return (
@@ -35,16 +40,34 @@ function Signin() {
         <Stack spacing={3}>
           <ThemeProvider theme={theme}>
             <Button sx={{ backgroundColor: '#10B981' }}>
+              <SvgIcon viewBox='0 0 41 41'>
+                <EmailIcon />
+              </SvgIcon>
               Sign in with Email
             </Button>
-            <Button sx={{ backgroundColor: '#3B82F6' }}>Sign in with Google</Button>
-            <Button sx={{ backgroundColor: '#0284C7' }}>Sign in with Facebook</Button>
-            <Button sx={{ backgroundColor: '#F5F5F5' }} className="text-[#191919]">Sign in with Apple</Button>
+            <Button sx={{ backgroundColor: '#3B82F6' }}>
+              <SvgIcon viewBox='0 0 31 31'>
+                <GoogleIcon />
+              </SvgIcon>
+              Sign in with Google
+            </Button>
+            <Button sx={{ backgroundColor: '#0284C7' }}>
+              <SvgIcon viewBox='0 0 40 40'>
+                <FacebookIcon />
+              </SvgIcon>
+              Sign in with Facebook
+            </Button>
+            <Button sx={{ backgroundColor: '#F5F5F5' }} className="text-[#191919]">
+              <SvgIcon viewBox='0 0 44 44'>
+                <AppleIcon />
+              </SvgIcon>
+              Sign in with Apple
+            </Button>
           </ThemeProvider>
         </Stack>
       </Box>
     </>
-  )
+  );
 }
 
 export default Signin;
