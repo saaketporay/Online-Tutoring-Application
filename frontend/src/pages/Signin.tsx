@@ -3,8 +3,6 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
-import SvgMail from '../assets/icons/SvgMail';
-import SvgIcon from '@mui/material/SvgIcon';
 import { createTheme } from '@mui/material';
 
 const theme = createTheme({
