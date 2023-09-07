@@ -1,5 +1,5 @@
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box'
+import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
@@ -9,6 +9,7 @@ import EmailIcon from '../assets/icons/Email.svg';
 import GoogleIcon from '../assets/icons/Google-Icon.svg';
 import FacebookIcon from '../assets/icons/Facebook-Icon.svg';
 import AppleIcon from '../assets/icons/Apple-Icon.svg';
+import EllipseIcon from '../assets/icons/Ellipse-Icon.svg'
 
 const theme = createTheme({
   components: {
@@ -20,13 +21,13 @@ const theme = createTheme({
         root: {
           borderRadius: 50,
           textTransform: 'none',
-          fontSize: 16,
+          fontSize: 18,
         }
       }
     },
     MuiSvgIcon: {
       defaultProps: {
-        className: 'absolute left-4'
+        className: 'absolute left-5'
       }
     }
   }
@@ -47,6 +48,7 @@ function GeneralSignin() {
             </Button>
             <Button sx={{ backgroundColor: '#3B82F6' }}>
               <SvgIcon viewBox='0 0 31 31'>
+                <EllipseIcon />
                 <GoogleIcon />
               </SvgIcon>
               Sign in with Google
