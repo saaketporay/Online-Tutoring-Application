@@ -1,5 +1,5 @@
 import Header from './components/Header';
-import Signin from './pages/Signin';
+import GeneralSignin from './pages/GeneralSignin';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -10,7 +10,7 @@ import {
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/">
-      <Route path="signin" element={<Signin />} />
+      <Route path="signin" element={<GeneralSignin />} />
     </Route>
   )
 );

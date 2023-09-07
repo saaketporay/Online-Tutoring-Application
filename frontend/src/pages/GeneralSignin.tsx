@@ -32,7 +32,7 @@ const theme = createTheme({
   }
 });
 
-function Signin() {
+function GeneralSignin() {
   return (
     <>
       <Box className="grid place-content-center bg-[#191919]">
@@ -70,4 +70,4 @@ function Signin() {
   );
 }
 
-export default Signin;
+export default GeneralSignin;
