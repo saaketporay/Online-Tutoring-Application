@@ -1,9 +1,9 @@
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
-import Link from '@mui/material/Link';
 import Typography from '@mui/material/Typography';
 import Logo from '../assets/icons/Logo.svg';
 import SvgIcon from '@mui/material/SvgIcon';
+import { Link } from 'react-router-dom'
 
 function Header() {
   return (
@@ -15,8 +15,8 @@ function Header() {
           </SvgIcon>
           <Typography variant="h6" className="ml-2">Tutoring Scheduler</Typography>
           <div className="ms-auto">
-            <Link href="/signin" className="text-white no-underline">Sign in</Link>
-            <Link href="/signup" className="text-white no-underline mx-6">Sign up</Link>
+            <Link to="/signin" className="text-white no-underline">Sign in</Link>
+            <Link to="/signup" className="text-white no-underline mx-6">Sign up</Link>
           </div>
         </Toolbar>
       </AppBar>

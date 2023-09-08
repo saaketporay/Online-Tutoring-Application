@@ -10,6 +10,7 @@ import GoogleIcon from '../assets/icons/Google-Icon.svg';
 import FacebookIcon from '../assets/icons/Facebook-Icon.svg';
 import AppleIcon from '../assets/icons/Apple-Icon.svg';
 import EllipseIcon from '../assets/icons/Ellipse-Icon.svg'
+import { Link } from 'react-router-dom'
 
 const theme = createTheme({
   components: {
@@ -40,7 +41,7 @@ function GeneralSignin() {
         <Typography variant="h4" className="my-16">Sign in to Tutoring Scheduler</Typography>
         <Stack spacing={3}>
           <ThemeProvider theme={theme}>
-            <Button sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
+            <Button to="/signin/email" component={Link} sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
               <SvgIcon viewBox='0 0 41 41'>
                 <EmailIcon />
               </SvgIcon>
