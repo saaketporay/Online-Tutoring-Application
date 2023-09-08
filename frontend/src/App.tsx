@@ -4,12 +4,20 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route
+  Route,
+  Outlet
 } from 'react-router-dom';
+
+const AppLayout = () => (
+  <>
+    <Header />
+    <Outlet />
+  </>
+);
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/">
+    <Route path="/" element={<AppLayout />}>
       <Route path="signin" element={<GeneralSignin />} />
     </Route>
   )
@@ -18,7 +26,6 @@ const router = createBrowserRouter(
 function App() {
   return (
     <>
-      <Header />
       <RouterProvider router={router} />
     </>
   );
