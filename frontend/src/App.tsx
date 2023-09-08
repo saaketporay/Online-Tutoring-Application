@@ -1,7 +1,25 @@
+import Header from './components/Header';
+import GeneralSignin from './pages/GeneralSignin';
+import {
+  createBrowserRouter,
+  createRoutesFromElements,
+  RouterProvider,
+  Route
+} from 'react-router-dom';
+
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <Route path="/">
+      <Route path="signin" element={<GeneralSignin />} />
+    </Route>
+  )
+);
+
 function App() {
   return (
     <>
-      <h1 className="text-3xl font-bold underline">Hello world!</h1>
+      <Header />
+      <RouterProvider router={router} />
     </>
   );
 }
