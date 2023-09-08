@@ -5,15 +5,12 @@ import './index.css';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import theme from './theme';
-import { Typography } from '@mui/material';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
-      <Typography color="textPrimary">
-        <CssBaseline />
-        <App />
-      </Typography>
+      <CssBaseline />
+      <App />
     </ ThemeProvider>
   </React.StrictMode>,
 );

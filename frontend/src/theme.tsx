@@ -5,9 +5,9 @@ const whitesmokeColor = '#F5F5F5'
 const theme = createTheme({
   palette: {
     text: {
-        primary: whitesmokeColor
+        primary: whitesmokeColor,
     }
-  }
+  },
 });
 
 export default theme;
