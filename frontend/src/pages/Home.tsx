@@ -15,11 +15,11 @@ function Home() {
         <Typography variant="h5" className="mb-16">To continue,</Typography>
         <Stack spacing={3} direction={'row'}>
           <ThemeProvider theme={roundButtonTheme}>
-            <Button to="/signin" component={Link} sx={{ backgroundColor: "#16A34A" }} className="px-9 py-2">Sign up as a student</Button>
+            <Button to="/signup" component={Link} sx={{ backgroundColor: "#16A34A" }} className="px-9 py-2">Sign up as a student</Button>
             <div className="w-[72px] h-[1px] bg-white mt-6"/>
             <Typography variant="h6" className="mt-2">or</Typography>
             <div className="w-[72px] h-[1px] bg-white mt-6"/>
-            <Button to="/signin" component={Link} sx={{ backgroundColor: "#6D28D9" }} className="px-12 py-2">Sign up as a tutor</Button>
+            <Button to="/signup" component={Link} sx={{ backgroundColor: "#6D28D9" }} className="px-12 py-2">Sign up as a tutor</Button>
           </ThemeProvider>
         </Stack>
       </Box>
