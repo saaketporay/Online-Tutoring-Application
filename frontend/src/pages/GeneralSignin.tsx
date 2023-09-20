@@ -12,7 +12,7 @@ import EllipseIcon from '../assets/icons/Ellipse-Icon.svg'
 import { Link } from 'react-router-dom'
 import { roundButtonTheme } from '../theme';
 
-function GeneralSignin({ userType }: { userType?: string }) {
+function GeneralSignin() {
   return (
     <>
       <Box className="grid place-content-center bg-[#191919]">
