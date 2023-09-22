@@ -21,6 +21,6 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src"],
+  "include": ["src", "../backend/zoom-api.tsx"],
   "references": [{ "path": "./tsconfig.node.json" }]
 }

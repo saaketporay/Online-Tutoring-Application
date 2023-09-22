@@ -1,16 +1,76 @@
+// app.js
 const express = require('express');
+const axios = require('axios');
+const cors = require('cors');
+
 const app = express();
-const port = 3000;
 
-// Middleware
 app.use(express.json());
+const port = process.env.PORT || 3000;
 
-// Basic route
-app.get('/', (req, res) => {
-  res.json({ message: 'Hello, world!' });
+app.use(cors())
+
+// Replace 'YOUR_CLIENT_ID' and 'YOUR_CLIENT_SECRET' with your actual Zoom app credentials
+const clientId = 'ID';
+const clientSecret = 'SECRET';
+const redirectUri = 'http://localhost:3000/zoom/callback';
+
+
+// Route for starting the OAuth flow
+app.get('/zoom/auth', (req, res) => {
+  res.redirect(`https://zoom.us/oauth/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}`);
 });
 
-// Start server
+
+// Callback route to handle OAuth code exchange for access token
+app.get('/zoom/callback', async (req, res) => {
+  try {
+    const code = req.query.code;
+
+    // Exchange the authorization code for an access token
+    const tokenResponse = await axios.post('https://zoom.us/oauth/token', null, {
+      params: {
+        grant_type: 'authorization_code',
+        code,
+        redirect_uri: redirectUri,
+      },
+      auth: {
+        username: clientId,
+        password: clientSecret,
+      },
+    });
+
+    const accessToken = tokenResponse.data.access_token;
+    const meetingLink = await createZoomMeeting(accessToken);
+
+    res.send(`Zoom Meeting Link: ${meetingLink}`);
+  } catch (error) {
+    console.error('Error obtaining access token:', error.response.data);
+    res.status(error.response.status || 500).json({ error: 'Error obtaining access token' });
+  }
+});
+
+
+// Function to create a Zoom meeting
+async function createZoomMeeting(accessToken) {
+  try {
+    const response = await axios.post('https://api.zoom.us/v2/users/me/meetings', {
+      topic: 'Zoom Meeting',
+      type: 2, // Scheduled Meeting
+    }, {
+      headers: {
+        'Authorization': `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    return response.data.join_url;
+  } catch (error) {
+    console.error('Error creating Zoom meeting:', error.response.data);
+    throw new Error('Error creating Zoom meeting');
+  }
+}
+
 app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}/`);
+  console.log(`Server is running on http://localhost:${port}`);
 });
