@@ -6,7 +6,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
@@ -44,15 +44,6 @@ const theme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         root: {
-          '& .MuiFormLabel-root': {
-            color: '#f5f5f5',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#404040',
-          },
-          '&:hover .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#f5f5f5',
-          },
           '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
             {
               color: '#f5f5f5',
@@ -67,6 +58,9 @@ const theme = createTheme({
         option: {
           color: '#f5f5f5',
         },
+        noOptions: {
+          color: '#f5f5f5',
+        },
       },
     },
     MuiButton: {
@@ -78,6 +72,24 @@ const theme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-input': {
+            color: '#f5f5f5',
+          },
+          '& .MuiFormLabel-root': {
+            color: '#f5f5f5',
+          },
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#404040',
+          },
+          '& .MuiOutlinedInput-root:hover fieldset': {
+            borderColor: '#f5f5f5',
+          },
+        },
+      },
+    },
   },
 });
 
@@ -85,6 +97,8 @@ const MeetingScheduler = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedTutor, setSelectedTutor] = useState<string>('');
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
+  const [meetingTitle, setMeetingTitle] = useState<string>('');
+  const [meetingDesc, setMeetingDesc] = useState<string>('');
 
   const availableTutors = selectedCourse
     ? Object.keys(DUMMY_DATA[selectedCourse]).map((name) => ({
@@ -92,37 +106,84 @@ const MeetingScheduler = () => {
       }))
     : [];
 
-  const availableTimeslots = selectedTutor
-    ? DUMMY_DATA[selectedCourse][selectedTutor].map((timeslot) => ({
-        label: `${timeslot.day} ${timeslot.from} - ${timeslot.to}`,
-      }))
-    : [];
+  const availableTimeslots =
+    selectedCourse &&
+    selectedTutor &&
+    selectedTutor in DUMMY_DATA[selectedCourse]
+      ? DUMMY_DATA[selectedCourse][selectedTutor].map((timeslot) => ({
+          label: `${timeslot.day} ${timeslot.from} - ${timeslot.to}`,
+        }))
+      : [];
 
   const courseSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
-    value: { label: string } | null
+    value: string,
+    reason: string
   ) => {
-    if (value) {
-      setSelectedCourse(value.label);
+    if (reason === 'clear') {
+      setSelectedCourse('');
+      setSelectedTutor('');
+      setSelectedTimeslot('');
+      return;
     }
+    if (reason === 'input') {
+      return;
+    }
+    setSelectedCourse(value);
   };
 
   const tutorSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
-    value: { label: string } | null
+    value: string,
+    reason: string
   ) => {
-    if (value) {
-      setSelectedTutor(value.label);
+    if (reason === 'clear') {
+      setSelectedTutor('');
+      setSelectedTimeslot('');
+      return;
     }
+    if (reason === 'input') {
+      return;
+    }
+    setSelectedTutor(value);
   };
 
   const timeslotSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
-    value: { label: string } | null
+    value: string,
+    reason: string
   ) => {
-    if (value) {
-      setSelectedTimeslot(value.label);
+    if (reason === 'input') {
+      return;
     }
+    setSelectedTimeslot(value);
+  };
+
+  useEffect(() => {
+    if (selectedCourse && selectedTutor) {
+      if (!(selectedTutor in DUMMY_DATA[selectedCourse])) {
+        setSelectedTutor('');
+        setSelectedTimeslot('');
+      } else if (
+        selectedTimeslot &&
+        !DUMMY_DATA[selectedCourse][selectedTutor].find(
+          (timeslot: { day: string; from: string; to: string }) =>
+            `${timeslot.day} ${timeslot.from} - ${timeslot.to}` ===
+            selectedTimeslot
+        )
+      ) {
+        setSelectedTimeslot('');
+      }
+    }
+  }, [selectedCourse, selectedTutor, selectedTimeslot]);
+
+  const getOptionEquality = (
+    option: { label: string },
+    value: { label: string }
+  ) => option.label === value.label;
+
+  const submitHandler = () => {
+    return;
   };
 
   return (
@@ -131,7 +192,7 @@ const MeetingScheduler = () => {
         className='my-24'
         spacing={16}>
         <ThemeProvider theme={theme}>
-          <Box>
+          <Stack spacing={6}>
             <Typography
               variant='h4'
               align='center'>
@@ -141,8 +202,9 @@ const MeetingScheduler = () => {
               id='course-select'
               options={DUMMY_COURSES}
               disablePortal
-              className='my-16'
-              onChange={courseSelectChangeHandler}
+              value={selectedCourse ? { label: selectedCourse } : null}
+              onInputChange={courseSelectChangeHandler}
+              isOptionEqualToValue={getOptionEquality}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -154,8 +216,9 @@ const MeetingScheduler = () => {
               id='instructor-select'
               options={availableTutors}
               disablePortal
-              className='my-16'
-              onChange={tutorSelectChangeHandler}
+              value={selectedTutor ? { label: selectedTutor } : null}
+              onInputChange={tutorSelectChangeHandler}
+              isOptionEqualToValue={getOptionEquality}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -163,8 +226,8 @@ const MeetingScheduler = () => {
                 />
               )}
             />
-          </Box>
-          <Box>
+          </Stack>
+          <Stack spacing={6}>
             <Typography
               variant='h4'
               align='center'>
@@ -174,8 +237,9 @@ const MeetingScheduler = () => {
               id='timeslot-select'
               options={availableTimeslots}
               disablePortal
-              className='my-16'
-              onChange={timeslotSelectChangeHandler}
+              value={selectedTimeslot ? { label: selectedTimeslot } : null}
+              onInputChange={timeslotSelectChangeHandler}
+              isOptionEqualToValue={getOptionEquality}
               renderInput={(params) => (
                 <TextField
                   {...params}
@@ -183,23 +247,47 @@ const MeetingScheduler = () => {
                 />
               )}
             />
-          </Box>
-          <Box>
+          </Stack>
+          <Stack spacing={6}>
             <Typography
               variant='h4'
               align='center'>
               Fill out details
             </Typography>
-          </Box>
-          <Box className='mx-auto'>
-            <Button
-              variant='contained'
-              color='success'
-              size='large'
-              disabled>
-              Submit
-            </Button>
-          </Box>
+            <TextField
+              id='meeting-title-field'
+              label='Meeting title'
+              required
+              value={meetingTitle}
+              onChange={(e) => {
+                setMeetingTitle(e.target.value);
+              }}
+            />
+            <TextField
+              id='meeting-desc-field'
+              label='Meeting description'
+              multiline
+              rows={3}
+              value={meetingDesc}
+              onChange={(e) => {
+                setMeetingDesc(e.target.value);
+              }}
+            />
+          </Stack>
+          <Button
+            variant='contained'
+            color='success'
+            size='large'
+            className='mx-auto'
+            disabled={
+              !selectedCourse ||
+              !selectedTutor ||
+              !selectedTimeslot ||
+              !meetingTitle
+            }
+            onClick={submitHandler}>
+            Submit
+          </Button>
         </ThemeProvider>
       </Stack>
     </Box>
