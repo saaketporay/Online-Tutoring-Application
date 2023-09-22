@@ -4,6 +4,7 @@ import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
+import Button from '@mui/material/Button';
 
 import { useState } from 'react';
 
@@ -17,31 +18,24 @@ const DUMMY_TIMES = [
 
 const DUMMY_DATA: {
   [key: string]: {
-    name: string;
-    times: { day: string; from: string; to: string }[];
-  }[];
+    [key: string]: { day: string; from: string; to: string }[];
+  };
 } = {
-  'CS 1336': [
-    { name: 'Shyam Karrah', times: [] },
-    { name: 'Srimathi Srinvasan', times: [] },
-    { name: 'Laurie Tompson', times: [] },
-  ],
-  'CS 1337': [
-    { name: 'Scott Dollinger', times: [] },
-    { name: 'Miguel Razo Razo', times: [] },
-    { name: 'Srimathi Srinivasan', times: [] },
-    { name: 'Khiem Le', times: [] },
-    { name: 'Jeyakesavan Veerasamy', times: [] },
-    { name: 'Jason Smith', times: [] },
-    { name: 'Doug DeGroot', times: [] },
-  ],
+  'CS 1336': {
+    'Shyam Karrah': DUMMY_TIMES,
+    'Srimathi Srinvasan': DUMMY_TIMES,
+    'Laurie Tompson': DUMMY_TIMES,
+  },
+  'CS 1337': {
+    'Scott Dollinger': DUMMY_TIMES,
+    'Miguel Razo Razo': DUMMY_TIMES,
+    'Srimathi Srinivasan': DUMMY_TIMES,
+    'Khiem Le': DUMMY_TIMES,
+    'Jeyakesavan Veerasamy': DUMMY_TIMES,
+    'Jason Smith': DUMMY_TIMES,
+    'Doug DeGroot': DUMMY_TIMES,
+  },
 };
-
-for (const course in DUMMY_DATA) {
-  for (const instructor_data of DUMMY_DATA[course]) {
-    instructor_data.times = DUMMY_TIMES;
-  }
-}
 
 const DUMMY_COURSES = Object.keys(DUMMY_DATA).map((name) => ({ label: name }));
 
@@ -75,16 +69,32 @@ const theme = createTheme({
         },
       },
     },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&:disabled': {
+            backgroundColor: '#404040',
+          },
+        },
+      },
+    },
   },
 });
 
 const MeetingScheduler = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedTutor, setSelectedTutor] = useState<string>('');
+  const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
 
   const availableTutors = selectedCourse
-    ? DUMMY_DATA[selectedCourse].map((tutorInfo) => ({
-        label: tutorInfo.name,
+    ? Object.keys(DUMMY_DATA[selectedCourse]).map((name) => ({
+        label: name,
+      }))
+    : [];
+
+  const availableTimeslots = selectedTutor
+    ? DUMMY_DATA[selectedCourse][selectedTutor].map((timeslot) => ({
+        label: `${timeslot.day} ${timeslot.from} - ${timeslot.to}`,
       }))
     : [];
 
@@ -106,10 +116,19 @@ const MeetingScheduler = () => {
     }
   };
 
+  const timeslotSelectChangeHandler = (
+    e: React.FormEvent<EventTarget>,
+    value: { label: string } | null
+  ) => {
+    if (value) {
+      setSelectedTimeslot(value.label);
+    }
+  };
+
   return (
     <Box className='grid place-content-center bg-[#191919]'>
       <Stack
-        className='mt-24'
+        className='my-24'
         spacing={16}>
         <ThemeProvider theme={theme}>
           <Box>
@@ -151,6 +170,19 @@ const MeetingScheduler = () => {
               align='center'>
               Select an available timeslot
             </Typography>
+            <Autocomplete
+              id='timeslot-select'
+              options={availableTimeslots}
+              disablePortal
+              className='my-16'
+              onChange={timeslotSelectChangeHandler}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label='Timeslot'
+                />
+              )}
+            />
           </Box>
           <Box>
             <Typography
@@ -158,6 +190,15 @@ const MeetingScheduler = () => {
               align='center'>
               Fill out details
             </Typography>
+          </Box>
+          <Box className='mx-auto'>
+            <Button
+              variant='contained'
+              color='success'
+              size='large'
+              disabled>
+              Submit
+            </Button>
           </Box>
         </ThemeProvider>
       </Stack>
