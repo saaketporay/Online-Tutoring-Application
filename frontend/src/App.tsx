@@ -1,5 +1,4 @@
 import Header from './components/Header';
-import GeneralSignin from './pages/GeneralSignin';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -8,6 +7,8 @@ import {
   Outlet
 } from 'react-router-dom';
 import Home from './pages/Home';
+import ErrorPage from './pages/ErrorPage'
+import GeneralSignin from './pages/GeneralSignin';
 
 const AppLayout = () => (
   <>
@@ -18,7 +19,7 @@ const AppLayout = () => (
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<AppLayout />}>
+    <Route path="/" element={<AppLayout />} errorElement={<ErrorPage />}>
       <Route path="" element={<Home />} />
       <Route path="signin" element={<GeneralSignin />} />
     </Route>
