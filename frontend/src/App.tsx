@@ -7,6 +7,7 @@ import {
   Route,
   Outlet
 } from 'react-router-dom';
+import Home from './pages/Home';
 
 const AppLayout = () => (
   <>
@@ -18,6 +19,7 @@ const AppLayout = () => (
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route path="/" element={<AppLayout />}>
+      <Route path="" element={<Home />} />
       <Route path="signin" element={<GeneralSignin />} />
     </Route>
   )

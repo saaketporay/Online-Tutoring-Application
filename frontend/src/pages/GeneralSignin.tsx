@@ -3,7 +3,6 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
-import { createTheme } from '@mui/material';
 import SvgIcon from '@mui/material/SvgIcon';
 import EmailIcon from '../assets/icons/Email.svg';
 import GoogleIcon from '../assets/icons/Google-Icon.svg';
@@ -11,28 +10,7 @@ import FacebookIcon from '../assets/icons/Facebook-Icon.svg';
 import AppleIcon from '../assets/icons/Apple-Icon.svg';
 import EllipseIcon from '../assets/icons/Ellipse-Icon.svg'
 import { Link } from 'react-router-dom'
-
-const theme = createTheme({
-  components: {
-    MuiButton: {
-      defaultProps: {
-        variant: 'contained',
-      },
-      styleOverrides: {
-        root: {
-          borderRadius: 50,
-          textTransform: 'none',
-          fontSize: 18,
-        }
-      }
-    },
-    MuiSvgIcon: {
-      defaultProps: {
-        className: 'absolute left-5',
-      }
-    }
-  }
-});
+import { roundButtonTheme } from '../theme';
 
 function GeneralSignin() {
   return (
@@ -40,7 +18,7 @@ function GeneralSignin() {
       <Box className="grid place-content-center bg-[#191919]">
         <Typography variant="h4" className="my-16">Sign in to Tutoring Scheduler</Typography>
         <Stack spacing={3}>
-          <ThemeProvider theme={theme}>
+          <ThemeProvider theme={roundButtonTheme}>
             <Button to="/signin/email" component={Link} sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
               <SvgIcon viewBox='0 0 41 41'>
                 <EmailIcon />
