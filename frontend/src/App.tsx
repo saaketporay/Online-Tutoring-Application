@@ -9,6 +9,7 @@ import {
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage'
 import GeneralSignin from './pages/GeneralSignin';
+import StudentSignup from './pages/StudentSignup'
 
 const AppLayout = () => (
   <>
@@ -22,6 +23,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<AppLayout />} errorElement={<ErrorPage />}>
       <Route path="" element={<Home />} />
       <Route path="signin" element={<GeneralSignin />} />
+      <Route path="signup" element={<StudentSignup />} />
     </Route>
   )
 );
