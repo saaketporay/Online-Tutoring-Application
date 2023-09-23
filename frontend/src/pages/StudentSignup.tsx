@@ -30,7 +30,7 @@ function StudentSignup() {
       <form onSubmit={formSubmitHandler} >
         <Box className="grid justify-center bg-[#191919]">
           <Typography
-            variant="h3"
+            variant="h4"
             className="mt-24 mb-10 justify-self-center">
             Sign up
           </Typography>
