@@ -45,7 +45,7 @@ function StudentSignup() {
               placeholder="First Name"
               autoComplete="off"
               className="w-[410px] mb-10"
-              onChange={event => setFirstName(event.target.value)} />
+              onChange={e => setFirstName(e.target.value)} />
             <TextField
               required
               id="last-name"
@@ -54,7 +54,7 @@ function StudentSignup() {
               placeholder="Last Name"
               autoComplete="off"
               className="w-[410px] mb-10"
-              onChange={event => setLastName(event.target.value)} />
+              onChange={e => setLastName(e.target.value)} />
             <TextField
               required
               id="email"
@@ -63,7 +63,7 @@ function StudentSignup() {
               placeholder="Email Address"
               autoComplete="off"
               className="w-[410px] mb-10"
-              onChange={event => setEmail(event.target.value)} />
+              onChange={e => setEmail(e.target.value)} />
             <TextField
               required
               id="password"
@@ -72,7 +72,7 @@ function StudentSignup() {
               placeholder="Password"
               type="password"
               className="w-[410px] mb-4"
-              onChange={event => setPassword(event.target.value)} />
+              onChange={e => setPassword(e.target.value)} />
             <FormControlLabel
               control={<Checkbox id="spam" onChange={e => setSpamChecked(e.target.checked)} />}
               label="I want to receive spam"
