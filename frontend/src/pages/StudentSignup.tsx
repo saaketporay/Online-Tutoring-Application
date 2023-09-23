@@ -27,7 +27,7 @@ function StudentSignup() {
 
   return (
     <>
-      <form onSubmit={formSubmitHandler} >
+      <form onSubmit={formSubmitHandler}>
         <Box className="grid justify-center bg-[#191919]">
           <Typography
             variant="h4"
