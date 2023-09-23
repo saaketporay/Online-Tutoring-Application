@@ -1,5 +1,4 @@
 import { createTheme } from '@mui/material/';
-import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
 const whiteSmoke = "#F4F4F4";
 const neutral700 = "#404040";
@@ -59,7 +58,7 @@ export const textFieldTheme = createTheme({
     MuiOutlinedInput: {
       styleOverrides: {
         root: {
-          [`&.Mui-focused .${outlinedInputClasses.notchedOutline}`]: {
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
             borderColor: neutral700,
           },
           // Placeholder has the correct whitesmoke color when opacity = 1
