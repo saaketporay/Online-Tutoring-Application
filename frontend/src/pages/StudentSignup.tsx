@@ -8,10 +8,10 @@ import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
-import DeepMerge from '../utils/DeepMerge';
 import { useState } from 'react';
+import { createTheme } from '@mui/material';
 
-const theme = DeepMerge([textFieldTheme, checkboxTheme, squareButtonTheme])
+const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme)
 
 function StudentSignup() {
   const [email, setEmail] = useState<string>('');
