@@ -14,6 +14,8 @@ import { createTheme } from '@mui/material';
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme)
 
 function StudentSignup() {
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
   const [spamChecked, setSpamChecked] = useState<boolean>(false);
@@ -22,7 +24,7 @@ function StudentSignup() {
     e: React.FormEvent<EventTarget>
   ) => {
     e.preventDefault();
-    console.log(email, password, spamChecked)
+    console.log(firstName, lastName, email, password, spamChecked)
   }
 
   return (
@@ -31,10 +33,28 @@ function StudentSignup() {
         <Box className="grid justify-center bg-[#191919]">
           <Typography
             variant="h4"
-            className="mt-24 mb-10 justify-self-center">
+            className="mt-8 mb-10 justify-self-center">
             Sign up
           </Typography>
           <ThemeProvider theme={theme}>
+            <TextField
+              required
+              id="first-name"
+              name="first-name"
+              label="Required"
+              placeholder="First Name"
+              autoComplete="off"
+              className="w-[410px] mb-10"
+              onChange={event => setFirstName(event.target.value)} />
+            <TextField
+              required
+              id="last-name"
+              name="last-name"
+              label="Required"
+              placeholder="Last Name"
+              autoComplete="off"
+              className="w-[410px] mb-10"
+              onChange={event => setLastName(event.target.value)} />
             <TextField
               required
               id="email"

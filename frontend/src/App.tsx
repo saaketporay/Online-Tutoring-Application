@@ -1,4 +1,3 @@
-import Header from './components/Header';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,6 +5,8 @@ import {
   Route,
   Outlet
 } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage'
 import GeneralSignin from './pages/GeneralSignin';
@@ -15,6 +16,7 @@ const AppLayout = () => (
   <>
     <Header />
     <Outlet />
+    <Footer />
   </>
 );
 
