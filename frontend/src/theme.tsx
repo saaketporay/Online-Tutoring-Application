@@ -69,14 +69,6 @@ export const textFieldTheme = createTheme({
             opacity: 1
           },
         },
-        input: {
-          '&:-webkit-autofill': {
-            // Keeps background from changing on autocomplete option hover
-            WebkitBoxShadow: '0 0 0 100px ' + eerieBlack + ' inset',
-            WebkitTextFillColor: whiteSmoke,
-          },
-          // TODO: Figure out how to prevent autocomplete from changing the font on hover
-        }
       },
     },
   },
