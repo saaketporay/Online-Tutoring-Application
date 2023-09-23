@@ -1,7 +1,7 @@
 import { createTheme } from '@mui/material/';
 import { outlinedInputClasses } from '@mui/material/OutlinedInput';
 
-const whiteSmoke = "#f4f4f4";
+const whiteSmoke = "#F4F4F4";
 const neutral700 = "#404040";
 const neutral400 = "#A3A3A3";
 const emerald500 = "#10B981";
