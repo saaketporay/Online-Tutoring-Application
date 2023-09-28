@@ -2,7 +2,7 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route,
+  Route, 
   Outlet
 } from 'react-router-dom';
 import Header from './components/Header';
@@ -11,6 +11,7 @@ import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage'
 import GeneralSignin from './pages/GeneralSignin';
 import StudentSignup from './pages/StudentSignup'
+import MeetingScheduler from './pages/MeetingScheduler';
 import EmailSignIn from './pages/EmailSignIn';
 
 const AppLayout = () => (
@@ -28,6 +29,7 @@ const router = createBrowserRouter(
       <Route path="signin" element={<GeneralSignin />} />
       <Route path="signin-email" element={<EmailSignIn />} />
       <Route path="signup" element={<StudentSignup />} />
+      <Route path="new-appt" element={<MeetingScheduler />} />
     </Route>
   )
 );
