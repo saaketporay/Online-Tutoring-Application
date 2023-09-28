@@ -1,4 +1,3 @@
-import Header from './components/Header';
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -6,14 +5,18 @@ import {
   Route,
   Outlet
 } from 'react-router-dom';
+import Header from './components/Header';
+import Footer from './components/Footer';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage'
 import GeneralSignin from './pages/GeneralSignin';
+import StudentSignup from './pages/StudentSignup'
 
 const AppLayout = () => (
   <>
     <Header />
     <Outlet />
+    <Footer />
   </>
 );
 
@@ -22,6 +25,7 @@ const router = createBrowserRouter(
     <Route path="/" element={<AppLayout />} errorElement={<ErrorPage />}>
       <Route path="" element={<Home />} />
       <Route path="signin" element={<GeneralSignin />} />
+      <Route path="signup" element={<StudentSignup />} />
     </Route>
   )
 );
