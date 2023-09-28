@@ -72,7 +72,7 @@ function EmailSignin() {
                 Forgot Password?
               </Link>
               <Link
-                to="/signin"
+                to="/signup"
                 component={RouterLink}
                 className="mt-2"
                 color="#A3A3A3"

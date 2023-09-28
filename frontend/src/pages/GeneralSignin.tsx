@@ -20,26 +20,26 @@ function GeneralSignin() {
         <Stack spacing={3}>
           <ThemeProvider theme={roundButtonTheme}>
             <Button to="/signin-email" component={Link} sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
-              <SvgIcon viewBox='0 0 41 41'>
+              <SvgIcon viewBox='0 0 41 41' sx={{fontSize:35}}>
                 <EmailIcon />
               </SvgIcon>
               Sign in with Email
             </Button>
             <Button sx={{ backgroundColor: '#3B82F6', ":hover": { backgroundColor: '#3B82F6' }}}>
-              <SvgIcon viewBox='0 0 31 31'>
+              <SvgIcon viewBox='0 0 31 31' sx={{fontSize:35}}>
                 <EllipseIcon />
                 <GoogleIcon />
               </SvgIcon>
               Sign in with Google
             </Button>
             <Button sx={{ backgroundColor: '#0284C7', ":hover": { backgroundColor: '#0284C7' } }}>
-              <SvgIcon viewBox='0 0 40 40'>
+              <SvgIcon viewBox='0 0 40 40' sx={{fontSize:35}}>
                 <FacebookIcon />
               </SvgIcon>
               Sign in with Facebook
             </Button>
             <Button sx={{ backgroundColor: '#F5F5F5', ":hover": { backgroundColor: '#F5F5F5' } }} className="text-[#191919]">
-              <SvgIcon viewBox='0 0 44 44'>
+              <SvgIcon viewBox='0 0 44 44' sx={{fontSize:35}}>
                 <AppleIcon />
               </SvgIcon>
               Sign in with Apple
