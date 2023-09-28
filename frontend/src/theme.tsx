@@ -1,10 +1,10 @@
 import { createTheme } from '@mui/material/';
 
-const whiteSmoke = "#F4F4F4";
-const neutral700 = "#404040";
-const neutral400 = "#A3A3A3";
-const emerald500 = "#10B981";
-const eerieBlack = "#191919";
+const whiteSmoke = '#F4F4F4';
+const neutral700 = '#404040';
+const neutral400 = '#A3A3A3';
+const emerald500 = '#10B981';
+const eerieBlack = '#191919';
 
 export const textTheme = createTheme({
   palette: {
@@ -25,8 +25,8 @@ export const roundButtonTheme = createTheme({
           borderRadius: 50,
           textTransform: 'none',
           fontSize: 18,
-        }
-      }
+        },
+      },
     },
     MuiSvgIcon: {
       defaultProps: {
@@ -50,8 +50,8 @@ export const textFieldTheme = createTheme({
             color: neutral400,
           },
           '& .MuiInputBase-root': {
-            color: whiteSmoke
-          }
+            color: whiteSmoke,
+          },
         },
       },
     },
@@ -63,10 +63,10 @@ export const textFieldTheme = createTheme({
           },
           // Placeholder has the correct whitesmoke color when opacity = 1
           '& input::placeholder': {
-            opacity: 1
+            opacity: 1,
           },
           '& textarea::placeholder': {
-            opacity: 1
+            opacity: 1,
           },
         },
       },
@@ -78,7 +78,7 @@ export const checkboxTheme = createTheme({
   components: {
     MuiFormControlLabel: {
       defaultProps: {
-        className: "pt-3"
+        className: 'pt-3',
       },
       styleOverrides: {
         root: {
@@ -107,6 +107,28 @@ export const squareButtonTheme = createTheme({
             backgroundColor: emerald500,
           },
           color: whiteSmoke,
+        },
+      },
+    },
+  },
+});
+
+export const radioButtonGroupTheme = createTheme({
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: neutral400,
+          '&.Mui-focused': {
+            color: neutral400,
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: neutral400,
         },
       },
     },

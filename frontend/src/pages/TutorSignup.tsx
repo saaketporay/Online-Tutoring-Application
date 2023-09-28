@@ -1,4 +1,3 @@
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
@@ -9,14 +8,18 @@ import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
+import FormControl from '@mui/material/FormControl';
+import {
+  textFieldTheme,
+  roundButtonTheme,
+  radioButtonGroupTheme,
+} from '../theme';
 
 const DUMMY_COURSES = [{ label: 'CS 1336' }, { label: 'CS 1337' }];
 
-// TODO: Create theme and add theme providers
-
 const TutorSignup = () => {
   return (
-    <Box className='grid place-content-center bg-[#191919]'>
+    <FormControl className='grid place-content-center bg-[#191919]'>
       <Typography
         variant='h4'
         align='center'
@@ -35,38 +38,44 @@ const TutorSignup = () => {
           <Stack
             spacing={2}
             className='grid place-content-center'>
-            <FormLabel id='criminal-radio-btn-grp-label'>
-              Please select either 'yes' or 'no'
-            </FormLabel>
-            <RadioGroup
-              aria-labelledby='criminal-radio-btn-grp-label'
-              defaultValue='no'
-              name='criminal-radio-btn-grp'>
-              <FormControlLabel
-                value='no'
-                control={<Radio />}
-                label='No'
-              />
-              <FormControlLabel
-                value='yes'
-                control={<Radio />}
-                label='Yes'
-              />
-            </RadioGroup>
+            <ThemeProvider theme={radioButtonGroupTheme}>
+              <FormLabel id='criminal-radio-btn-grp-label'>
+                Please select either 'yes' or 'no'
+              </FormLabel>
+              <RadioGroup
+                aria-labelledby='criminal-radio-btn-grp-label'
+                defaultValue='no'
+                name='criminal-radio-btn-grp'>
+                <FormControlLabel
+                  value='no'
+                  control={<Radio />}
+                  label='No'
+                />
+                <FormControlLabel
+                  value='yes'
+                  control={<Radio />}
+                  label='Yes'
+                />
+              </RadioGroup>
+            </ThemeProvider>
           </Stack>
         </Stack>
-        <Stack spacing={6}>
+        <Stack
+          spacing={6}
+          className='grid place-content-center'>
           <Typography
             variant='h5'
             align='center'>
             Please enter an "About me"
           </Typography>
-          <TextField
-            id='tutor-about-me-field'
-            label='About me'
-            multiline
-            rows={3}
-          />
+          <ThemeProvider theme={textFieldTheme}>
+            <TextField
+              id='tutor-about-me-field'
+              label='About me'
+              multiline
+              rows={3}
+            />
+          </ThemeProvider>
         </Stack>
         <Stack spacing={6}>
           <Typography
@@ -88,15 +97,17 @@ const TutorSignup = () => {
           />{' '}
         </Stack>
         {/* TODO: Add available times grid */}
-        <Button
-          variant='contained'
-          color='success'
-          size='large'
-          className='mx-auto'>
-          Submit
-        </Button>
+        <ThemeProvider theme={roundButtonTheme}>
+          <Button
+            variant='contained'
+            color='success'
+            size='large'
+            className='mx-auto'>
+            Submit
+          </Button>
+        </ThemeProvider>
       </Stack>
-    </Box>
+    </FormControl>
   );
 };
 
