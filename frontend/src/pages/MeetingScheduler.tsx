@@ -6,6 +6,7 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { autocompleteTheme, textFieldTheme, roundButtonTheme } from '../theme';
+import FormControl from '@mui/material/FormControl';
 
 import { useState, useEffect } from 'react';
 
@@ -141,7 +142,7 @@ const MeetingScheduler = () => {
   };
 
   return (
-    <Box className='grid place-content-center bg-[#191919]'>
+    <FormControl className='grid place-content-center bg-[#191919]'>
       <Stack
         className='my-24'
         spacing={16}>
@@ -153,7 +154,7 @@ const MeetingScheduler = () => {
               Schedule a new appointment
             </Typography>
             <Autocomplete
-              id='course-select'
+              id='student-course-select'
               options={DUMMY_COURSES}
               disablePortal
               value={selectedCourse ? { label: selectedCourse } : null}
@@ -246,7 +247,7 @@ const MeetingScheduler = () => {
           </Button>
         </ThemeProvider>
       </Stack>
-    </Box>
+    </FormControl>
   );
 };
 
