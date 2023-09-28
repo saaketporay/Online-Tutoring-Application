@@ -19,7 +19,7 @@ function GeneralSignin() {
         <Typography variant="h4" className="mt-24 mb-12">Sign in to Tutoring Scheduler</Typography>
         <Stack spacing={3}>
           <ThemeProvider theme={roundButtonTheme}>
-            <Button to="/signin/email" component={Link} sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
+            <Button to="/signin-email" component={Link} sx={{ backgroundColor: '#10B981', ":hover": { backgroundColor: '#10B981'}}}>
               <SvgIcon viewBox='0 0 41 41'>
                 <EmailIcon />
               </SvgIcon>
