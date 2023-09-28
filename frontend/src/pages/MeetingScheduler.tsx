@@ -132,6 +132,11 @@ const MeetingScheduler = () => {
   ) => option.label === value.label;
 
   const submitHandler = () => {
+    setSelectedCourse('');
+    setSelectedTutor('');
+    setSelectedTimeslot('');
+    setMeetingTitle('');
+    setMeetingDesc('');
     return;
   };
 
