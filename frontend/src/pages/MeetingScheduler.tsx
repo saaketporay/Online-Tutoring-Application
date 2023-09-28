@@ -5,6 +5,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { autocompleteTheme, textFieldTheme, roundButtonTheme } from '../theme';
 
 import { useState, useEffect } from 'react';
 
@@ -39,59 +40,7 @@ const DUMMY_DATA: {
 
 const DUMMY_COURSES = Object.keys(DUMMY_DATA).map((name) => ({ label: name }));
 
-const theme = createTheme({
-  components: {
-    MuiAutocomplete: {
-      styleOverrides: {
-        root: {
-          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
-            {
-              color: '#f5f5f5',
-            },
-        },
-        input: {
-          color: '#f5f5f5',
-        },
-        paper: {
-          backgroundColor: '#404040',
-        },
-        option: {
-          color: '#f5f5f5',
-        },
-        noOptions: {
-          color: '#f5f5f5',
-        },
-      },
-    },
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          '&:disabled': {
-            backgroundColor: '#404040',
-          },
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiInputBase-input': {
-            color: '#f5f5f5',
-          },
-          '& .MuiFormLabel-root': {
-            color: '#f5f5f5',
-          },
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#404040',
-          },
-          '& .MuiOutlinedInput-root:hover fieldset': {
-            borderColor: '#f5f5f5',
-          },
-        },
-      },
-    },
-  },
-});
+const textInputTheme = createTheme(autocompleteTheme, textFieldTheme);
 
 const MeetingScheduler = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('');
@@ -191,7 +140,7 @@ const MeetingScheduler = () => {
       <Stack
         className='my-24'
         spacing={16}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={textInputTheme}>
           <Stack spacing={6}>
             <Typography
               variant='h4'
@@ -274,6 +223,8 @@ const MeetingScheduler = () => {
               }}
             />
           </Stack>
+        </ThemeProvider>
+        <ThemeProvider theme={roundButtonTheme}>
           <Button
             variant='contained'
             color='success'
