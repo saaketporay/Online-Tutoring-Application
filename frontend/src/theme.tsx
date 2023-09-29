@@ -6,7 +6,7 @@ const neutral400 = "#A3A3A3";
 const emerald500 = "#10B981";
 const eerieBlack = "#191919";
 
-export const textTheme = createTheme({
+export const globalTheme = createTheme({
   palette: {
     text: {
       primary: whiteSmoke,

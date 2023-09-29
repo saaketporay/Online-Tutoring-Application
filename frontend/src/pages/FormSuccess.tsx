@@ -7,7 +7,12 @@ function FormSuccess() {
   return (
     <>
       <Box className="grid place-content-center bg-[#191919]">
-        <SvgIcon viewBox='0 0 169 169' className="justify-self-center mt-40" sx={{fontSize: 150}}>
+        <SvgIcon
+          viewBox='0 0 169 169'
+          className="justify-self-center mt-40"
+          sx={{
+            fontSize: 150
+          }}>
           <SuccessIcon />
         </SvgIcon>
         <Typography variant="h4" className="mt-16">

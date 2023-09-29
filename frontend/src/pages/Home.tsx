@@ -15,11 +15,27 @@ function Home() {
         <Typography variant="h6" className="mb-16">To continue,</Typography>
         <Stack spacing={3} direction={'row'}>
           <ThemeProvider theme={roundButtonTheme}>
-            <Button to="/signup" component={Link} sx={{ backgroundColor: "#16A34A" }} className="px-9 py-2">Sign up as a student</Button>
-            <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6"/>
+            <Button
+              to="/signup"
+              component={Link}
+              sx={{
+                backgroundColor: "#16A34A"
+              }}
+              className="px-9 py-2">
+              Sign up as a student
+            </Button>
+            <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6" />
             <Typography variant="h6" className="mt-2">or</Typography>
-            <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6"/>
-            <Button to="/signup" component={Link} sx={{ backgroundColor: "#6D28D9" }} className="px-12 py-2">Sign up as a tutor</Button>
+            <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6" />
+            <Button
+              to="/signup"
+              component={Link}
+              sx={{
+                backgroundColor: "#6D28D9"
+              }}
+              className="px-12 py-2">
+              Sign up as a tutor
+            </Button>
           </ThemeProvider>
         </Stack>
       </Box>
