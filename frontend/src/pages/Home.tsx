@@ -18,7 +18,9 @@ function Home() {
             <Button
               to="/signup"
               component={Link}
-              sx={{ backgroundColor: "#16A34A" }}
+              sx={{
+                backgroundColor: "#16A34A"
+              }}
               className="px-9 py-2">
               Sign up as a student
             </Button>
@@ -28,7 +30,9 @@ function Home() {
             <Button
               to="/signup"
               component={Link}
-              sx={{ backgroundColor: "#6D28D9" }}
+              sx={{
+                backgroundColor: "#6D28D9"
+              }}
               className="px-12 py-2">
               Sign up as a tutor
             </Button>

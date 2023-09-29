@@ -30,7 +30,9 @@ function GeneralSignin() {
               }}>
               <SvgIcon
                 viewBox='0 0 41 41'
-                sx={{ fontSize: 35 }}>
+                sx={{
+                  fontSize: 35
+                }}>
                 <EmailIcon />
               </SvgIcon>
               Sign in with Email
@@ -44,7 +46,9 @@ function GeneralSignin() {
               }}>
               <SvgIcon
                 viewBox='0 0 31 31'
-                sx={{ fontSize: 35 }}>
+                sx={{
+                  fontSize: 35
+                }}>
                 <EllipseIcon />
                 <GoogleIcon />
               </SvgIcon>
