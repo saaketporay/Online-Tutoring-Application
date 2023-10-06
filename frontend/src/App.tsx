@@ -15,6 +15,7 @@ import MeetingScheduler from './pages/MeetingScheduler';
 import EmailSignIn from './pages/EmailSignIn';
 import FormSuccess from './pages/FormSuccess';
 import StudentDashboard from './pages/StudentDashboard';
+import TutorDashboard from './pages/TutorDashboard';
 
 const AppLayout = () => (
   <>
@@ -34,6 +35,7 @@ const router = createBrowserRouter(
       <Route path="form-success" element={<FormSuccess />} />
       <Route path="new-appt" element={<MeetingScheduler />} />
       <Route path="student" element={<StudentDashboard />} />
+      <Route path="tutor" element={<TutorDashboard />} />
     </Route>
   )
 );

@@ -15,28 +15,22 @@ import Avatar from '@mui/material/Avatar';
 import EditAppointmentIcon from '../assets/icons/Edit-Appointment-Icon.svg';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 
-const DUMMY_STUDENT_INFO = {
-  name: "John Smith",
-  total_meeting_time: "32 h",
-  avg_monthly_meeting_time: "16 h",
-  avg_weekly_meeting_time: "4h",
+const DUMMY_TUTOR_INFO = {
+  name: "James Smith",
+  total_meeting_time: "16 h",
+  avg_monthly_meeting_time: "8 h",
+  avg_weekly_meeting_time: "2h",
   appointments: [
     {
-      tutor_name: "James Smith",
+      student_name: "John Smith",
       course: 'CS 2305',
       day: 'Monday',
       time: '11:15 am - 12:15 pm'
     },
-    {
-      tutor_name: 'Maria Garcia',
-      course: 'CS 2336',
-      day: 'Thursday',
-      time: '3 pm - 4 pm'
-    }
   ]
 }
 
-function StudentDashboard() {
+function TutorDashboard() {
   return (
     <>
       <Box className="grid justify-items-center bg-[#191919]">
@@ -44,12 +38,12 @@ function StudentDashboard() {
           <Button
             to='/new-appt'
             component={Link}
-            className='my-8 py-3 px-16'
+            className='my-8 py-3 px-24'
             style={{
-              backgroundColor: '#B45309',
+              backgroundColor: '#BE185D',
             }}>
             <Typography className="font-bold">
-              Schedule appointment
+              Generate report
             </Typography>
           </Button>
         </ThemeProvider>
@@ -69,7 +63,7 @@ function StudentDashboard() {
                       width: 75
                     }} />
                   <Typography variant='h6' className='self-center'>
-                    {DUMMY_STUDENT_INFO['name']}
+                    {DUMMY_TUTOR_INFO['name']}
                   </Typography>
                 </Stack>
                 <Stack direction={'column'} spacing={1}>
@@ -90,7 +84,7 @@ function StudentDashboard() {
                       Total meeting time
                     </Typography>
                     <Typography variant='body2'>
-                      {DUMMY_STUDENT_INFO['total_meeting_time']}
+                      {DUMMY_TUTOR_INFO['total_meeting_time']}
                     </Typography>
                   </Stack>
                   <Stack direction={'row'} justifyContent={'space-between'}>
@@ -98,7 +92,7 @@ function StudentDashboard() {
                       Avg. monthly meeting time
                     </Typography>
                     <Typography variant='body2'>
-                      {DUMMY_STUDENT_INFO['avg_monthly_meeting_time']}
+                      {DUMMY_TUTOR_INFO['avg_monthly_meeting_time']}
                     </Typography>
                   </Stack>
                   <Stack direction={'row'} justifyContent={'space-between'}>
@@ -106,7 +100,7 @@ function StudentDashboard() {
                       Avg. weekly meeting time
                     </Typography>
                     <Typography variant='body2'>
-                      {DUMMY_STUDENT_INFO['avg_weekly_meeting_time']}
+                      {DUMMY_TUTOR_INFO['avg_weekly_meeting_time']}
                     </Typography>
                   </Stack>
                 </Stack>
@@ -143,7 +137,7 @@ function StudentDashboard() {
                   }}>
                   <CardContent>
                     <Typography variant='body1' align='center'>
-                      Total meeting time / instructor
+                      Total meeting time / student
                     </Typography>
                   </CardContent>
                 </Card>
@@ -158,11 +152,11 @@ function StudentDashboard() {
                     Upcoming Appointments
                   </Typography>
                   <Stack direction={'column'}>
-                    {DUMMY_STUDENT_INFO.appointments.map(function (appt, i) {
+                    {DUMMY_TUTOR_INFO.appointments.map(function (appt, i) {
                       return (
                         <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
                           <Typography variant='body1'>
-                            {appt.course} {appt.tutor_name} {appt.day} {appt.time}
+                            {appt.course} {appt.student_name} {appt.day} {appt.time}
                           </Typography>
                           <div>
                             <Button>
@@ -196,6 +190,6 @@ function StudentDashboard() {
       </Box>
     </>
   )
-};
+}
 
-export default StudentDashboard;
+export default TutorDashboard;
