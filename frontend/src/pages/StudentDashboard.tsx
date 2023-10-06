@@ -159,31 +159,33 @@ function StudentDashboard() {
                   </Typography>
                   <Stack direction={'column'}>
                     {DUMMY_STUDENT_INFO.appointments.map(function (appt, i) {
-                      return <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
-                        <Typography variant='body1'>
-                          {appt.course} {appt.tutor_name} {appt.day} {appt.time}
-                        </Typography>
-                        <div>
-                          <Button>
-                            <SvgIcon
-                              viewBox='0 0 45 45'
-                              sx={{
-                                fontSize: 35
-                              }}>
-                              <EditAppointmentIcon />
-                            </SvgIcon>
-                          </Button>
-                          <Button>
-                            <SvgIcon
-                              viewBox='0 0 45 45'
-                              sx={{
-                                fontSize: 35
-                              }}>
-                              <DeleteAppointmentIcon />
-                            </SvgIcon>
-                          </Button>
-                        </div>
-                      </ Stack>
+                      return (
+                        <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
+                          <Typography variant='body1'>
+                            {appt.course} {appt.tutor_name} {appt.day} {appt.time}
+                          </Typography>
+                          <div>
+                            <Button>
+                              <SvgIcon
+                                viewBox='0 0 45 45'
+                                sx={{
+                                  fontSize: 35
+                                }}>
+                                <EditAppointmentIcon />
+                              </SvgIcon>
+                            </Button>
+                            <Button>
+                              <SvgIcon
+                                viewBox='0 0 45 45'
+                                sx={{
+                                  fontSize: 35
+                                }}>
+                                <DeleteAppointmentIcon />
+                              </SvgIcon>
+                            </Button>
+                          </div>
+                        </ Stack>
+                      )
                     })}
                   </Stack>
                 </CardContent>
