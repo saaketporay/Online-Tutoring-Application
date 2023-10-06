@@ -5,12 +5,15 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
+import SvgIcon from '@mui/material/SvgIcon'
 import Stack from '@mui/material/Stack'
 import { ThemeProvider } from '@emotion/react';
 import { Link } from 'react-router-dom'
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
+import EditAppointmentIcon from '../assets/icons/Edit-Appointment-Icon.svg';
+import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 
 const DUMMY_STUDENT_INFO = {
   name: "John Smith",
@@ -55,7 +58,7 @@ function StudentDashboard() {
             <Card
               sx={{
                 width: 250,
-                height: 400
+                height: 500
               }}>
               <CardContent>
                 <Stack direction={'row'} spacing={3}>
@@ -79,7 +82,7 @@ function StudentDashboard() {
                     }}>
                     Edit Profile
                   </Button>
-                  <Typography variant='subtitle1' className='self-center'>
+                  <Typography variant='subtitle1' align='center'>
                     Overall Stats
                   </Typography>
                   <Stack direction={'row'} justifyContent={'space-between'}>
@@ -117,7 +120,9 @@ function StudentDashboard() {
                     height: 125
                   }}>
                   <CardContent>
-
+                    <Typography variant='body1' align='center'>
+                      Total meeting time / course
+                    </Typography>
                   </CardContent>
                 </Card>
                 <Card
@@ -126,7 +131,9 @@ function StudentDashboard() {
                     height: 125
                   }}>
                   <CardContent>
-
+                    <Typography variant='body1' align='center'>
+                      Meeting time for last 30 days
+                    </Typography>
                   </CardContent>
                 </Card>
                 <Card
@@ -135,17 +142,50 @@ function StudentDashboard() {
                     height: 125
                   }}>
                   <CardContent>
-
+                    <Typography variant='body1' align='center'>
+                      Total meeting time / instructor
+                    </Typography>
                   </CardContent>
                 </Card>
               </Stack>
               <Card
                 className='justify-self-stretch'
                 sx={{
-                  height: 250
+                  height: 350
                 }}>
                 <CardContent>
-
+                  <Typography variant='h6' align='center' className='mb-3'>
+                    Upcoming Appointments
+                  </Typography>
+                  <Stack direction={'column'}>
+                    {DUMMY_STUDENT_INFO.appointments.map(function (appt, i) {
+                      return <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
+                        <Typography variant='body1'>
+                          {appt.course} {appt.tutor_name} {appt.day} {appt.time}
+                        </Typography>
+                        <div>
+                          <Button>
+                            <SvgIcon
+                              viewBox='0 0 45 45'
+                              sx={{
+                                fontSize: 35
+                              }}>
+                              <EditAppointmentIcon />
+                            </SvgIcon>
+                          </Button>
+                          <Button>
+                            <SvgIcon
+                              viewBox='0 0 45 45'
+                              sx={{
+                                fontSize: 35
+                              }}>
+                              <DeleteAppointmentIcon />
+                            </SvgIcon>
+                          </Button>
+                        </div>
+                      </ Stack>
+                    })}
+                  </Stack>
                 </CardContent>
               </Card>
             </Stack>
