@@ -22,11 +22,8 @@ function GeneralSignin() {
             <Button
               to="/signin-email"
               component={Link}
-              sx={{
+              style={{
                 backgroundColor: '#10B981',
-                ":hover": {
-                  backgroundColor: '#10B981'
-                }
               }}>
               <SvgIcon
                 viewBox='0 0 41 41'
@@ -38,11 +35,8 @@ function GeneralSignin() {
               Sign in with Email
             </Button>
             <Button
-              sx={{
+              style={{
                 backgroundColor: '#3B82F6',
-                ":hover": {
-                  backgroundColor: '#3B82F6'
-                }
               }}>
               <SvgIcon
                 viewBox='0 0 31 31'
@@ -55,11 +49,8 @@ function GeneralSignin() {
               Sign in with Google
             </Button>
             <Button
-              sx={{
+              style={{
                 backgroundColor: '#0284C7',
-                ":hover": {
-                  backgroundColor: '#0284C7'
-                }
               }}>
               <SvgIcon
                 viewBox='0 0 40 40'
@@ -71,11 +62,8 @@ function GeneralSignin() {
               Sign in with Facebook
             </Button>
             <Button
-              sx={{
+              style={{
                 backgroundColor: '#F5F5F5',
-                ":hover": {
-                  backgroundColor: '#F5F5F5'
-                }
               }}
               className="text-[#191919]">
               <SvgIcon

@@ -5,6 +5,7 @@ const neutral700 = "#404040";
 const neutral400 = "#A3A3A3";
 const emerald500 = "#10B981";
 const eerieBlack = "#191919";
+const charlestonGreen = "#2D2D2D";
 
 export const globalTheme = createTheme({
   palette: {
@@ -112,3 +113,16 @@ export const squareButtonTheme = createTheme({
     },
   },
 });
+
+export const dashboardCardTheme = createTheme({
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          background: charlestonGreen,
+          color: whiteSmoke
+        }
+      }
+    }
+  }
+})
