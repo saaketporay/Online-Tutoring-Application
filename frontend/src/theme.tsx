@@ -4,7 +4,7 @@ const whiteSmoke = "#F4F4F4";
 const neutral700 = "#404040";
 const neutral400 = "#A3A3A3";
 const emerald500 = "#10B981";
-const eerieBlack = "#191919";
+// const eerieBlack = "#191919";
 const charlestonGreen = "#2D2D2D";
 
 export const globalTheme = createTheme({

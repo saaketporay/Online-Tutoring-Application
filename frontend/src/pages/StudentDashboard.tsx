@@ -196,6 +196,6 @@ function StudentDashboard() {
       </Box>
     </>
   )
-};
+}
 
 export default StudentDashboard;
