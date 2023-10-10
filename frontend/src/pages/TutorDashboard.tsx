@@ -39,7 +39,7 @@ function TutorDashboard() {
             to='/new-appt'
             component={Link}
             className='my-8 py-3 px-24'
-            style={{
+            sx={{
               backgroundColor: '#BE185D',
             }}>
             <Typography className="font-bold">
@@ -69,7 +69,7 @@ function TutorDashboard() {
                 <Stack direction={'column'} spacing={1}>
                   <Button
                     className="my-6 px-16"
-                    style={{
+                    sx={{
                       backgroundColor: '#16653480',
                       textTransform: 'none',
                       color: '#4ADE80'

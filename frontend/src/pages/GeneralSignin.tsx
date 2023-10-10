@@ -22,7 +22,7 @@ function GeneralSignin() {
             <Button
               to="/signin-email"
               component={Link}
-              style={{
+              sx={{
                 backgroundColor: '#10B981',
               }}>
               <SvgIcon
@@ -35,7 +35,7 @@ function GeneralSignin() {
               Sign in with Email
             </Button>
             <Button
-              style={{
+              sx={{
                 backgroundColor: '#3B82F6',
               }}>
               <SvgIcon
@@ -49,7 +49,7 @@ function GeneralSignin() {
               Sign in with Google
             </Button>
             <Button
-              style={{
+              sx={{
                 backgroundColor: '#0284C7',
               }}>
               <SvgIcon
@@ -62,7 +62,7 @@ function GeneralSignin() {
               Sign in with Facebook
             </Button>
             <Button
-              style={{
+              sx={{
                 backgroundColor: '#F5F5F5',
               }}
               className="text-[#191919]">

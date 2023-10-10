@@ -32,7 +32,7 @@ const router = createBrowserRouter(
       <Route path="signin" element={<GeneralSignin />} />
       <Route path="signin-email" element={<EmailSignIn />} />
       <Route path="signup" element={<StudentSignup />} />
-      <Route path="form-success" element={<FormSuccess />} />
+      <Route path="success" element={<FormSuccess />} />
       <Route path="new-appt" element={<MeetingScheduler />} />
       <Route path="student" element={<StudentDashboard />} />
       <Route path="tutor" element={<TutorDashboard />} />
