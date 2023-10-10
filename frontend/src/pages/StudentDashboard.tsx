@@ -45,7 +45,7 @@ function StudentDashboard() {
             to='/new-appt'
             component={Link}
             className='my-8 py-3 px-16'
-            style={{
+            sx={{
               backgroundColor: '#B45309',
             }}>
             <Typography className="font-bold">
@@ -75,7 +75,7 @@ function StudentDashboard() {
                 <Stack direction={'column'} spacing={1}>
                   <Button
                     className="my-6 px-16"
-                    style={{
+                    sx={{
                       backgroundColor: '#16653480',
                       textTransform: 'none',
                       color: '#4ADE80'
@@ -196,6 +196,6 @@ function StudentDashboard() {
       </Box>
     </>
   )
-}
+};
 
 export default StudentDashboard;
