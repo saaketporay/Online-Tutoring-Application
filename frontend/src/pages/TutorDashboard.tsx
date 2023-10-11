@@ -3,14 +3,17 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { ThemeProvider } from '@emotion/react';
-import { Link } from 'react-router-dom'
 import Dashboard from '../components/Dashboard';
 
 const DUMMY_TUTOR_INFO = {
-  name: "James Smith",
+  first_name: "James",
+  last_name: "Smith",
+  email: "jamesmith@outlook.com",
   total_meeting_time: "16 h",
   avg_monthly_meeting_time: "8 h",
   avg_weekly_meeting_time: "2h",
+  user_type: "tutor",
+  user_id: "asdf",
   appointments: [
     {
       student_name: "John Smith",
@@ -24,23 +27,30 @@ const DUMMY_TUTOR_INFO = {
 }
 
 function TutorDashboard() {
+
+  function generateReport() {
+    // TODO: Implement report generation logic
+  }
+
   return (
     <>
       <Box className="grid justify-items-center bg-[#191919]">
         <ThemeProvider theme={roundButtonTheme}>
           <Button
-            to='/new-appt'
-            component={Link}
+            onClick={() => generateReport()}
             className='my-8 py-3 px-24'
             sx={{
               backgroundColor: '#BE185D',
+              "&:hover": {
+                backgroundColor: '#BE185D'
+              }
             }}>
             <Typography className="font-bold">
               Generate report
             </Typography>
           </Button>
         </ThemeProvider>
-        <Dashboard {...DUMMY_TUTOR_INFO}/>
+        <Dashboard {...DUMMY_TUTOR_INFO} />
       </Box>
     </>
   )

@@ -7,10 +7,14 @@ import { Link } from 'react-router-dom'
 import Dashboard from '../components/Dashboard';
 
 const DUMMY_STUDENT_INFO = {
-  name: "John Smith",
+  first_name: "John",
+  last_name: "Smith",
+  email: "johnsmith@gmail.com",
   total_meeting_time: "32 h",
   avg_monthly_meeting_time: "16 h",
   avg_weekly_meeting_time: "4h",
+  user_type: "student",
+  user_id: "qwer",
   appointments: [
     {
       student_name: "John Smith",
@@ -42,6 +46,9 @@ function StudentDashboard() {
             className='my-8 py-3 px-16'
             sx={{
               backgroundColor: '#B45309',
+              "&:hover": {
+                backgroundColor: '#B45309'
+              }
             }}>
             <Typography className="font-bold">
               Schedule appointment

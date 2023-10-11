@@ -1,4 +1,4 @@
-import { dashboardCardTheme } from '../theme';
+import { dashboardCardTheme, textFieldTheme } from '../theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -12,6 +12,7 @@ import EditAppointmentIcon from '../assets/icons/Edit-Appointment-Icon.svg';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
+import { TextField, createTheme } from '@mui/material';
 
 const modalStyle = {
   position: 'absolute' as 'absolute',
@@ -26,10 +27,14 @@ const modalStyle = {
 };
 
 interface userProps {
-  name: string,
+  first_name: string,
+  last_name: string,
+  email: string,
   total_meeting_time: string,
   avg_monthly_meeting_time: string,
   avg_weekly_meeting_time: string,
+  user_type: string,
+  user_id: string,
   appointments: {
     student_name: string,
     tutor_name: string,
@@ -40,20 +45,60 @@ interface userProps {
   }[]
 }
 
+const dashboardTheme = createTheme(dashboardCardTheme, textFieldTheme, {
+  components: {
+    MuiOutlinedInput: {
+      styleOverrides: {
+        root: {
+          width: '325px',
+          '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
+            borderColor: "#F4F4F4",
+          },
+        }
+      }
+    }
+  }
+});
+
 function Dashboard({
-  name,
+  first_name,
+  last_name,
+  email,
   total_meeting_time,
   avg_monthly_meeting_time,
   avg_weekly_meeting_time,
+  user_type,
+  user_id,
   appointments
 }: userProps) {
-  const [openProfileModal, setOpenProfileModal] = useState<boolean>(false);
+  const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
+  const [firstName, setFirstName] = useState<string>('');
+  const [lastName, setLastName] = useState<string>('');
+  const [inputEmail, setInputEmail] = useState<string>('');
+  const [password, setPassword] = useState<string>('');
+
   const [editApptModal, setEditApptModal] = useState<boolean>(false);
   const [deleteApptModal, setDeleteApptModal] = useState<boolean>(false);
 
+  const handleEditProfileSubmission = () => {
+    console.log(user_id, firstName, lastName, inputEmail, password)
+  }
+
+  const handleEditApptSubmission = (
+    appt_id: string
+  ) => {
+    console.log(appt_id)
+  }
+
+  const handleDeleteApptSubmission = (
+    appt_id: string
+  ) => {
+    console.log(appt_id)
+  }
+
   return (
     <>
-      <ThemeProvider theme={dashboardCardTheme}>
+      <ThemeProvider theme={dashboardTheme}>
         <Stack direction={'row'} spacing={3}>
           <Card
             sx={{
@@ -61,15 +106,22 @@ function Dashboard({
               height: 500
             }}>
             <CardContent>
-              <Stack direction={'row'} spacing={3}>
-                <Avatar
-                  variant='square'
-                  sx={{
-                    height: 75,
-                    width: 75
-                  }} />
-                <Typography variant='h6' className='self-center'>
-                  {name}
+              <Stack
+                direction={'row'}
+                spacing={3}
+                className={user_type == "student" ? "grid" : ""}>
+                {user_type == "tutor" &&
+                  <Avatar
+                    variant='square'
+                    sx={{
+                      height: 75,
+                      width: 75
+                    }} />
+                }
+                <Typography
+                  variant='h6'
+                  className={user_type == "student" ? "mt-2 justify-self-center" : "self-center"}>
+                  {first_name} {last_name}
                 </Typography>
               </Stack>
               <Stack direction={'column'} spacing={1}>
@@ -80,9 +132,68 @@ function Dashboard({
                     textTransform: 'none',
                     color: '#4ADE80'
                   }}
-                  onClick={() => setOpenProfileModal(true)}>
+                  onClick={() => setEditProfileModal(true)}>
                   Edit Profile
                 </Button>
+                <Modal
+                  open={editProfileModal}
+                  onClose={() => setEditProfileModal(false)}
+                  aria-labeledby="edit-profile-title"
+                  aria-describedby="edit-profile-description">
+                  <Box sx={modalStyle}>
+                    <form onSubmit={handleEditProfileSubmission}>
+                      <Stack direction={'column'} spacing={2}>
+                        <Typography id="edit-profile-title" variant="h5">
+                          Edit profile
+                        </Typography>
+                        <TextField
+                          required
+                          value={first_name}
+                          id="first-name"
+                          name="first-name"
+                          label="Required"
+                          placeholder="First Name"
+                          autoComplete="off"
+                          className="w-[410px] mb-10"
+                          onChange={e => setFirstName(e.target.value)} />
+                        <TextField
+                          required
+                          value={last_name}
+                          id="last-name"
+                          name="last-name"
+                          label="Required"
+                          placeholder="Last Name"
+                          autoComplete="off"
+                          className="w-[410px] mb-10"
+                          onChange={e => setLastName(e.target.value)} />
+                        <TextField
+                          required
+                          value={email}
+                          id="email"
+                          name="email"
+                          label="Required"
+                          placeholder="Email Address"
+                          autoComplete="off"
+                          className="w-[410px] mb-10"
+                          onChange={e => setInputEmail(e.target.value)} />
+                        <TextField
+                          required
+                          id="password"
+                          name="password"
+                          label="Required"
+                          placeholder="Password"
+                          type="password"
+                          className="w-[410px] mb-4"
+                          onChange={e => setPassword(e.target.value)} />
+                        <Button
+                          onClick={handleEditProfileSubmission}
+                          variant="contained">
+                            Submit profile changes
+                        </Button>
+                      </Stack>
+                    </form>
+                  </Box>
+                </Modal>
                 <Typography variant='subtitle1' align='center'>
                   Overall Stats
                 </Typography>
@@ -163,11 +274,16 @@ function Dashboard({
                     return (
                       <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
                         <Typography variant='body1'>
-                          {appt.course} {appt.tutor_name} {appt.day} {appt.time}
+                          {appt.course} {user_type == "student" ? appt.tutor_name : appt.student_name} {appt.day} {appt.time}
                         </Typography>
                         <div>
-                          <Button
-                            onClick={() => setEditApptModal(true)}>
+                          {/* <Button
+                            onClick={() => setEditApptModal(true)}
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: 'transparent'
+                              }
+                            }}>
                             <SvgIcon
                               viewBox='0 0 45 45'
                               sx={{
@@ -182,12 +298,20 @@ function Dashboard({
                             aria-labeledby="edit-appt-title"
                             aria-describedby="edit-appt-description">
                             <Box sx={modalStyle}>
-                              <Typography id="edit-appt-title">
-                                Edit appointment
-                              </Typography>
+                              <form onSubmit={() => handleEditApptSubmission(appt.id)}>
+                                <Typography id="edit-appt-title" variant="h5">
+                                  Edit appointment
+                                </Typography>
+                              </form>
                             </Box>
-                          </Modal>
-                          <Button onClick={() => setDeleteApptModal(true)}>
+                          </Modal> */}
+                          <Button
+                            onClick={() => setDeleteApptModal(true)}
+                            sx={{
+                              "&:hover": {
+                                backgroundColor: 'transparent'
+                              }
+                            }}>
                             <SvgIcon
                               viewBox='0 0 45 45'
                               sx={{
@@ -196,6 +320,30 @@ function Dashboard({
                               <DeleteAppointmentIcon />
                             </SvgIcon>
                           </Button>
+                          <Modal
+                            open={deleteApptModal}
+                            onClose={() => setDeleteApptModal(false)}
+                            aria-labeledby="delete-appt-title"
+                            aria-describedby="delete-appt-description">
+                            <Box sx={modalStyle} className='flex'>
+                              <form onSubmit={() => handleDeleteApptSubmission(appt.id)}>
+                                <Stack direction={'column'} spacing={2}>
+                                  <Typography id="delete-appt-title" variant="h5">
+                                    Are you sure you want to cancel this appointment?
+                                  </Typography>
+                                  <Typography id="delete-appt-description">
+                                    Click outside of this modal to exit
+                                  </Typography>
+                                  <Button
+                                    type='submit'
+                                    variant='contained'
+                                    color='error'>
+                                    Cancel appointment
+                                  </Button>
+                                </Stack>
+                              </form>
+                            </Box>
+                          </Modal>
                         </div>
                       </ Stack>
                     )
