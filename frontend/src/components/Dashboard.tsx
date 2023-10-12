@@ -277,34 +277,6 @@ function Dashboard({
                           {appt.course} {user_type == "student" ? appt.tutor_name : appt.student_name} {appt.day} {appt.time}
                         </Typography>
                         <div>
-                          {/* <Button
-                            onClick={() => setEditApptModal(true)}
-                            sx={{
-                              "&:hover": {
-                                backgroundColor: 'transparent'
-                              }
-                            }}>
-                            <SvgIcon
-                              viewBox='0 0 45 45'
-                              sx={{
-                                fontSize: 35
-                              }}>
-                              <EditAppointmentIcon />
-                            </SvgIcon>
-                          </Button>
-                          <Modal
-                            open={editApptModal}
-                            onClose={() => setEditApptModal(false)}
-                            aria-labeledby="edit-appt-title"
-                            aria-describedby="edit-appt-description">
-                            <Box sx={modalStyle}>
-                              <form onSubmit={() => handleEditApptSubmission(appt.id)}>
-                                <Typography id="edit-appt-title" variant="h5">
-                                  Edit appointment
-                                </Typography>
-                              </form>
-                            </Box>
-                          </Modal> */}
                           <Button
                             onClick={() => setDeleteApptModal(true)}
                             sx={{
