@@ -95,6 +95,6 @@ function StudentSignup() {
       </form>
     </>
   )
-};
+}
 
 export default StudentSignup;

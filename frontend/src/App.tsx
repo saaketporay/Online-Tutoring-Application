@@ -13,6 +13,9 @@ import GeneralSignin from './pages/GeneralSignin';
 import StudentSignup from './pages/StudentSignup'
 import MeetingScheduler from './pages/MeetingScheduler';
 import EmailSignIn from './pages/EmailSignIn';
+import FormSuccess from './pages/FormSuccess';
+import StudentDashboard from './pages/StudentDashboard';
+import TutorDashboard from './pages/TutorDashboard';
 
 const AppLayout = () => (
   <>
@@ -29,7 +32,10 @@ const router = createBrowserRouter(
       <Route path="signin" element={<GeneralSignin />} />
       <Route path="signin-email" element={<EmailSignIn />} />
       <Route path="signup" element={<StudentSignup />} />
+      <Route path="success" element={<FormSuccess />} />
       <Route path="new-appt" element={<MeetingScheduler />} />
+      <Route path="student" element={<StudentDashboard />} />
+      <Route path="tutor" element={<TutorDashboard />} />
     </Route>
   )
 );

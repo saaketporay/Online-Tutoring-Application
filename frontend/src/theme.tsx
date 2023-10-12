@@ -1,12 +1,13 @@
 import { createTheme } from '@mui/material/';
 
-const whiteSmoke = '#F4F4F4';
-const neutral700 = '#404040';
-const neutral400 = '#A3A3A3';
-const emerald500 = '#10B981';
-const eerieBlack = '#191919';
+const whiteSmoke = "#F4F4F4";
+const neutral700 = "#404040";
+const neutral400 = "#A3A3A3";
+const emerald500 = "#10B981";
+// const eerieBlack = "#191919";
+const charlestonGreen = "#2D2D2D";
 
-export const textTheme = createTheme({
+export const globalTheme = createTheme({
   palette: {
     text: {
       primary: whiteSmoke,
@@ -145,3 +146,16 @@ export const autocompleteTheme = createTheme({
     },
   },
 });
+
+export const dashboardCardTheme = createTheme({
+  components: {
+    MuiCard: {
+      styleOverrides: {
+        root: {
+          background: charlestonGreen,
+          color: whiteSmoke
+        }
+      }
+    }
+  }
+})
