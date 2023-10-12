@@ -26,8 +26,11 @@ export const roundButtonTheme = createTheme({
           borderRadius: 50,
           textTransform: 'none',
           fontSize: 18,
-        }
-      }
+          '&:disabled': {
+            backgroundColor: neutral700,
+          },
+        },
+      },
     },
     MuiSvgIcon: {
       defaultProps: {
@@ -45,14 +48,14 @@ export const textFieldTheme = createTheme({
       },
       styleOverrides: {
         root: {
-          width: '400px',
+          // width: '400px',
           '& label.Mui-focused': {
             // Must be under MuiTextField to work
             color: neutral400,
           },
           '& .MuiInputBase-root': {
-            color: whiteSmoke
-          }
+            color: whiteSmoke,
+          },
         },
       },
     },
@@ -64,10 +67,10 @@ export const textFieldTheme = createTheme({
           },
           // Placeholder has the correct whitesmoke color when opacity = 1
           '& input::placeholder': {
-            opacity: 1
+            opacity: 1,
           },
           '& textarea::placeholder': {
-            opacity: 1
+            opacity: 1,
           },
         },
       },
@@ -79,7 +82,7 @@ export const checkboxTheme = createTheme({
   components: {
     MuiFormControlLabel: {
       defaultProps: {
-        className: "pt-3"
+        className: 'pt-3',
       },
       styleOverrides: {
         root: {
@@ -102,11 +105,41 @@ export const squareButtonTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
+          color: whiteSmoke,
           background: emerald500,
           '&:hover': {
             // Prevents default MUI button behavior
             backgroundColor: emerald500,
           },
+          '&:disabled': {
+            backgroundColor: neutral700,
+          },
+        },
+      },
+    },
+  },
+});
+
+export const autocompleteTheme = createTheme({
+  components: {
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
+            {
+              color: whiteSmoke,
+            },
+        },
+        input: {
+          color: whiteSmoke,
+        },
+        paper: {
+          backgroundColor: neutral700,
+        },
+        option: {
+          color: whiteSmoke,
+        },
+        noOptions: {
           color: whiteSmoke,
         },
       },
