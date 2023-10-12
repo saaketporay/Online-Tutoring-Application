@@ -81,10 +81,14 @@ const theme = createTheme({
           '& .MuiFormLabel-root': {
             color: '#f5f5f5',
           },
+          // Normal/multiline TextField styles
           '& .MuiOutlinedInput-notchedOutline': {
             borderColor: '#404040',
           },
           '& .MuiOutlinedInput-root:hover fieldset': {
+            borderColor: '#f5f5f5',
+          },
+          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
             borderColor: '#f5f5f5',
           },
         },
@@ -92,6 +96,11 @@ const theme = createTheme({
     },
   },
 });
+
+const getOptionEquality = (
+  option: { label: string },
+  value: { label: string }
+) => option.label === value.label;
 
 const MeetingScheduler = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('');
@@ -176,11 +185,6 @@ const MeetingScheduler = () => {
       }
     }
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
-
-  const getOptionEquality = (
-    option: { label: string },
-    value: { label: string }
-  ) => option.label === value.label;
 
   const submitHandler = () => {
     return;
