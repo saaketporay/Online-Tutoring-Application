@@ -40,7 +40,68 @@ const DUMMY_DATA: {
 
 const DUMMY_COURSES = Object.keys(DUMMY_DATA).map((name) => ({ label: name }));
 
-const textInputTheme = createTheme(autocompleteTheme, textFieldTheme);
+const theme = createTheme({
+  components: {
+    MuiAutocomplete: {
+      styleOverrides: {
+        root: {
+          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
+            {
+              color: '#f5f5f5',
+            },
+        },
+        input: {
+          color: '#f5f5f5',
+        },
+        paper: {
+          backgroundColor: '#404040',
+        },
+        option: {
+          color: '#f5f5f5',
+        },
+        noOptions: {
+          color: '#f5f5f5',
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&:disabled': {
+            backgroundColor: '#404040',
+          },
+        },
+      },
+    },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-input': {
+            color: '#f5f5f5',
+          },
+          '& .MuiFormLabel-root': {
+            color: '#f5f5f5',
+          },
+          // Normal/multiline TextField styles
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#404040',
+          },
+          '& .MuiOutlinedInput-root:hover fieldset': {
+            borderColor: '#f5f5f5',
+          },
+          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+            borderColor: '#f5f5f5',
+          },
+        },
+      },
+    },
+  },
+});
+
+const getOptionEquality = (
+  option: { label: string },
+  value: { label: string }
+) => option.label === value.label;
 
 const MeetingScheduler = () => {
   const [selectedCourse, setSelectedCourse] = useState<string>('');
@@ -125,11 +186,6 @@ const MeetingScheduler = () => {
       }
     }
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
-
-  const getOptionEquality = (
-    option: { label: string },
-    value: { label: string }
-  ) => option.label === value.label;
 
   const submitHandler = () => {
     console.log(

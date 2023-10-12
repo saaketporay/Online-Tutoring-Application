@@ -147,6 +147,28 @@ export const autocompleteTheme = createTheme({
   },
 });
 
+export const radioButtonGroupTheme = createTheme({
+  components: {
+    MuiFormLabel: {
+      styleOverrides: {
+        root: {
+          color: neutral400,
+          '&.Mui-focused': {
+            color: neutral400,
+          },
+        },
+      },
+    },
+    MuiRadio: {
+      styleOverrides: {
+        root: {
+          color: neutral400,
+        },
+      },
+    },
+  },
+});
+
 export const dashboardCardTheme = createTheme({
   components: {
     MuiCard: {
