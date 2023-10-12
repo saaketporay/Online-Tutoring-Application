@@ -102,7 +102,7 @@ function StudentSignup() {
         </Box>
       </form>
     </>
-  );
+  )
 }
 
 export default StudentSignup;

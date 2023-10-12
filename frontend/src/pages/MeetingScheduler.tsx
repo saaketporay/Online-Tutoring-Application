@@ -1,10 +1,11 @@
-import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
+import { autocompleteTheme, textFieldTheme, roundButtonTheme } from '../theme';
+import FormControl from '@mui/material/FormControl';
 
 import { useState, useEffect } from 'react';
 
@@ -187,15 +188,28 @@ const MeetingScheduler = () => {
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
 
   const submitHandler = () => {
+    console.log(
+      selectedCourse,
+      selectedTutor,
+      selectedTimeslot,
+      meetingTitle,
+      meetingDesc
+    );
+
+    setSelectedCourse('');
+    setSelectedTutor('');
+    setSelectedTimeslot('');
+    setMeetingTitle('');
+    setMeetingDesc('');
     return;
   };
 
   return (
-    <Box className='grid place-content-center bg-[#191919]'>
+    <FormControl className='grid place-content-center bg-[#191919]'>
       <Stack
         className='my-24'
         spacing={16}>
-        <ThemeProvider theme={theme}>
+        <ThemeProvider theme={textInputTheme}>
           <Stack spacing={6}>
             <Typography
               variant='h4'
@@ -203,7 +217,7 @@ const MeetingScheduler = () => {
               Schedule a new appointment
             </Typography>
             <Autocomplete
-              id='course-select'
+              id='student-course-select'
               options={DUMMY_COURSES}
               disablePortal
               value={selectedCourse ? { label: selectedCourse } : null}
@@ -278,6 +292,8 @@ const MeetingScheduler = () => {
               }}
             />
           </Stack>
+        </ThemeProvider>
+        <ThemeProvider theme={roundButtonTheme}>
           <Button
             variant='contained'
             color='success'
@@ -294,7 +310,7 @@ const MeetingScheduler = () => {
           </Button>
         </ThemeProvider>
       </Stack>
-    </Box>
+    </FormControl>
   );
 };
 
