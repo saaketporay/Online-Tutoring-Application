@@ -8,7 +8,6 @@ import { ThemeProvider } from '@emotion/react';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
-import EditAppointmentIcon from '../assets/icons/Edit-Appointment-Icon.svg';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { useState } from 'react';
 import Modal from '@mui/material/Modal';
