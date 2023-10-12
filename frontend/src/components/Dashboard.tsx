@@ -76,18 +76,10 @@ function Dashboard({
   const [lastName, setLastName] = useState<string>('');
   const [inputEmail, setInputEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-
-  const [editApptModal, setEditApptModal] = useState<boolean>(false);
   const [deleteApptModal, setDeleteApptModal] = useState<boolean>(false);
 
   const handleEditProfileSubmission = () => {
     console.log(user_id, firstName, lastName, inputEmail, password)
-  }
-
-  const handleEditApptSubmission = (
-    appt_id: string
-  ) => {
-    console.log(appt_id)
   }
 
   const handleDeleteApptSubmission = (
