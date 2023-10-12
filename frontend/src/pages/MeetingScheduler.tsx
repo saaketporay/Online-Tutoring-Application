@@ -132,6 +132,14 @@ const MeetingScheduler = () => {
   ) => option.label === value.label;
 
   const submitHandler = () => {
+    console.log(
+      selectedCourse,
+      selectedTutor,
+      selectedTimeslot,
+      meetingTitle,
+      meetingDesc
+    );
+
     setSelectedCourse('');
     setSelectedTutor('');
     setSelectedTimeslot('');
