@@ -112,7 +112,7 @@ const TutorSignup = () => {
   const [endHr, setEndHr] = useState<number>(17);
   const [hrChunks, setHrChunks] = useState<number>(2);
 
-  const formSubmitHandler = () => {
+  const submitHandler = () => {
     console.log(isCriminal, aboutMe, courses, schedule);
     setAboutMe('');
     setCourses([]);
@@ -269,7 +269,7 @@ const TutorSignup = () => {
             size='large'
             className='mx-auto'
             disabled={!aboutMe || courses.length == 0 || schedule.length == 0}
-            onClick={formSubmitHandler}>
+            onClick={submitHandler}>
             Submit
           </Button>
         </Stack>
