@@ -14,7 +14,7 @@ import Modal from '@mui/material/Modal';
 import { TextField, createTheme } from '@mui/material';
 
 const modalStyle = {
-  position: 'absolute' as 'absolute',
+  position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
