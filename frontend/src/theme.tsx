@@ -1,11 +1,11 @@
 import { createTheme } from '@mui/material/';
 
-const whiteSmoke = "#F4F4F4";
-const neutral700 = "#404040";
-const neutral400 = "#A3A3A3";
-const emerald500 = "#10B981";
+const whiteSmoke = '#F4F4F4';
+const neutral700 = '#404040';
+const neutral400 = '#A3A3A3';
+const emerald500 = '#10B981';
 // const eerieBlack = "#191919";
-const charlestonGreen = "#2D2D2D";
+const charlestonGreen = '#2D2D2D';
 
 export const globalTheme = createTheme({
   palette: {
@@ -144,6 +144,31 @@ export const autocompleteTheme = createTheme({
         },
       },
     },
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiInputBase-input': {
+            color: '#f5f5f5',
+          },
+          '& .MuiFormLabel-root': {
+            color: '#f5f5f5',
+          },
+          '& label.Mui-focused': {
+            color: '#f5f5f5',
+          },
+          // Normal/multiline TextField styles
+          '& .MuiOutlinedInput-notchedOutline': {
+            borderColor: '#404040',
+          },
+          '& .MuiOutlinedInput-root:hover fieldset': {
+            borderColor: '#f5f5f5',
+          },
+          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
+            borderColor: '#f5f5f5',
+          },
+        },
+      },
+    },
   },
 });
 
@@ -175,9 +200,9 @@ export const dashboardCardTheme = createTheme({
       styleOverrides: {
         root: {
           background: charlestonGreen,
-          color: whiteSmoke
-        }
-      }
-    }
-  }
-})
+          color: whiteSmoke,
+        },
+      },
+    },
+  },
+});
