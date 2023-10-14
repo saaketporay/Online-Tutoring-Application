@@ -9,40 +9,15 @@ import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Button from '@mui/material/Button';
 import FormControl from '@mui/material/FormControl';
-import { radioButtonGroupTheme } from '../theme';
+import { radioButtonGroupTheme, autocompleteTheme } from '../theme';
 import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 
 import { useState } from 'react';
 
-const theme = createTheme(radioButtonGroupTheme, {
+const theme = createTheme(radioButtonGroupTheme, autocompleteTheme, {
   components: {
-    MuiAutocomplete: {
-      styleOverrides: {
-        root: {
-          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
-            {
-              color: '#f5f5f5',
-            },
-        },
-        input: {
-          color: '#f5f5f5',
-        },
-        paper: {
-          backgroundColor: '#404040',
-        },
-        option: {
-          color: '#f5f5f5',
-        },
-        noOptions: {
-          color: '#f5f5f5',
-        },
-        tag: {
-          color: '#f5f5f5',
-          backgroundColor: '#404040',
-        },
-      },
-    },
+    // Custom button theme just for this page since roundButtonTheme/squareButtonTheme messes with the autocompleteTheme
     MuiButton: {
       styleOverrides: {
         root: {
@@ -52,29 +27,10 @@ const theme = createTheme(radioButtonGroupTheme, {
         },
       },
     },
+    // Custom TextField number input styles
     MuiTextField: {
       styleOverrides: {
         root: {
-          '& .MuiInputBase-input': {
-            color: '#f5f5f5',
-          },
-          '& .MuiFormLabel-root': {
-            color: '#f5f5f5',
-          },
-          // Normal/multiline TextField styles
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#404040',
-          },
-          '& .MuiOutlinedInput-root:hover fieldset': {
-            borderColor: '#f5f5f5',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-            borderColor: '#f5f5f5',
-          },
-          // Number TextField styles
-          '& label.Mui-focused': {
-            color: '#f5f5f5',
-          },
           '& .MuiOutlinedInput-root input[type="number"] + fieldset': {
             borderColor: '#404040',
           },

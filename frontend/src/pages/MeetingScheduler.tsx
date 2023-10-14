@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { autocompleteTheme, textFieldTheme, roundButtonTheme } from '../theme';
+import { autocompleteTheme } from '../theme';
 import FormControl from '@mui/material/FormControl';
 
 import { useState, useEffect } from 'react';
@@ -40,57 +40,13 @@ const DUMMY_DATA: {
 
 const DUMMY_COURSES = Object.keys(DUMMY_DATA).map((name) => ({ label: name }));
 
-const theme = createTheme({
+const theme = createTheme(autocompleteTheme, {
   components: {
-    MuiAutocomplete: {
-      styleOverrides: {
-        root: {
-          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
-            {
-              color: '#f5f5f5',
-            },
-        },
-        input: {
-          color: '#f5f5f5',
-        },
-        paper: {
-          backgroundColor: '#404040',
-        },
-        option: {
-          color: '#f5f5f5',
-        },
-        noOptions: {
-          color: '#f5f5f5',
-        },
-      },
-    },
     MuiButton: {
       styleOverrides: {
         root: {
           '&:disabled': {
             backgroundColor: '#404040',
-          },
-        },
-      },
-    },
-    MuiTextField: {
-      styleOverrides: {
-        root: {
-          '& .MuiInputBase-input': {
-            color: '#f5f5f5',
-          },
-          '& .MuiFormLabel-root': {
-            color: '#f5f5f5',
-          },
-          // Normal/multiline TextField styles
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#404040',
-          },
-          '& .MuiOutlinedInput-root:hover fieldset': {
-            borderColor: '#f5f5f5',
-          },
-          '& .MuiOutlinedInput-root.Mui-focused fieldset': {
-            borderColor: '#f5f5f5',
           },
         },
       },
@@ -206,10 +162,10 @@ const MeetingScheduler = () => {
 
   return (
     <FormControl className='grid place-content-center bg-[#191919]'>
-      <Stack
-        className='my-24'
-        spacing={16}>
-        <ThemeProvider theme={textInputTheme}>
+      <ThemeProvider theme={theme}>
+        <Stack
+          className='my-24'
+          spacing={16}>
           <Stack spacing={6}>
             <Typography
               variant='h4'
@@ -292,8 +248,6 @@ const MeetingScheduler = () => {
               }}
             />
           </Stack>
-        </ThemeProvider>
-        <ThemeProvider theme={roundButtonTheme}>
           <Button
             variant='contained'
             color='success'
@@ -308,8 +262,8 @@ const MeetingScheduler = () => {
             onClick={submitHandler}>
             Submit
           </Button>
-        </ThemeProvider>
-      </Stack>
+        </Stack>
+      </ThemeProvider>
     </FormControl>
   );
 };
