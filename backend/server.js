@@ -23,7 +23,7 @@ app.post('/register', encodeUrl, (req, res) => {
     }
 
     // check if already registered
-    con.query(`SELECT * FROM users WHERE username = '${email}'`, function(err, result)
+    con.query(`SELECT * FROM users WHERE email = '${email}'`, function(err, result)
     {
       if (err)
       {
@@ -62,6 +62,34 @@ app.post('/register', encodeUrl, (req, res) => {
     })
   })
 });
+
+app.post('/login', function(request, response, next)
+{
+  var user_email = request.body.email;
+  var user_password = request.body.password;
+
+  if (user_email && user_password)
+  {
+    query = `SELECT * FROM users WHERE email = "${user_email}"`;
+    con.query(express.query, function(err, data)
+    {
+      if (data.length > 0)
+      {
+        for (var c = 0; c < data.length; c++)
+        {
+          if (data[c].password == user_password)
+          {
+            // TO DO: login user if data is correct
+          }
+          else
+          {
+            response.send("Incorrect Login")
+          }
+        }
+      }
+    })
+  }
+})
 
 // Start server
 app.listen(port, () => {
