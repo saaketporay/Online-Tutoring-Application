@@ -1,4 +1,4 @@
-import { dashboardCardTheme, textFieldTheme } from '../theme';
+import { cardTheme, textFieldTheme } from '../theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -44,7 +44,7 @@ interface userProps {
   }[]
 }
 
-const dashboardTheme = createTheme(dashboardCardTheme, textFieldTheme, {
+const dashboardTheme = createTheme(cardTheme, textFieldTheme, {
   components: {
     MuiOutlinedInput: {
       styleOverrides: {
