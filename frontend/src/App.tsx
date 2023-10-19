@@ -2,15 +2,15 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route, 
+  Route,
   Outlet
 } from 'react-router-dom';
 import Header from './components/Header';
 import Footer from './components/Footer';
 import Home from './pages/Home';
-import ErrorPage from './pages/ErrorPage'
+import ErrorPage from './pages/ErrorPage';
 import GeneralSignin from './pages/GeneralSignin';
-import StudentSignup from './pages/StudentSignup'
+import StudentSignup from './pages/StudentSignup';
 import MeetingScheduler from './pages/MeetingScheduler';
 import EmailSignIn from './pages/EmailSignIn';
 import FormSuccess from './pages/FormSuccess';

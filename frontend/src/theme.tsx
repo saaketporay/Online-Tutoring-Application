@@ -125,10 +125,9 @@ export const autocompleteTheme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         root: {
-          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
-            {
-              color: whiteSmoke,
-            },
+          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root': {
+            color: whiteSmoke,
+          },
         },
         input: {
           color: whiteSmoke,
@@ -194,7 +193,7 @@ export const radioButtonGroupTheme = createTheme({
   },
 });
 
-export const dashboardCardTheme = createTheme({
+export const cardTheme = createTheme({
   components: {
     MuiCard: {
       styleOverrides: {
