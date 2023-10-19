@@ -77,13 +77,18 @@ function Dashboard({
   const [password, setPassword] = useState<string>('');
   const [deleteApptModal, setDeleteApptModal] = useState<boolean>(false);
 
-  const handleEditProfileSubmission = () => {
+  const handleEditProfileSubmission = (
+    e: React.FormEvent<EventTarget>
+  ) => {
+    e.preventDefault();
     console.log(user_id, firstName, lastName, inputEmail, password)
   }
 
   const handleDeleteApptSubmission = (
+    e: React.FormEvent<EventTarget>,
     appt_id: string
   ) => {
+    e.preventDefault();
     console.log(appt_id)
   }
 
@@ -289,7 +294,7 @@ function Dashboard({
                             aria-labeledby="delete-appt-title"
                             aria-describedby="delete-appt-description">
                             <Box sx={modalStyle} className='flex'>
-                              <form onSubmit={() => handleDeleteApptSubmission(appt.id)}>
+                              <form onSubmit={(e) => handleDeleteApptSubmission(e, appt.id)}>
                                 <Stack direction={'column'} spacing={2}>
                                   <Typography id="delete-appt-title" variant="h5">
                                     Are you sure you want to cancel this appointment?
