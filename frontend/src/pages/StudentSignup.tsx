@@ -1,8 +1,6 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
@@ -18,11 +16,10 @@ function StudentSignup() {
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [spamChecked, setSpamChecked] = useState<boolean>(false);
 
   const formSubmitHandler = (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
-    console.log(firstName, lastName, email, password, spamChecked);
+    console.log(firstName, lastName, email, password);
   };
 
   return (
@@ -74,16 +71,6 @@ function StudentSignup() {
               type='password'
               className='w-[410px] mb-4'
               onChange={(e) => setPassword(e.target.value)}
-            />
-            <FormControlLabel
-              control={
-                <Checkbox
-                  id='spam'
-                  onChange={(e) => setSpamChecked(e.target.checked)}
-                />
-              }
-              label='I want to receive spam'
-              className='justify-start'
             />
             <Button
               className='mt-4 py-2'

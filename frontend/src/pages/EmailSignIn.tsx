@@ -1,8 +1,6 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from 'react-router-dom';
@@ -16,13 +14,12 @@ const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme)
 function EmailSignin() {
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
-  const [rememberUser, setRememberUser] = useState<boolean>(false);
 
   const formSubmitHandler = (
     e: React.FormEvent<EventTarget>
   ) => {
     e.preventDefault();
-    console.log(email, password, rememberUser)
+    console.log(email, password)
   }
 
   return (
@@ -53,10 +50,6 @@ function EmailSignin() {
               type="password"
               className="w-[410px] mb-4"
               onChange={e => setPassword(e.target.value)} />
-            <FormControlLabel
-              control={<Checkbox id="remember" onChange={e => setRememberUser(e.target.checked)} />}
-              label="Remember me"
-              className="justify-start" />
             <Button
               className="mt-8 py-2"
               type="submit">
