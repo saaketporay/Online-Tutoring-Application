@@ -16,10 +16,13 @@ function StudentSignup() {
   const [lastName, setLastName] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
+  const [phoneNumber, setPhoneNumber] = useState<string>('');
 
-  const formSubmitHandler = (e: React.FormEvent<EventTarget>) => {
+  const formSubmitHandler = (
+    e: React.FormEvent<EventTarget>
+  ) => {
     e.preventDefault();
-    console.log(firstName, lastName, email, password);
+    console.log(firstName, lastName, email, password, phoneNumber);
   };
 
   return (
@@ -61,6 +64,16 @@ function StudentSignup() {
               autoComplete='off'
               className='w-[410px] mb-10'
               onChange={(e) => setEmail(e.target.value)}
+            />
+            <TextField
+              required
+              id='phone-number'
+              name='phone-number'
+              label='Required'
+              placeholder='Phone Number'
+              type='tel'
+              className='w-[410px] mb-10'
+              onChange={(e) => setPhoneNumber(e.target.value)}
             />
             <TextField
               required
