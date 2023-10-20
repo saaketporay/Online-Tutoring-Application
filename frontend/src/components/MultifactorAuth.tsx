@@ -3,6 +3,7 @@ import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
+import Box from "@mui/material/Box";
 import { cardTheme, textFieldTheme, squareButtonTheme } from "../theme";
 import { ThemeProvider } from "@emotion/react";
 import { useState } from "react";
@@ -23,35 +24,37 @@ function MultifactorAuth() {
   return (
     <>
       <ThemeProvider theme={theme}>
-        <Card
-          className='mt-16'
-          sx={{
-            width: 500,
-            height: 400
-          }}
-        >
-          <CardContent className='grid justify-items-center'>
-            <form onSubmit={verifyHandler} className="grid">
-              <Typography variant='h5' className='mt-6'>Check your phone messages</Typography>
-              <Typography className='mt-6'>You should be receiving a verification code shortly</Typography>
-              <Typography className='mt-6'>Enter the code below</Typography>
-              <TextField
-                required
-                id="number"
-                name="number"
-                type="number"
-                className="w-[200px] my-4"
-                onChange={e => setNumber(e.target.value)}
-              />
-              <Button
-                className='mt-6'
-                type='submit'
-              >
-                Verify
-              </Button>
-            </form>
-          </CardContent>
-        </Card>
+        <Box className="grid justify-center bg-[#191919]">
+          <Card
+            className='mt-16'
+            sx={{
+              width: 500,
+              height: 400
+            }}
+          >
+            <CardContent className='grid justify-items-center'>
+              <form onSubmit={verifyHandler} className="grid">
+                <Typography variant='h5' className='mt-6'>Check your phone messages</Typography>
+                <Typography className='mt-6'>You should be receiving a verification code shortly</Typography>
+                <Typography className='mt-6'>Enter the code below</Typography>
+                <TextField
+                  required
+                  id="number"
+                  name="number"
+                  type="number"
+                  className="w-[200px] my-4"
+                  onChange={e => setNumber(e.target.value)}
+                />
+                <Button
+                  className='mt-6'
+                  type='submit'
+                >
+                  Verify
+                </Button>
+              </form>
+            </CardContent>
+          </Card>
+        </Box>
       </ThemeProvider>
     </>
   )

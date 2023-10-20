@@ -5,6 +5,15 @@ import './index.css';
 import { CssBaseline } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
 import { globalTheme } from './theme';
+import axios from 'axios';
+
+if (import.meta.env.PROD == false) {
+  axios.defaults.baseURL = 'http://localhost:3000'
+} else {
+  // axios.defaults.baseURL = amazon ec2 instance url
+  // axios.defaults.headers.common['Authorization'] = api token
+}
+axios.defaults.headers.common['Content-Type'] = 'application/json'
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
