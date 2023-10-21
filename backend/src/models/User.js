@@ -8,9 +8,17 @@ const getUserByEmail = async (email) => {
     return rows[0];
 };
 
-const createUser = async (email, firstname, lastname, password, user_type, total_tutoring_hours) => {
-    const [result] = await connection.query('INSERT INTO users (email, firstname, lastname, password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, ?)', [email, firstname, lastname, password, user_type, total_tutoring_hours]);
-    return result.insertId;
+const createUser = async (email, firstname, lastname, password, user_type) => {
+    try
+    {
+        console.log(connection);
+        const [result] = await connection.query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type, total_tutoring_hours) VALUES ('${firstname}', '${lastname}', '${email}', '${password}', '${user_type}', 0);`);
+        return true;
+    }
+    catch (err)
+    {
+        return err;
+    }
 };
 
 module.exports = 

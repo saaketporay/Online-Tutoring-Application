@@ -35,14 +35,20 @@
 
  const register = async (req, res) => {
     const { email, firstname, lastname, password, user_type} = req.body;
+    console.log(req.body);
 
     try
     {
         const hashedPassword = hashPassword(password);
-        const userId = await createUser(email, firstname, lastname, hashedPassword, user_type);
+        connection.query('SHOW tables', (error, results) => {
+    if (error) throw error;
+    console.log(results);
 
-        req.session.userId = userId;
-        return res.status(200).send('Register Successful: ?', [req.session.userId]);
+    connection.end(); 
+});
+        //const test = await createUser(email, firstname, lastname, hashedPassword, user_type);
+        console.log(test)
+        return res.status(200).send('Register Successful: ');
     }
     catch (err)
     {
