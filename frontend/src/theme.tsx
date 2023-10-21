@@ -142,6 +142,10 @@ export const autocompleteTheme = createTheme({
         noOptions: {
           color: whiteSmoke,
         },
+        tag: {
+          color: whiteSmoke,
+          backgroundColor: neutral700,
+        },
       },
     },
     MuiTextField: {
