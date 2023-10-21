@@ -9,7 +9,7 @@ const getUserByEmail = async (email) => {
 };
 
 const createUser = async (user_id, email, firstname, lastname, password, user_type, total_tutoring_hours) => {
-    const [result] = await pool.query('INSERT INTO users (user_id, email, firstname, lastname, password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, ?, ?)', [user_id, email, firstname, lastname, password, user_type, total_tutoring_hours]);
+    const [result] = await pool.query('INSERT INTO users (email, firstname, lastname, password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, ?)', [email, firstname, lastname, password, user_type, total_tutoring_hours]);
     return result.insertId;
 };
 
