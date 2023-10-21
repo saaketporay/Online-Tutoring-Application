@@ -34,27 +34,26 @@
  };
 
  const register = async (req, res) => {
-    const { email, firstname, lastname, password, user_type} = req.body;
+    const { email, firstname, lastname, password, user_type } = req.body;
+    const hashedPassword = hashPassword(password);
 
-    try
-    {
-        const hashedPassword = hashPassword(password);
-        const userId = await createUser(email, firstname, lastname, hashedPassword, user_type);
-
-        req.session.userId = userId;
-        return res.status(200).send('Register Successful: ?', [req.session.userId]);
-    }
-    catch (err)
-    {
+    try {
+        const result = await createUser(email, firstname, lastname, hashedPassword, user_type);
+        if (result === 1) {
+            res.status(200).send('Register Successful');
+        } else {
+            res.status(400).send('Failed to add User');
+        }
+    } catch (err) {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
- };
+};
 
  module.exports = 
  {
     showLoginForm,
     showRegisterForm,
     login,
-    register,
+    register
  };
