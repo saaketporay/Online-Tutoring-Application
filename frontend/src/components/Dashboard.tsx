@@ -29,7 +29,10 @@ interface userProps {
   first_name: string,
   last_name: string,
   email: string,
+  monthly_meeting_time: string,
   total_meeting_time: string,
+  avg_meeting_time_per_course: string,
+  avg_meeting_time_per_user: string,
   avg_monthly_meeting_time: string,
   avg_weekly_meeting_time: string,
   user_type: string,
@@ -64,6 +67,9 @@ function Dashboard({
   last_name,
   email,
   total_meeting_time,
+  avg_meeting_time_per_course,
+  avg_meeting_time_per_user,
+  monthly_meeting_time,
   avg_monthly_meeting_time,
   avg_weekly_meeting_time,
   user_type,
@@ -229,7 +235,10 @@ function Dashboard({
                 }}>
                 <CardContent>
                   <Typography variant='body1' align='center'>
-                    Total meeting time / course
+                    Avg. meeting time / course
+                  </Typography>
+                  <Typography variant='h6' align='center' className='pt-4'>
+                    {avg_meeting_time_per_course}
                   </Typography>
                 </CardContent>
               </Card>
@@ -242,6 +251,9 @@ function Dashboard({
                   <Typography variant='body1' align='center'>
                     Meeting time for last 30 days
                   </Typography>
+                  <Typography variant='h6' align='center' className='pt-4'>
+                    {monthly_meeting_time}
+                  </Typography>
                 </CardContent>
               </Card>
               <Card
@@ -251,7 +263,10 @@ function Dashboard({
                 }}>
                 <CardContent>
                   <Typography variant='body1' align='center'>
-                    Total meeting time / instructor
+                    Avg. meeting time / {user_type == 'student' ? 'Instructor' : 'Student'}
+                  </Typography>
+                  <Typography variant='h6' align='center' className='pt-4'>
+                    {avg_meeting_time_per_user}
                   </Typography>
                 </CardContent>
               </Card>

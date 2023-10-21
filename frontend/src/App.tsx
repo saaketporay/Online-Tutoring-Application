@@ -2,11 +2,9 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route,
-  Outlet
+  Route
 } from 'react-router-dom';
-import Header from './components/Header';
-import Footer from './components/Footer';
+import AppLayout from './pages/AppLayout'
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import GeneralSignin from './pages/GeneralSignin';
@@ -18,18 +16,19 @@ import TutorSignup from './pages/TutorSignup';
 import StudentDashboard from './pages/StudentDashboard';
 import TutorDashboard from './pages/TutorDashboard';
 import MultifactorAuth from './components/MultifactorAuth';
-
-const AppLayout = () => (
-  <>
-    <Header />
-    <Outlet />
-    <Footer />
-  </>
-);
+import { logoutAction } from './utils/logout';
+import { tokenLoader } from './utils/auth';
+import PrivateRoute from './components/PrivateRoute';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
-    <Route path="/" element={<AppLayout />} errorElement={<ErrorPage />}>
+    <Route
+      path="/"
+      element={<AppLayout />}
+      errorElement={<ErrorPage />}
+      id="root"
+      loader={tokenLoader}
+    >
       <Route
         index={true}
         element={<Home />}
@@ -54,6 +53,10 @@ const router = createBrowserRouter(
         element={<StudentSignup />}
       />
       <Route
+        path="tutor-signup"
+        element={<TutorSignup />}
+      />
+      <Route
         path="success"
         element={<FormSuccess />}
       />
@@ -62,16 +65,16 @@ const router = createBrowserRouter(
         element={<MeetingScheduler />}
       />
       <Route
-        path="tutor-signup"
-        element={<TutorSignup />}
-      />
-      <Route
         path="student"
         element={<StudentDashboard />}
       />
       <Route
         path="tutor"
         element={<TutorDashboard />}
+      />
+      <Route
+        path="logout"
+        action={logoutAction}
       />
     </Route>
   )
@@ -83,6 +86,6 @@ function App() {
       <RouterProvider router={router} />
     </>
   );
-}
+};
 
 export default App;

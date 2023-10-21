@@ -8,21 +8,18 @@ import type { ActionFunction, ActionFunctionArgs } from "react-router";
 import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
 import { createTheme } from '@mui/material';
-import axios, { AxiosResponse, AxiosError } from 'axios';
+import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
 interface authError {
   message?: string,
-  errors: {
-    email: string,
-    password: string,
-  }[]
-}
+  errors: string[]
+};
 
 function EmailSignin() {
   const data = useActionData() as authError;
-  console.log(data)
+  console.log(data);
 
   return (
     <>
@@ -35,17 +32,15 @@ function EmailSignin() {
             Sign in
           </Typography>
           {data && data.errors &&
-            <>
-              <ul className="mt-0">
-                {Object.values(data.errors).map((error: Object) => {
-                  return (
-                    <li key={error.toString()}>
-                      {error.toString()}
-                    </li>
-                  )
-                })}
-              </ul>
-            </>
+            <ul className="mt-0">
+              {Object.values(data.errors).map((error: string) => {
+                return (
+                  <li key={error}>
+                    {error}
+                  </li>
+                )
+              })}
+            </ul>
           }
           <ThemeProvider theme={theme}>
             <TextField
@@ -96,7 +91,7 @@ function EmailSignin() {
         </Form >
       </Box>
     </>
-  )
+  );
 }
 
 export default EmailSignin;
@@ -104,11 +99,17 @@ export default EmailSignin;
 export const authAction: ActionFunction = async ({ request }: ActionFunctionArgs) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
+  // TODO: When backend endpoints are made change the line below
   const response = await axios.get('/');
   console.log(response);
   if (response.status != 200) {
     return response.data;
   }
-  return redirect('/student')
-  // throw json(null, { statusText: "Unexpected error came from server", status: 400 })
-}
+  const token = response.data.token;
+  localStorage.setItem('token', token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + (24 * 7));
+  localStorage.setItem('expiration', expiration.toISOString());
+  localStorage.setItem('user_type', 'student');
+  return redirect('/student');
+};

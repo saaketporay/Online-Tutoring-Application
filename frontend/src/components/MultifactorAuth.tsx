@@ -19,7 +19,7 @@ function MultifactorAuth() {
   ) => {
     e.preventDefault();
     console.log(number);
-  }
+  };
 
   return (
     <>
@@ -57,7 +57,7 @@ function MultifactorAuth() {
         </Box>
       </ThemeProvider>
     </>
-  )
-}
+  );
+};
 
 export default MultifactorAuth;
