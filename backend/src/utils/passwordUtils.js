@@ -7,7 +7,7 @@ const hashPassword = (password) => {
     return bcrypt.hashSync(password, saltRounds);
 };
 
-const comparePasswords = (plainTextPassword, hashedPassword) => {
+const comparePasswords = (plainTextPassword, hashPassword) => {
     return bcrypt.compareSync(plainTextPassword, hashPassword);
 };
 
