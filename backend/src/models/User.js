@@ -8,8 +8,8 @@ const getUserByEmail = async (email) => {
     return rows[0];
 };
 
-const createUser = async (user_id, email, firstname, lastname, password, user_type, total_tutoring_hours) => {
-    const [result] = await pool.query('INSERT INTO users (email, firstname, lastname, password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, ?)', [email, firstname, lastname, password, user_type, total_tutoring_hours]);
+const createUser = async (email, firstname, lastname, password, user_type) => {
+    const [result] = await pool.query('INSERT INTO users (email, firstname, lastname, password) VALUES (?, ?, ?, ?, ?)', [email, firstname, lastname, password, user_type]);
     return result.insertId;
 };
 
