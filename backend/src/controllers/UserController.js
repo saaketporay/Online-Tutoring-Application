@@ -34,6 +34,7 @@
  };
 
  const register = async (req, res) => {
+
     const { email, firstname, lastname, password, user_type } = req.body;
     const hashedPassword = hashPassword(password);
 
@@ -45,6 +46,7 @@
             res.status(400).send('Failed to add User');
         }
     } catch (err) {
+
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
