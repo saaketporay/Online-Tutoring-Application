@@ -4,7 +4,7 @@ import {
   RouterProvider,
   Route
 } from 'react-router-dom';
-import AppLayout from './pages/AppLayout'
+import AppLayout from './components/AppLayout'
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import GeneralSignin from './pages/GeneralSignin';
