@@ -12,19 +12,18 @@
  };
 
  const login = async (req, res) => {
-    const { email, password } = req.body;
+    const { email, hashed_password } = req.body;
 
     try
     {
-        const user = getUserByEmail(email);
-
-        if (!user || !comparePasswords(password, user.password))
+        const user = await getUserByEmail(email);
+        console.log(hashed_password);
+        if (!user || !(await comparePasswords(hashed_password, user.hashed_password)))
         {
             return res.status(400).send("Failed to login. Wrong credentials");
         }
 
-        req.session.userId = user.userId;
-        return res.status(200).send('Login Successful: ?', [req.session.userId]);
+        return res.status(200).send('Login Successful: ');
     }
     catch (err)
     {
@@ -34,28 +33,27 @@
  };
 
  const register = async (req, res) => {
+    const { firstname, lastname, email, password, user_type} = req.body;
 
-    const { email, firstname, lastname, password, user_type } = req.body;
-    const hashedPassword = hashPassword(password);
+    try
+    {
+        const hashedPassword = await hashPassword(password);
+        const userId = await createUser(firstname, lastname, email, hashedPassword, user_type);
+        console.log(userId)
 
-    try {
-        const result = await createUser(email, firstname, lastname, hashedPassword, user_type);
-        if (result === 1) {
-            res.status(200).send('Register Successful');
-        } else {
-            res.status(400).send('Failed to add User');
-        }
-    } catch (err) {
-
+        return res.status(200).send('Register Successful: ');
+    }
+    catch (err)
+    {
         console.error(err);
         res.status(500).send('Internal Server Error');
     }
-};
+ };
 
  module.exports = 
  {
     showLoginForm,
     showRegisterForm,
     login,
-    register
+    register,
  };

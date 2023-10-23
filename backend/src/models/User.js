@@ -4,25 +4,24 @@
 const connection = require('../config/dbConfig')
 
 const getUserByEmail = async (email) => {
-    const [rows] = await connection.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [rows, fields] = await connection.promise().query(`SELECT * FROM Users WHERE email = '${email}';`);
+    console.log(rows[0])
     return rows[0];
 };
 
-function createUser(email, firstname, lastname, password, user_type) {
-    try {
-        console.log(email, firstname, lastname, password, user_type);
-        const query = 'INSERT INTO Users (first_name, last_name, email, hashed_password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, 0)';
-        connection.query(query, [firstname, lastname, email, password, user_type], (error, results) => {
-            if (error) {
-                console.error(error);
-            }
-        });
-        return 1;
-    } catch (err) {
-        console.log(err);
-        return 0;
+const createUser = async (firstname, lastname, email, password, user_type) => {
+    try
+    {
+        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES ('${firstname}', '${lastname}', '${email}', '${password}', '${user_type}');`);
+        await getUserByEmail(email);
+        console.log(email)
+        return result[0];
     }
-}
+    catch (err)
+    {
+        return err;
+    }
+};
 
 module.exports = 
 {
