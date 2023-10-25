@@ -1,16 +1,26 @@
 // functions to intereact with the users table
 
 // config for RDS
-const { pool } = require('../config')
+const connection = require('../config/dbConfig')
 
 const getUserByEmail = async (email) => {
-    const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
+    const [rows, fields] = await connection.promise().query(`SELECT * FROM Users WHERE email = '${email}';`);
+    console.log(rows[0])
     return rows[0];
 };
 
-const createUser = async (user_id, email, firstname, lastname, password, user_type, total_tutoring_hours) => {
-    const [result] = await pool.query('INSERT INTO users (user_id, email, firstname, lastname, password, user_type, total_tutoring_hours) VALUES (?, ?, ?, ?, ?, ?, ?)', [user_id, email, firstname, lastname, password, user_type, total_tutoring_hours]);
-    return result.insertId;
+const createUser = async (firstname, lastname, email, password, user_type) => {
+    try
+    {
+        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES ('${firstname}', '${lastname}', '${email}', '${password}', '${user_type}');`);
+        await getUserByEmail(email);
+        console.log(email)
+        return result[0];
+    }
+    catch (err)
+    {
+        return err;
+    }
 };
 
 module.exports = 
