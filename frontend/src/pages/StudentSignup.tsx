@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Form } from 'react-router-dom';
 import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
 import { useState } from 'react';
@@ -18,16 +18,9 @@ function StudentSignup() {
   const [password, setPassword] = useState<string>('');
   const [phoneNumber, setPhoneNumber] = useState<string>('');
 
-  const formSubmitHandler = (
-    e: React.FormEvent<EventTarget>
-  ) => {
-    e.preventDefault();
-    console.log(firstName, lastName, email, password, phoneNumber);
-  };
-
   return (
     <>
-      <form onSubmit={formSubmitHandler}>
+      <Form method="post">
         <Box className='grid justify-center bg-[#191919]'>
           <Typography
             variant='h4'
@@ -100,7 +93,7 @@ function StudentSignup() {
             </Link>
           </ThemeProvider>
         </Box>
-      </form>
+      </Form>
     </>
   )
 }
