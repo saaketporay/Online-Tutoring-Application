@@ -1,4 +1,3 @@
-import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@emotion/react";
 import { squareButtonTheme, textFieldTheme } from '../theme';

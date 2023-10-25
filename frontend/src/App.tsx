@@ -7,7 +7,7 @@ import {
 import AppLayout from './components/AppLayout'
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
-import GeneralSignin from './pages/GeneralSignin';
+// import GeneralSignin from './pages/GeneralSignin';
 import StudentSignup from './pages/StudentSignup';
 import MeetingScheduler from './pages/MeetingScheduler';
 import EmailSignIn, { authAction } from './pages/EmailSignIn';
@@ -18,7 +18,7 @@ import TutorDashboard from './pages/TutorDashboard';
 import MultifactorAuth from './components/MultifactorAuth';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
-import { studentInfoForm } from './utils/actions';
+import { dashboardLoader, userInfoAction } from './utils/actions';
 import PrivateRoute from './components/PrivateRoute';
 
 const router = createBrowserRouter(
@@ -36,28 +36,6 @@ const router = createBrowserRouter(
       />
       <Route
         path="signin"
-        element={<GeneralSignin />}
-      />
-      <Route
-        path="logout"
-        action={logoutAction}
-      />
-      <Route
-        id="student"
-        action={studentInfoForm}
-      >
-        <Route
-          path="signup"
-          element={<StudentSignup />}
-        />
-        <Route
-          path="student"
-          element={<StudentDashboard />}
-        />
-      </Route>
-      <Route
-        path="signin-email"
-        id="signin-email"
         element={<EmailSignIn />}
         action={authAction}
       />
@@ -67,9 +45,31 @@ const router = createBrowserRouter(
         element={<MultifactorAuth />}
       />
       <Route
-        path="tutor-signup"
-        element={<TutorSignup />}
-      />
+        path="signup"
+      >
+        <Route
+          path="student"
+          element={<StudentSignup />}
+          action={userInfoAction}
+        />
+        <Route
+          path="tutor"
+          element={<TutorSignup />}
+        />
+      </Route>
+      <Route
+        id="dashboard"
+        loader={dashboardLoader}
+      >
+        <Route
+          path="student"
+          element={<StudentDashboard />}
+        />
+        <Route
+          path="tutor"
+          element={<TutorDashboard />}
+        />
+      </Route>
       <Route
         path="success"
         element={<FormSuccess />}
@@ -79,10 +79,6 @@ const router = createBrowserRouter(
         element={<MeetingScheduler />}
       />
       <Route
-        path="tutor"
-        element={<TutorDashboard />}
-      />
-      <Route
         path="logout"
         action={logoutAction}
       />
@@ -90,7 +86,7 @@ const router = createBrowserRouter(
   )
 );
 
-function App() {
+const App = () => {
   return (
     <>
       <RouterProvider router={router} />
