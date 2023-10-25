@@ -33,22 +33,13 @@ function Header() {
           </Link>
           <div className="ms-auto">
             {!signedIn ?
-              <>
-                <Link
-                  to="/signin"
-                  component={RouterLink}
-                  className="no-underline"
-                  color="#F4F4F4">
-                  Sign in
-                </Link>
-                <Link
-                  to="/signup"
-                  component={RouterLink}
-                  className="no-underline mx-6"
-                  color="#F4F4F4">
-                  Sign up
-                </Link>
-              </>
+              <Link
+                to="/signin"
+                component={RouterLink}
+                className="no-underline mr-6"
+                color="#F4F4F4">
+                Sign in
+              </Link>
               :
               <Form
                 action="/logout"
