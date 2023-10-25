@@ -18,6 +18,7 @@ import TutorDashboard from './pages/TutorDashboard';
 import MultifactorAuth from './components/MultifactorAuth';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
+import { studentInfoForm } from './utils/actions';
 import PrivateRoute from './components/PrivateRoute';
 
 const router = createBrowserRouter(
@@ -38,6 +39,23 @@ const router = createBrowserRouter(
         element={<GeneralSignin />}
       />
       <Route
+        path="logout"
+        action={logoutAction}
+      />
+      <Route
+        id="student"
+        action={studentInfoForm}
+      >
+        <Route
+          path="signup"
+          element={<StudentSignup />}
+        />
+        <Route
+          path="student"
+          element={<StudentDashboard />}
+        />
+      </Route>
+      <Route
         path="signin-email"
         id="signin-email"
         element={<EmailSignIn />}
@@ -47,10 +65,6 @@ const router = createBrowserRouter(
         path="signin-email/:tokenId"
         id="mfa-auth"
         element={<MultifactorAuth />}
-      />
-      <Route
-        path="signup"
-        element={<StudentSignup />}
       />
       <Route
         path="tutor-signup"
@@ -63,10 +77,6 @@ const router = createBrowserRouter(
       <Route
         path="new-appt"
         element={<MeetingScheduler />}
-      />
-      <Route
-        path="student"
-        element={<StudentDashboard />}
       />
       <Route
         path="tutor"

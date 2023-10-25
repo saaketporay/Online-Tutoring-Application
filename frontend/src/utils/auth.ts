@@ -30,3 +30,8 @@ export const checkAuthLoader = () => {
   }
   return null;
 };
+
+export const logoutAction = () => {
+  localStorage.removeItem('token');
+  redirect('/')
+}
