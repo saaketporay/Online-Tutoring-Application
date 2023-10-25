@@ -100,10 +100,13 @@ export const authAction: ActionFunction = async ({ request }: ActionFunctionArgs
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
   // TODO: When backend endpoints are made change the line below
-  const response = await axios.get('/');
+  const response = await axios.get('/user/login');
   console.log(response);
   if (response.status != 200) {
-    return response.data;
+    throw json({
+      ...response.data,
+      "status": response.status
+    })
   }
   const token = response.data.token;
   localStorage.setItem('token', token);
