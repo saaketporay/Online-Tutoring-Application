@@ -5,16 +5,18 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node ./src/server.js"
+    "start": "nodemon ./src/server.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "bcrypt": "^5.1.1",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "http": "^0.0.1-security",
-    "mysql2": "^3.6.2"
+    "mysql2": "^3.6.2",
+    "nodemon": "^3.0.1"
   }
 }
