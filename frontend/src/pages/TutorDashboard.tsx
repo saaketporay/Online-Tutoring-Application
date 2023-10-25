@@ -38,7 +38,7 @@ function TutorDashboard() {
       <Box className="grid justify-items-center bg-[#191919]">
         <ThemeProvider theme={roundButtonTheme}>
           <Button
-            className='my-8 py-3 px-24'
+            className='my-8 py-3 px-28'
             sx={{
               backgroundColor: '#BE185D',
               "&:hover": {
@@ -53,7 +53,7 @@ function TutorDashboard() {
               color="#F4F4F4"
             >
               <Typography className="font-bold">
-                Edit schedule
+                Edit Profile
               </Typography>
             </Link>
           </Button>
