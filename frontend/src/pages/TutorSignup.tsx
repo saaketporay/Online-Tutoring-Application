@@ -13,6 +13,7 @@ import { radioButtonGroupTheme, autocompleteTheme } from '../theme';
 import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
+import GeneralSignupInfo from '../components/GeneralSignupInfo';
 
 import { useState } from 'react';
 
@@ -94,14 +95,15 @@ const TutorSignup = () => {
   };
 
   return (
-    <FormControl className='grid place-content-center bg-[#191919]'>
+    <FormControl className='grid justify-items-center bg-[#191919]'>
       <ThemeProvider theme={theme}>
         <Typography
           variant='h4'
           align='center'
-          className='mt-24'>
+          className='mt-24 mb-20'>
           Please enter the following information
         </Typography>
+        <GeneralSignupInfo />
         <Stack
           className='mt-20 mb-24'
           spacing={16}>

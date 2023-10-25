@@ -1,90 +1,25 @@
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import TextField from '@mui/material/TextField';
+import { Form } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink } from "react-router-dom";
+import GeneralSignupInfo from '../components/GeneralSignupInfo';
+import { squareButtonTheme } from '../theme';
 import { ThemeProvider } from '@emotion/react';
-import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
-import { useState } from 'react';
-import { createTheme } from '@mui/material';
 
-const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
-
-function StudentSignup() {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
-
-  const formSubmitHandler = (
-    e: React.FormEvent<EventTarget>
-  ) => {
-    e.preventDefault();
-    console.log(firstName, lastName, email, password, phoneNumber);
-  };
-
+const StudentSignup = () => {
   return (
     <>
-      <form onSubmit={formSubmitHandler}>
+      <Form method="post">
         <Box className='grid justify-center bg-[#191919]'>
           <Typography
             variant='h4'
             className='mt-8 mb-10 justify-self-center'>
             Sign up
           </Typography>
-          <ThemeProvider theme={theme}>
-            <TextField
-              required
-              id='first-name'
-              name='first-name'
-              label='Required'
-              placeholder='First Name'
-              autoComplete='off'
-              className='w-[410px] mb-10'
-              onChange={(e) => setFirstName(e.target.value)}
-            />
-            <TextField
-              required
-              id='last-name'
-              name='last-name'
-              label='Required'
-              placeholder='Last Name'
-              autoComplete='off'
-              className='w-[410px] mb-10'
-              onChange={(e) => setLastName(e.target.value)}
-            />
-            <TextField
-              required
-              id='email'
-              name='email'
-              label='Required'
-              placeholder='Email Address'
-              autoComplete='off'
-              className='w-[410px] mb-10'
-              onChange={(e) => setEmail(e.target.value)}
-            />
-            <TextField
-              required
-              id='phone-number'
-              name='phone-number'
-              label='Required'
-              placeholder='Phone Number'
-              type='tel'
-              className='w-[410px] mb-10'
-              onChange={(e) => setPhoneNumber(e.target.value)}
-            />
-            <TextField
-              required
-              id='password'
-              name='password'
-              label='Required'
-              placeholder='Password'
-              type='password'
-              className='w-[410px] mb-4'
-              onChange={(e) => setPassword(e.target.value)}
-            />
+          <GeneralSignupInfo />
+          <ThemeProvider theme={squareButtonTheme}>
             <Button
               className='mt-4 py-2'
               type='submit'>
@@ -100,7 +35,7 @@ function StudentSignup() {
             </Link>
           </ThemeProvider>
         </Box>
-      </form>
+      </Form>
     </>
   )
 }

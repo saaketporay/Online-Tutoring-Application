@@ -6,7 +6,7 @@ import { roundButtonTheme } from '../theme';
 import { ThemeProvider } from '@emotion/react';
 import { Link } from 'react-router-dom'
 
-function Home() {
+const Home = () => {
   return (
     <>
       <Box className="grid justify-items-center bg-[#191919]">
@@ -16,7 +16,7 @@ function Home() {
         <Stack spacing={3} direction={'row'}>
           <ThemeProvider theme={roundButtonTheme}>
             <Button
-              to="/signup"
+              to="/signup/student"
               component={Link}
               sx={{
                 backgroundColor: "#16A34A"
@@ -28,7 +28,7 @@ function Home() {
             <Typography variant="h6" className="mt-2">or</Typography>
             <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6" />
             <Button
-              to="/signup"
+              to="/signup/student"
               component={Link}
               sx={{
                 backgroundColor: "#6D28D9"
