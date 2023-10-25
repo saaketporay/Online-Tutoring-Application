@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import { ThemeProvider } from '@emotion/react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 
 const DUMMY_STUDENT_INFO = {
@@ -11,6 +11,9 @@ const DUMMY_STUDENT_INFO = {
   last_name: "Smith",
   email: "johnsmith@gmail.com",
   total_meeting_time: "32 h",
+  avg_meeting_time_per_course: "1.5 h",
+  avg_meeting_time_per_user: "8 h",
+  monthly_meeting_time: "12 h",
   avg_monthly_meeting_time: "16 h",
   avg_weekly_meeting_time: "4h",
   user_type: "student",
@@ -33,7 +36,7 @@ const DUMMY_STUDENT_INFO = {
       id: '2'
     }
   ]
-}
+};
 
 function StudentDashboard() {
   return (
@@ -58,7 +61,7 @@ function StudentDashboard() {
         <Dashboard {...DUMMY_STUDENT_INFO} />
       </Box>
     </>
-  )
-}
+  );
+};
 
 export default StudentDashboard;

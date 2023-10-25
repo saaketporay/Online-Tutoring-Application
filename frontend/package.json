@@ -13,6 +13,7 @@
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.7",
+    "axios": "^1.5.1",
     "core-js": "^3.33.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
