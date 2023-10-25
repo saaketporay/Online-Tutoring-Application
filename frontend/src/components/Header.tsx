@@ -36,8 +36,9 @@ function Header() {
               <Link
                 to="/signin"
                 component={RouterLink}
-                className="no-underline mr-6"
-                color="#F4F4F4">
+                className="no-underline mr-6 hover:underline"
+                color="#F4F4F4"
+              >
                 Sign in
               </Link>
               :
