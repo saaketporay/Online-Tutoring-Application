@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { Link as RouterLink, Form, json, redirect, useActionData } from 'react-router-dom';
-import type { ActionFunction, ActionFunctionArgs } from "react-router";
+import type { ActionFunction } from "react-router";
 import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
 import { createTheme } from '@mui/material';
@@ -96,11 +96,10 @@ function EmailSignin() {
 
 export default EmailSignin;
 
-export const authAction: ActionFunction = async ({ request }: ActionFunctionArgs) => {
+export const authAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
-  // TODO: When backend endpoints are made change the line below
-  const response = await axios.get('/user/login');
+  const response = await axios.post('/user/login', userInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
