@@ -14,12 +14,13 @@
     "@emotion/styled": "^11.11.0",
     "@mui/material": "^5.14.7",
     "axios": "^1.5.1",
+    "core-js": "^3.33.1",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.15.0",
-    "react-schedule-selector": "^2.0.0",
+    "react-schedule-selector": "^3.0.2",
     "sort-by": "^0.0.2",
     "vite-plugin-svgr": "^3.2.0"
   },
@@ -39,5 +40,10 @@
     "tailwindcss": "^3.3.3",
     "typescript": "^5.0.2",
     "vite": "^4.4.0"
+  },
+  "overrides": {
+    "src": {
+      "underscore": "^1.12.0"
+    }
   }
 }

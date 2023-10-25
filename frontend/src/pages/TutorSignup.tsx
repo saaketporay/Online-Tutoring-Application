@@ -12,6 +12,7 @@ import FormControl from '@mui/material/FormControl';
 import { radioButtonGroupTheme, autocompleteTheme } from '../theme';
 import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
+import Slider from '@mui/material/Slider';
 
 import { useState } from 'react';
 
@@ -27,19 +28,10 @@ const theme = createTheme(radioButtonGroupTheme, autocompleteTheme, {
         },
       },
     },
-    // Custom TextField number input styles
-    MuiTextField: {
+    MuiSlider: {
       styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-root input[type="number"] + fieldset': {
-            borderColor: '#404040',
-          },
-          '& .MuiOutlinedInput-root input[type="number"]:hover + fieldset': {
-            borderColor: '#f5f5f5',
-          },
-          '& .MuiOutlinedInput-root input[type="number"]:focus + fieldset': {
-            borderColor: '#f5f5f5',
-          },
+        markLabel: {
+          color: '#f5f5f5',
         },
       },
     },
@@ -64,8 +56,7 @@ const TutorSignup = () => {
   const [aboutMe, setAboutMe] = useState<string>('');
   const [courses, setCourses] = useState<{ label: string }[]>([]);
   const [schedule, setSchedule] = useState<Array<Date>>([]);
-  const [startHr, setStartHr] = useState<number>(9);
-  const [endHr, setEndHr] = useState<number>(17);
+  const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
 
   const submitHandler = () => {
@@ -73,6 +64,33 @@ const TutorSignup = () => {
     setAboutMe('');
     setCourses([]);
     setSchedule([]);
+  };
+
+  const marks = [];
+  for (let i = 0; i <= 24; i++) {
+    if (i % 2 == 1) {
+      continue;
+    }
+    marks.push({
+      value: i,
+      label: i != 0 ? `${i <= 12 ? i : i - 12}${i < 12 ? 'am' : 'pm'}` : '12am',
+    });
+  }
+
+  const timeRangeSliderChangeHandler = (
+    e: Event,
+    newValue: number | number[],
+    activeThumb: number
+  ) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (activeThumb === 0) {
+      setTimeRange([Math.min(newValue[0], timeRange[1] - 1), timeRange[1]]);
+    } else {
+      setTimeRange([timeRange[0], Math.max(newValue[1], timeRange[0] + 1)]);
+    }
   };
 
   return (
@@ -170,8 +188,7 @@ const TutorSignup = () => {
               align='center'>
               Select your available times
             </Typography>
-            <Box sx={{ display: 'flex', justifyContent: 'space-evenly' }}>
-              <TextField
+            {/* <TextField
                 id='startingHour'
                 label='Starting Hour'
                 type='number'
@@ -206,12 +223,42 @@ const TutorSignup = () => {
                 onChange={(e) => {
                   setHrChunks(+e.target.value);
                 }}
+              /> */}
+            <Box>
+              <Typography gutterBottom>Time range</Typography>
+              <Slider
+                aria-label='Time range'
+                getAriaValueText={(value: number) => value.toString()}
+                value={timeRange}
+                onChange={timeRangeSliderChangeHandler}
+                valueLabelDisplay='auto'
+                step={1}
+                marks={marks}
+                min={0}
+                max={24}
+                disableSwap
+              />
+            </Box>
+            <Box>
+              <Typography>Hourly chunks</Typography>
+              <Slider
+                aria-label='Hourly chunks'
+                getAriaValueText={(value: number) => value.toString()}
+                value={hrChunks}
+                onChange={(e, v) => {
+                  setHrChunks(+v);
+                }}
+                valueLabelDisplay='auto'
+                step={1}
+                min={1}
+                max={6}
+                marks
               />
             </Box>
             <ScheduleSelector
               selection={schedule}
-              minTime={startHr}
-              maxTime={endHr}
+              minTime={timeRange[0]}
+              maxTime={timeRange[1]}
               hourlyChunks={hrChunks}
               startDate={getLastSunday()}
               dateFormat='ddd'

@@ -125,9 +125,10 @@ export const autocompleteTheme = createTheme({
     MuiAutocomplete: {
       styleOverrides: {
         root: {
-          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root': {
-            color: whiteSmoke,
-          },
+          '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
+            {
+              color: whiteSmoke,
+            },
         },
         input: {
           color: whiteSmoke,
@@ -140,6 +141,10 @@ export const autocompleteTheme = createTheme({
         },
         noOptions: {
           color: whiteSmoke,
+        },
+        tag: {
+          color: whiteSmoke,
+          backgroundColor: neutral700,
         },
       },
     },
@@ -200,6 +205,26 @@ export const cardTheme = createTheme({
         root: {
           background: charlestonGreen,
           color: whiteSmoke,
+        },
+      },
+    },
+  },
+});
+
+export const numberInputTheme = createTheme({
+  components: {
+    MuiTextField: {
+      styleOverrides: {
+        root: {
+          '& .MuiOutlinedInput-root input[type="number"] + fieldset': {
+            borderColor: '#404040',
+          },
+          '& .MuiOutlinedInput-root input[type="number"]:hover + fieldset': {
+            borderColor: '#f5f5f5',
+          },
+          '& .MuiOutlinedInput-root input[type="number"]:focus + fieldset': {
+            borderColor: '#f5f5f5',
+          },
         },
       },
     },
