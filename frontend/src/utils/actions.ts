@@ -12,17 +12,32 @@ export const userInfoAction: ActionFunction = async ({request, params}) => {
     method: method,
     url: url,
     data: studentInfo
-  })
+  });
   console.log(response);
   if (response.status != 200) {
     throw json({
       ...response.data,
-      "status": response.status
-    })
+      status: response.status
+    });
   }
-  return redirect("/student")
+  return redirect("/dashboard");
 };
 
 export const dashboardLoader: LoaderFunction = async () => {
   return null;
+}
+
+export const deleteAppointmentAction: ActionFunction = async ({request}) => {
+  const data = await request.formData();
+  const appointmentInfo = Object.fromEntries(data);
+  const response = await axios.delete('/appointment/delete', appointmentInfo)
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      "status": response.status
+    });
+  }
+  return {
+    errors: true
+  };
 }
