@@ -16,7 +16,6 @@ import MeetingScheduler from './pages/MeetingScheduler';
 import MultifactorAuth from './components/MultifactorAuth';
 import StudentEditProfileModal from './components/StudentEditProfileModal';
 import DeleteAppointmentModal from './components/DeleteAppointmentModal';
-import PrivateRoute from './components/PrivateRoute';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
 import { dashboardLoader, deleteAppointmentAction, userInfoAction } from './utils/actions';
