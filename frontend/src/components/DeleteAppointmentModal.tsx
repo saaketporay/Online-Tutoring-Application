@@ -4,7 +4,8 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
 import { Form, useActionData, useOutletContext, json, redirect, ActionFunction } from 'react-router-dom';
-import { useAppSelector } from '../hooks';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { toggleModal, clearAppointmentId } from "../features/modalSlice";
 import axios from 'axios';
 
 const modalStyle = {
@@ -22,6 +23,8 @@ const modalStyle = {
 const DeleteAppointmentModal = () => {
   const handleModalClose = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);
+  const appointmentId = useAppSelector((state) => state.modal.appointmentId);
+  
 
   return (
     <>
@@ -65,5 +68,7 @@ export const deleteAppointmentAction: ActionFunction = async ({request}) => {
       "status": response.status
     });
   }
+  const dispatch = useAppDispatch();
+  dispatch(clearAppointmentId());
   return redirect("/dashboard");
 };

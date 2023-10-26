@@ -26,6 +26,6 @@ export const modalSlice = createSlice({
   },
 });
 
-export const { toggleModal } = modalSlice.actions;
+export const { toggleModal, setAppointmentId, clearAppointmentId } = modalSlice.actions;
 
 export default modalSlice.reducer;

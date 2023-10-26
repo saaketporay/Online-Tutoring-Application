@@ -20,7 +20,6 @@ const modalStyle = {
   p: 4,
 };
 
-
 const StudentEditProfileModal = () => {
   const handleModalClose = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);

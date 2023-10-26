@@ -12,7 +12,7 @@ import { useState } from 'react';
 import { createTheme } from '@mui/material';
 import { useActionData, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal } from "../features/modalSlice";
+import { toggleModal, setAppointmentId } from "../features/modalSlice";
 
 type userProps = {
   first_name: string,
@@ -218,7 +218,10 @@ const Dashboard = ({
                           <Button
                             component={Link}
                             to={`delete-appt/${appt.id}`}
-                            onClick={() => dispatch(toggleModal())}
+                            onClick={() => {
+                              dispatch(setAppointmentId(appt.id));
+                              dispatch(toggleModal());
+                            }}
                             sx={{
                               "&:hover": {
                                 backgroundColor: 'transparent'

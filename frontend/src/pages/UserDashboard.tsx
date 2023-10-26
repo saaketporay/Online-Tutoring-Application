@@ -5,7 +5,6 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { ThemeProvider } from '@emotion/react';
 import { Link as RouterLink, LoaderFunction, Outlet, useLoaderData, useSearchParams, useNavigate, json } from 'react-router-dom';
-import type { ActionFunction } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks';
