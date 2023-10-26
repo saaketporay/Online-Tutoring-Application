@@ -7,25 +7,27 @@ import {
 import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
-// import GeneralSignin from './pages/GeneralSignin';
-import StudentSignup from './pages/StudentSignup';
-import MeetingScheduler, {
-  loader as meetingSchedulerLoader,
-  action as meetingSchedulerAction,
-} from './pages/MeetingScheduler';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import FormSuccess from './pages/FormSuccess';
+import EmailSignIn, { authAction } from './pages/EmailSignIn';
+import MultifactorAuth from './components/MultifactorAuth';
+import StudentSignup, { userSignupAction } from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
   action as tutorSignupAction,
 } from './pages/TutorSignup';
-import StudentDashboard from './pages/StudentDashboard';
-import TutorDashboard from './pages/TutorDashboard';
-import MultifactorAuth from './components/MultifactorAuth';
+import MeetingScheduler, {
+  loader as meetingSchedulerLoader,
+  action as meetingSchedulerAction,
+} from './pages/MeetingScheduler';
+import UserDashboard, { dashboardLoader } from './pages/UserDashboard';
+import StudentEditProfileModal, { studentEditProfileAction } from './components/StudentEditProfileModal';
+import DeleteAppointmentModal, { deleteAppointmentAction } from './components/DeleteAppointmentModal';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
-import { dashboardLoader, userInfoAction } from './utils/actions';
-import PrivateRoute from './components/PrivateRoute';
+import EditTutorProfile, {
+  loader as editTutorProfileLoader,
+  action as editTutorProfileAction,
+} from './pages/EditTutorProfile';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -34,7 +36,8 @@ const router = createBrowserRouter(
       element={<AppLayout />}
       errorElement={<ErrorPage />}
       id='root'
-      loader={tokenLoader}>
+      loader={tokenLoader}
+    >
       <Route
         index={true}
         element={<Home />}
@@ -53,7 +56,7 @@ const router = createBrowserRouter(
         <Route
           path='student'
           element={<StudentSignup />}
-          action={userInfoAction}
+          action={userSignupAction}
         />
         <Route
           path='tutor'
@@ -63,26 +66,37 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route
+        path="edit-tutor-profile"
+        element={<EditTutorProfile />}
+        loader={editTutorProfileLoader}
+        action={editTutorProfileAction}
+      />
+      <Route
         id='dashboard'
-        loader={dashboardLoader}>
+        path='dashboard'
+        element={<UserDashboard />}
+        loader={dashboardLoader}
+      >
         <Route
-          path='student'
-          element={<StudentDashboard />}
+          path="edit-profile"
+          element={<StudentEditProfileModal />}
+          action={studentEditProfileAction}
         />
         <Route
-          path='tutor'
-          element={<TutorDashboard />}
+          path="delete-appt/:apptId"
+          element={<DeleteAppointmentModal />}
+          action={deleteAppointmentAction}
         />
       </Route>
-      <Route
-        path='success'
-        element={<FormSuccess />}
-      />
       <Route
         path='new-appt'
         element={<MeetingScheduler />}
         loader={meetingSchedulerLoader}
         action={meetingSchedulerAction}
+      />
+      <Route
+        path='success'
+        element={<FormSuccess />}
       />
       <Route
         path='logout'

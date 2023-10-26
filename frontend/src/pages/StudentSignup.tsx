@@ -7,6 +7,9 @@ import { Link as RouterLink } from "react-router-dom";
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import { squareButtonTheme } from '../theme';
 import { ThemeProvider } from '@emotion/react';
+import type { ActionFunction } from 'react-router-dom';
+import { redirect, json } from 'react-router-dom';
+import axios from 'axios';
 
 const StudentSignup = () => {
   return (
@@ -37,7 +40,22 @@ const StudentSignup = () => {
         </Box>
       </Form>
     </>
-  )
-}
+  );
+};
 
 export default StudentSignup;
+
+export const userSignupAction: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const studentInfo = Object.fromEntries(data);
+  console.log(studentInfo);
+  const response = await axios.post('/user/register', studentInfo);
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  return redirect("/dashboard");
+};

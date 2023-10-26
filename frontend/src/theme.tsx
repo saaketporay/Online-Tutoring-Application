@@ -1,8 +1,8 @@
 import { createTheme } from '@mui/material/';
 
-const whiteSmoke = '#F4F4F4';
-const neutral700 = '#404040';
+const neutral100 = '#F5F5F5';
 const neutral400 = '#A3A3A3';
+const neutral700 = '#404040';
 const emerald500 = '#10B981';
 // const eerieBlack = "#191919";
 const charlestonGreen = '#2D2D2D';
@@ -10,7 +10,7 @@ const charlestonGreen = '#2D2D2D';
 export const globalTheme = createTheme({
   palette: {
     text: {
-      primary: whiteSmoke,
+      primary: neutral100,
     },
   },
 });
@@ -54,7 +54,7 @@ export const textFieldTheme = createTheme({
             color: neutral400,
           },
           '& .MuiInputBase-root': {
-            color: whiteSmoke,
+            color: neutral100,
           },
         },
       },
@@ -105,7 +105,7 @@ export const squareButtonTheme = createTheme({
     MuiButton: {
       styleOverrides: {
         root: {
-          color: whiteSmoke,
+          color: neutral100,
           background: emerald500,
           '&:hover': {
             // Prevents default MUI button behavior
@@ -127,23 +127,23 @@ export const autocompleteTheme = createTheme({
         root: {
           '& .MuiAutocomplete-endAdornment .MuiButtonBase-root .MuiSvgIcon-root':
             {
-              color: whiteSmoke,
+              color: neutral100,
             },
         },
         input: {
-          color: whiteSmoke,
+          color: neutral100,
         },
         paper: {
           backgroundColor: neutral700,
         },
         option: {
-          color: whiteSmoke,
+          color: neutral100,
         },
         noOptions: {
-          color: whiteSmoke,
+          color: neutral100,
         },
         tag: {
-          color: whiteSmoke,
+          color: neutral100,
           backgroundColor: neutral700,
         },
       },
@@ -204,7 +204,7 @@ export const cardTheme = createTheme({
       styleOverrides: {
         root: {
           background: charlestonGreen,
-          color: whiteSmoke,
+          color: neutral100,
         },
       },
     },
