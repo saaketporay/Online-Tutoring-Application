@@ -17,7 +17,7 @@ interface authError {
   errors: string[]
 };
 
-function EmailSignin() {
+const EmailSignin = () => {
   const data = useActionData() as authError;
   console.log(data);
 
@@ -104,8 +104,8 @@ export const authAction: ActionFunction = async ({ request }) => {
   if (response.status != 200) {
     throw json({
       ...response.data,
-      "status": response.status
-    })
+      status: response.status
+    });
   }
   const token = response.data.token;
   localStorage.setItem('token', token);
@@ -113,5 +113,5 @@ export const authAction: ActionFunction = async ({ request }) => {
   expiration.setHours(expiration.getHours() + (24 * 7));
   localStorage.setItem('expiration', expiration.toISOString());
   localStorage.setItem('user_type', 'student');
-  return redirect('/student');
+  return redirect('/dashboard');
 };

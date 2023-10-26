@@ -28,7 +28,7 @@ const Home = () => {
             <Typography variant="h6" className="mt-2">or</Typography>
             <div className="w-[72px] h-[1px] bg-[#F4F4F4] mt-6" />
             <Button
-              to="/signup/student"
+              to="/signup/tutor"
               component={Link}
               sx={{
                 backgroundColor: "#6D28D9"

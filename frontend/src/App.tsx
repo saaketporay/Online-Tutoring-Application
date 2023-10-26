@@ -7,19 +7,20 @@ import {
 import AppLayout from './components/AppLayout'
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
-// import GeneralSignin from './pages/GeneralSignin';
-import StudentSignup from './pages/StudentSignup';
-import MeetingScheduler from './pages/MeetingScheduler';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import FormSuccess from './pages/FormSuccess';
+// import GeneralSignin from './pages/GeneralSignin';
+import EmailSignIn, { authAction } from './pages/EmailSignIn';
+import StudentSignup from './pages/StudentSignup';
 import TutorSignup from './pages/TutorSignup';
-import StudentDashboard from './pages/StudentDashboard';
-import TutorDashboard from './pages/TutorDashboard';
+import UserDashboard from './pages/UserDashboard';
+import MeetingScheduler from './pages/MeetingScheduler';
 import MultifactorAuth from './components/MultifactorAuth';
+import StudentEditProfileModal from './components/StudentEditProfileModal';
+import DeleteAppointmentModal from './components/DeleteAppointmentModal';
+import PrivateRoute from './components/PrivateRoute';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
-import { dashboardLoader, userInfoAction } from './utils/actions';
-import PrivateRoute from './components/PrivateRoute';
+import { dashboardLoader, deleteAppointmentAction, userInfoAction } from './utils/actions';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -55,19 +56,24 @@ const router = createBrowserRouter(
         <Route
           path="tutor"
           element={<TutorSignup />}
+          action={userInfoAction}
         />
       </Route>
       <Route
         id="dashboard"
+        path="dashboard"
+        element={<UserDashboard />}
         loader={dashboardLoader}
       >
         <Route
-          path="student"
-          element={<StudentDashboard />}
+          path="edit-profile"
+          element={<StudentEditProfileModal />}
+          action={userInfoAction}
         />
         <Route
-          path="tutor"
-          element={<TutorDashboard />}
+          path="delete-appt/:apptId"
+          element={<DeleteAppointmentModal />}
+          action={deleteAppointmentAction}
         />
       </Route>
       <Route
