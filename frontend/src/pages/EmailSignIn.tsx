@@ -12,7 +12,7 @@ import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
-interface authError {
+type authError = {
   message?: string,
   errors: string[]
 };
@@ -108,6 +108,7 @@ export const authAction: ActionFunction = async ({ request }) => {
     });
   }
   const token = response.data.token;
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   localStorage.setItem('token', token);
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + (24 * 7));
