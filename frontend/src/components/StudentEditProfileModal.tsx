@@ -1,18 +1,12 @@
-import { cardTheme, textFieldTheme } from '../theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import SvgIcon from '@mui/material/SvgIcon'
 import Stack from '@mui/material/Stack'
-import { ThemeProvider } from '@emotion/react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
-import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
-import { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { TextField, createTheme } from '@mui/material';
-import { Form, redirect, useActionData, useLoaderData } from 'react-router-dom';
+import { TextField } from '@mui/material';
+import { ActionFunction, Form, useActionData, useLoaderData, useOutletContext, json, redirect } from 'react-router-dom';
+import { useAppSelector } from '../hooks';
+import axios from 'axios';
 
 const modalStyle = {
   position: 'absolute',
@@ -26,28 +20,18 @@ const modalStyle = {
   p: 4,
 };
 
-interface editProfileModalProps {
-  first_name: string,
-  last_name: string,
-  email: string,
-  showEditProfileModal: boolean,
-  onClose: () => void,
-  formHandler: VoidFunction
-}
 
 const StudentEditProfileModal = () => {
-  const loaderData = useLoaderData();
-  let open = true
+  const handleModalClose = useOutletContext() as VoidFunction;
+  const showModal = useAppSelector((state) => state.modal.showModal);
 
   return (
     <>
       <Modal
-        open={open}
-        onClose={() => {
-          open = false;
-        }}
-      // aria-labeledby="edit-profile-title"
-      // aria-describedby="edit-profile-description"
+        open={showModal}
+        onClose={handleModalClose}
+        aria-label="edit-profile-title"
+        aria-describedby="edit-profile-description"
       >
         <Box sx={modalStyle}>
           <Form method="patch">
@@ -109,7 +93,21 @@ const StudentEditProfileModal = () => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default StudentEditProfileModal;
+
+export const studentEditProfileAction: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const editProfileInfo = Object.fromEntries(data);
+  console.log(editProfileInfo);
+  const response = await axios.patch('/user/info', editProfileInfo);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status
+    });
+  }
+  return redirect('/dashboard');
+};

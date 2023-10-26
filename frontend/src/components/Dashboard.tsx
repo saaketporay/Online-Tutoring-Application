@@ -1,6 +1,5 @@
 import { cardTheme, textFieldTheme } from '../theme';
 import Typography from '@mui/material/Typography';
-import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon'
 import Stack from '@mui/material/Stack'
@@ -10,23 +9,12 @@ import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { useState } from 'react';
-import Modal from '@mui/material/Modal';
-import { TextField, createTheme } from '@mui/material';
-import { Form, useActionData, Link } from 'react-router-dom';
+import { createTheme } from '@mui/material';
+import { useActionData, Link } from 'react-router-dom';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { toggleModal } from "../features/modalSlice";
 
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: '#191919',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
-
-interface userProps {
+type userProps = {
   first_name: string,
   last_name: string,
   email: string,
@@ -45,8 +33,8 @@ interface userProps {
     day: string,
     time: string,
     id: string
-  }[]
-}
+  }[],
+};
 
 const dashboardTheme = createTheme(cardTheme, textFieldTheme, {
   components: {
@@ -63,7 +51,7 @@ const dashboardTheme = createTheme(cardTheme, textFieldTheme, {
   }
 });
 
-interface modalResponse {
+type modalResponse = {
   errors: boolean | string[]
 };
 
@@ -78,20 +66,15 @@ const Dashboard = ({
   avg_monthly_meeting_time,
   avg_weekly_meeting_time,
   user_type,
-  user_id,
-  appointments
+  appointments,
 }: userProps) => {
-  const [editProfileModal, setEditProfileModal] = useState<boolean>(false);
-  
-  const [deleteApptModal, setDeleteApptModal] = useState<boolean>(false);
+  const showModal = useAppSelector((state) => state.modal.showModal);
+  console.log("From dashboard: ", showModal);
+  const dispatch = useAppDispatch();
 
   const actionData = useActionData() as modalResponse;
   if (actionData?.errors == false) {
-    setEditProfileModal(false);
-  }
-
-  const editProfileSubmissionHandler = () => {
-    
+    // setEditProfileModal(false);
   }
 
   return (
@@ -129,6 +112,7 @@ const Dashboard = ({
                       className="mt-6 px-16"
                       component={Link}
                       to="edit-profile"
+                      onClick={() => dispatch(toggleModal())}
                       sx={{
                         backgroundColor: '#16653480',
                         textTransform: 'none',
@@ -234,6 +218,7 @@ const Dashboard = ({
                           <Button
                             component={Link}
                             to={`delete-appt/${appt.id}`}
+                            onClick={() => dispatch(toggleModal())}
                             sx={{
                               "&:hover": {
                                 backgroundColor: 'transparent'
@@ -258,7 +243,7 @@ const Dashboard = ({
         </Stack>
       </ThemeProvider >
     </>
-  )
-}
+  );
+};
 
 export default Dashboard;

@@ -46,26 +46,15 @@ function Header() {
           </Link>
           <div className='ms-auto'>
             {!signedIn ? (
-              <>
-                <NavLink
-                  to='/signin'
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'text-yellow-300 no-underline mr-6 hover:underline'
-                      : 'text-slate-100 no-underline mr-6 hover:underline'
-                  }>
-                  Sign in
-                </NavLink>
-                <NavLink
-                  to='/signup/student'
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'text-yellow-300 no-underline mr-6 hover:underline'
-                      : 'text-slate-100 no-underline mr-6 hover:underline'
-                  }>
-                  Sign up
-                </NavLink>
-              </>
+              <NavLink
+                to='/signin'
+                className={({ isActive }) =>
+                  isActive
+                    ? 'text-yellow-300 no-underline mr-6 hover:underline'
+                    : 'text-slate-100 no-underline mr-6 hover:underline'
+                }>
+                Sign in
+              </NavLink>
             ) : (
               <Button
                 onClick={() => {

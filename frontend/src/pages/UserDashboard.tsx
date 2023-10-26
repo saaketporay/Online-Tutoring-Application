@@ -4,9 +4,13 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { ThemeProvider } from '@emotion/react';
-import { Link as RouterLink, LoaderFunction, Outlet, useLoaderData, useSearchParams } from 'react-router-dom';
+import { Link as RouterLink, LoaderFunction, Outlet, useLoaderData, useSearchParams, useNavigate, json } from 'react-router-dom';
+import type { ActionFunction } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
+import { useAppDispatch, useAppSelector } from '../hooks';
+import { toggleModal } from "../features/modalSlice";
+import axios from 'axios';
 
 const DUMMY_STUDENT_INFO = {
   first_name: "John",
@@ -64,10 +68,6 @@ const DUMMY_TUTOR_INFO = {
   ]
 };
 
-interface dashboardParams {
-  user_type: "student" | "tutor";
-};
-
 const theme = createTheme(roundButtonTheme, textFieldTheme, {
   components: {
     MuiOutlinedInput: {
@@ -87,11 +87,19 @@ const UserDashboard = () => {
   const loaderData = useLoaderData();
   const [searchParams] = useSearchParams();
 
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
+
+  const handleModalClose = () => {
+    dispatch(toggleModal());
+    navigate('/dashboard');
+  };
+
   return (
     <>
       <Box className="grid justify-items-center bg-[#191919]">
         <ThemeProvider theme={theme}>
-          <Outlet />
+          <Outlet context={handleModalClose} />
           {searchParams.get('user_type') != "student" ? // temporary, this will be provided by loaderData when backend endpoints are ready
             <Button
               to='/new-appt'
@@ -137,11 +145,18 @@ const UserDashboard = () => {
         }
       </Box>
     </>
-  )
-}
+  );
+};
 
 export default UserDashboard;
 
-export const userInfoLoader: LoaderFunction = async () => {
-
+export const dashboardLoader: LoaderFunction = async () => {
+  const response = await axios.get('/user/info')
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.data
+    });
+  }
+  return response.data;
 };

@@ -1,18 +1,11 @@
-import { cardTheme, textFieldTheme } from '../theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
-import SvgIcon from '@mui/material/SvgIcon'
 import Stack from '@mui/material/Stack'
-import { ThemeProvider } from '@emotion/react';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Avatar from '@mui/material/Avatar';
-import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
-import { useState } from 'react';
 import Modal from '@mui/material/Modal';
-import { TextField, createTheme } from '@mui/material';
-import { Form, redirect, useActionData, useLoaderData } from 'react-router-dom';
+import { Form, useActionData, useOutletContext, json, redirect, ActionFunction } from 'react-router-dom';
+import { useAppSelector } from '../hooks';
+import axios from 'axios';
 
 const modalStyle = {
   position: 'absolute',
@@ -27,16 +20,18 @@ const modalStyle = {
 };
 
 const DeleteAppointmentModal = () => {
-  
+  const handleModalClose = useOutletContext() as VoidFunction;
+  const showModal = useAppSelector((state) => state.modal.showModal);
+
   return (
     <>
       <Modal
-        open={true}
-        // onClose={() => setDeleteApptModal(false)}
-        aria-labeledby="delete-appt-title"
+        open={showModal}
+        onClose={handleModalClose}
+        aria-label="delete-appt-title"
         aria-describedby="delete-appt-description">
         <Box sx={modalStyle} className='flex'>
-          <Form method="delete">
+          <Form method="delete" action={`/appointment/${'hi'}`}>
             <Stack direction={'column'} spacing={2}>
               <Typography id="delete-appt-title" variant="h5">
                 Are you sure you want to cancel this appointment?
@@ -55,7 +50,20 @@ const DeleteAppointmentModal = () => {
         </Box>
       </Modal>
     </>
-  )
-}
+  );
+};
 
 export default DeleteAppointmentModal;
+
+export const deleteAppointmentAction: ActionFunction = async ({request}) => {
+  const data = await request.formData();
+  const appointmentInfo = Object.fromEntries(data);
+  const response = await axios.delete('/appointment/delete', appointmentInfo);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      "status": response.status
+    });
+  }
+  return redirect("/dashboard");
+};

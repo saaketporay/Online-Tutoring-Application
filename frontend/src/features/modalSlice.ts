@@ -1,23 +1,31 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface ModalState {
-  value: boolean,
+  showModal: boolean,
+  appointmentId: string | undefined,
 };
 
 const initialState: ModalState = {
-  value: false
-}
+  showModal: false,
+  appointmentId: undefined,
+};
 
 export const modalSlice = createSlice({
   name: 'modal',
   initialState: initialState,
   reducers: {
     toggleModal: (state) => {
-      state.value = !state.value
+      state.showModal = !state.showModal;
+    },
+    setAppointmentId: (state, action: PayloadAction<string>) => {
+      state.appointmentId = action.payload;
+    },
+    clearAppointmentId: (state) => {
+      state.appointmentId = undefined;
     },
   },
 });
 
-export const { toggleModal } = modalSlice.actions
+export const { toggleModal } = modalSlice.actions;
 
-export default modalSlice.reducer
+export default modalSlice.reducer;
