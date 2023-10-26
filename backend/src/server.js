@@ -12,6 +12,7 @@ app.use(cors());
 
 // Basic route
 app.use('/user', userRoutes);
+
 app.get('*', (req, res) => {
   res.json({ message: 'Hello, world!' });
 });
