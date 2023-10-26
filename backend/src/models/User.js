@@ -1,13 +1,14 @@
 // functions to intereact with the users table
 
 // config for RDS
-const connection = require('../config/dbConfig')
+const connection = require('../config/dbConfig');
 
 const getUserByEmail = async (email) => {
     const [rows, fields] = await connection.promise().query(`SELECT * FROM Users WHERE email = '${email}';`);
     console.log(rows[0])
     return rows[0];
 };
+
 
 const createUser = async (firstname, lastname, email, password, user_type) => {
     try
