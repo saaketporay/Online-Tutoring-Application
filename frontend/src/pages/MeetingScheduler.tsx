@@ -280,6 +280,8 @@ const MeetingScheduler = () => {
 };
 
 export const loader: LoaderFunction = async () => {
+  // TODO: extract JWT from logged in user and send with request
+
   // const response = await axios.get('/timeslot/timeslots');
   // if (response.status !== 200) {
   //   throw json({
@@ -296,8 +298,7 @@ export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
   console.log(userInfo);
-  // TODO: parse JSON.stringified courses and schedule and change them into the proper format
-  // TODO: extract JWT from logged-in student and send with request
+  // TODO: extract JWT from logged in user and send with request
 
   // const response = await axios.post('/user/register?tutor=true', userInfo);
   // console.log(response);
