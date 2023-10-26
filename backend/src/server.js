@@ -1,16 +1,23 @@
 const express = require('express');
+const cors = require('cors')
+const userRoutes = require('./routes/subjectRoutes');
 const app = express();
+const http = require('http');
 const port = 3000;
 
 // Middleware
 app.use(express.json());
+app.use(cors());
+
 
 // Basic route
-app.get('/', (req, res) => {
+app.use('/subject', userRoutes);
+app.get('*', (req, res) => {
   res.json({ message: 'Hello, world!' });
 });
 
+const server = http.createServer(app);
 // Start server
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server running at http://localhost:${port}/`);
 });
