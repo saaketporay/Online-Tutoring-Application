@@ -2,17 +2,24 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route
+  Route,
 } from 'react-router-dom';
-import AppLayout from './components/AppLayout'
+import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
+// import GeneralSignin from './pages/GeneralSignin';
 import StudentSignup from './pages/StudentSignup';
-import TutorSignup from './pages/TutorSignup';
+import MeetingScheduler, {
+  loader as meetingSchedulerLoader,
+  action as meetingSchedulerAction,
+} from './pages/MeetingScheduler';
+import EmailSignIn, { authAction } from './pages/EmailSignIn';
+import TutorSignup, {
+  loader as tutorSignupLoader,
+  action as tutorSignupAction,
+} from './pages/TutorSignup';
 import UserDashboard from './pages/UserDashboard';
-import MeetingScheduler from './pages/MeetingScheduler';
 import MultifactorAuth from './components/MultifactorAuth';
 import StudentEditProfileModal from './components/StudentEditProfileModal';
 import DeleteAppointmentModal from './components/DeleteAppointmentModal';
@@ -23,46 +30,43 @@ import { dashboardLoader, deleteAppointmentAction, userInfoAction } from './util
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/"
+      path='/'
       element={<AppLayout />}
       errorElement={<ErrorPage />}
-      id="root"
-      loader={tokenLoader}
-    >
+      id='root'
+      loader={tokenLoader}>
       <Route
         index={true}
         element={<Home />}
       />
       <Route
-        path="signin"
+        path='signin'
         element={<EmailSignIn />}
         action={authAction}
       />
       <Route
-        path="signin-email/:tokenId"
-        id="mfa-auth"
+        path='signin-email/:tokenId'
+        id='mfa-auth'
         element={<MultifactorAuth />}
       />
-      <Route
-        path="signup"
-      >
+      <Route path='signup'>
         <Route
-          path="student"
+          path='student'
           element={<StudentSignup />}
           action={userInfoAction}
         />
         <Route
-          path="tutor"
+          path='tutor'
           element={<TutorSignup />}
-          action={userInfoAction}
+          loader={tutorSignupLoader}
+          action={tutorSignupAction}
         />
       </Route>
       <Route
-        id="dashboard"
-        path="dashboard"
+        id='dashboard'
+        path='dashboard'
         element={<UserDashboard />}
-        loader={dashboardLoader}
-      >
+        loader={dashboardLoader}>
         <Route
           path="edit-profile"
           element={<StudentEditProfileModal />}
@@ -75,15 +79,17 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route
-        path="success"
+        path='success'
         element={<FormSuccess />}
       />
       <Route
-        path="new-appt"
+        path='new-appt'
         element={<MeetingScheduler />}
+        loader={meetingSchedulerLoader}
+        action={meetingSchedulerAction}
       />
       <Route
-        path="logout"
+        path='logout'
         action={logoutAction}
       />
     </Route>

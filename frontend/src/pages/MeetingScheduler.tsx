@@ -6,8 +6,16 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { autocompleteTheme } from '../theme';
 import FormControl from '@mui/material/FormControl';
-
 import { useState, useEffect } from 'react';
+import axios from 'axios';
+import {
+  Form,
+  useLoaderData,
+  LoaderFunction,
+  ActionFunction,
+  json,
+  redirect,
+} from 'react-router-dom';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
@@ -161,7 +169,9 @@ const MeetingScheduler = () => {
   };
 
   return (
-    <FormControl className='grid place-content-center bg-[#191919]'>
+    <Form
+      method='post'
+      className='grid place-content-center bg-[#191919]'>
       <ThemeProvider theme={theme}>
         <Stack
           className='my-24'
@@ -169,7 +179,8 @@ const MeetingScheduler = () => {
           <Stack spacing={6}>
             <Typography
               variant='h4'
-              align='center'>
+              align='center'
+              className='mb-3'>
               Schedule a new appointment
             </Typography>
             <Autocomplete
@@ -203,7 +214,7 @@ const MeetingScheduler = () => {
           </Stack>
           <Stack spacing={6}>
             <Typography
-              variant='h4'
+              variant='h5'
               align='center'>
               Select an available timeslot
             </Typography>
@@ -224,7 +235,7 @@ const MeetingScheduler = () => {
           </Stack>
           <Stack spacing={6}>
             <Typography
-              variant='h4'
+              variant='h5'
               align='center'>
               Fill out details
             </Typography>
@@ -264,8 +275,42 @@ const MeetingScheduler = () => {
           </Button>
         </Stack>
       </ThemeProvider>
-    </FormControl>
+    </Form>
   );
+};
+
+export const loader: LoaderFunction = async () => {
+  // TODO: extract JWT from logged in user and send with request
+
+  // const response = await axios.get('/timeslot/timeslots');
+  // if (response.status !== 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
+  // console.log(response);
+  // return response.data as { day: number, start_time: string, end_time: string }[];
+  return null;
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const userInfo = Object.fromEntries(data);
+  console.log(userInfo);
+  // TODO: extract JWT from logged in user and send with request
+
+  // const response = await axios.post('/user/register?tutor=true', userInfo);
+  // console.log(response);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     "status": response.status
+  //   })
+  // }
+
+  // TODO: add logged-in student's id to redirect to the right dashboard
+  return redirect('/dashboard/student');
 };
 
 export default MeetingScheduler;
