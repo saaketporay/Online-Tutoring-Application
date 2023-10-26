@@ -49,19 +49,38 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const data = await request.formData();
-  const userInfo = Object.fromEntries(data);
-  console.log(userInfo);
-  // TODO: parse JSON.stringified courses and schedule and change them into the proper format
+  const userInfo = Object.fromEntries(await request.formData());
+  const courses = (
+    JSON.parse(userInfo.courses as string) as { label: string }[]
+  ).map(({ label }) => label);
+  const schedule = (JSON.parse(userInfo.schedule as string) as string[]).map(
+    (date) => new Date(date)
+  );
+  const modifiedUserInfo = {
+    // TODO: standardize key names to either camelCase, snake_case, or kebab-case
+    // TODO: fix string key names in Forms
+    firstname: userInfo['first-name'],
+    lastname: userInfo['last-name'],
+    email: userInfo.email,
+    password: userInfo.password,
+    phoneNumber: userInfo['phone-number'], // TODO: accept in the backend
+    user_type: 'tutor',
+    aboutMe: userInfo['about-me'],
+    profilePicture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
+    isCriminal: false, // TODO: remove from request and generate on backend instead
+    courses, // TODO: accept in the backend
+    schedule, // TODO: accept in the backend
+  };
+  console.log(modifiedUserInfo);
 
-  // const response = await axios.post('/user/register?tutor=true', userInfo);
-  // console.log(response);
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     "status": response.status
-  //   })
-  // }
+  const response = await axios.post('/user/register', modifiedUserInfo);
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
   return redirect('/signin');
 };
 
