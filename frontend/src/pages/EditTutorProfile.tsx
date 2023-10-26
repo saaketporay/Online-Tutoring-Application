@@ -13,7 +13,7 @@ import axios from 'axios';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 
-const TutorSignup = () => {
+const EditTutorProfile = () => {
   const data = useLoaderData();
 
   return (
@@ -36,7 +36,10 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  // const response = await axios.get('subject/subjects');
+  // TODO: extract user_id to use in req url
+  // TODO: extract JWT from logged in user and send with request
+
+  // const response = await axios.get('/user/:user_id');
   // if (response.status !== 200) {
   //   throw json({
   //     ...response.data,
@@ -44,7 +47,8 @@ export const loader: LoaderFunction = async () => {
   //   });
   // }
   // console.log(response);
-  // return response.data as { subject_id: number; subject_name: string }[];
+  // return response.data as BACKEND_USER_DATA_FORMAT;
+
   return null;
 };
 
@@ -54,7 +58,10 @@ export const action: ActionFunction = async ({ request }) => {
   console.log(userInfo);
   // TODO: parse JSON.stringified courses and schedule and change them into the proper format
 
-  // const response = await axios.post('/user/register?tutor=true', userInfo);
+  // TODO: extract JWT from logged in user and send with request
+  // TODO: extract user_id to use in req url
+
+  // const response = await axios.post('/user/edit?tutor=true', userInfo);
   // console.log(response);
   // if (response.status != 200) {
   //   throw json({
@@ -62,7 +69,9 @@ export const action: ActionFunction = async ({ request }) => {
   //     "status": response.status
   //   })
   // }
-  return redirect('/signin');
+
+  // TODO: extract tutor id and redirect to the right dashboard
+  return redirect('/dashboard/tutor');
 };
 
-export default TutorSignup;
+export default EditTutorProfile;
