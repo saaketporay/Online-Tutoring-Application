@@ -12,16 +12,17 @@ const getUserByEmail = async (email) => {
 const createUser = async (firstname, lastname, email, password, user_type) => {
     try
     {
-        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES ('${firstname}', '${lastname}', '${email}', '${password}', '${user_type}');`);
-        await getUserByEmail(email);
-        console.log(email)
-        return result[0];
+        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES (?, ?, ?, ?, ?);`, [firstname, lastname, email, password, user_type]);
+        const userId = result.insertId;
+        console.log(`New user created with ID: ${userId}`);
+        return userId;
     }
     catch (err)
     {
         return err;
     }
 };
+
 
 module.exports = 
 {
