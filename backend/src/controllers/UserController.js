@@ -21,23 +21,21 @@
      return token;
  };
 
-const login = async (req, res) => {
-  const { email, hashed_password } = req.body;
+ const login = async (req, res) => {
+    const { email, password } = req.body;
 
-  try {
-    const user = await getUserByEmail(email);
-    console.log(hashed_password);
-    if (
-      !user ||
-      !(await comparePasswords(hashed_password, user.hashed_password))
-    ) {
-      return res.status(400).send("Failed to login. Wrong credentials");
-    }
+    try
+    {
+        const user = await getUserByEmail(email);
+        console.log(password);
+        if (!user || !(await comparePasswords(password, user.hashed_password)))
+        {
+            return res.status(400).send("Failed to login. Wrong credentials");
+        }
 
         const token = generateToken(user);
         console.log(token);
         res.json({token});
-        return token;
     }
     catch (err)
     {
