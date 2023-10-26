@@ -4,7 +4,16 @@ import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
 import { TextField } from '@mui/material';
-import { ActionFunction, Form, useActionData, useLoaderData, useOutletContext, json, redirect } from 'react-router-dom';
+import GeneralSignupInfo from './GeneralSignupInfo';
+import {
+  ActionFunction,
+  Form,
+  useActionData,
+  useLoaderData,
+  useOutletContext,
+  json,
+  redirect
+} from 'react-router-dom';
 import { useAppSelector } from '../hooks';
 import axios from 'axios';
 
@@ -38,50 +47,7 @@ const StudentEditProfileModal = () => {
               <Typography id="edit-profile-title" variant="h5">
                 Edit profile
               </Typography>
-              <TextField
-                required
-                // value={first_name}
-                variant="outlined"
-                id="first-name"
-                name="first-name"
-                label="Required"
-                placeholder="First Name"
-                autoComplete="off"
-                className="w-[410px] mb-10"
-              // onChange={e => setFirstName(e.target.value)}
-              />
-              <TextField
-                required
-                // value={last_name}
-                id="last-name"
-                name="last-name"
-                label="Required"
-                placeholder="Last Name"
-                autoComplete="off"
-                className="w-[410px] mb-10"
-              // onChange={e => setLastName(e.target.value)}
-              />
-              <TextField
-                required
-                // value={email}
-                id="email"
-                name="email"
-                label="Required"
-                placeholder="Email Address"
-                autoComplete="off"
-                className="w-[410px] mb-10"
-              // onChange={e => setInputEmail(e.target.value)}
-              />
-              <TextField
-                required
-                id="password"
-                name="password"
-                label="Required"
-                placeholder="Password"
-                type="password"
-                className="w-[410px] mb-4"
-              // onChange={e => setPassword(e.target.value)}
-              />
+              <GeneralSignupInfo />
               <Button
                 type="submit"
                 variant="contained">
@@ -101,12 +67,13 @@ export const studentEditProfileAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const editProfileInfo = Object.fromEntries(data);
   console.log(editProfileInfo);
-  const response = await axios.patch('/user/info', editProfileInfo);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status
-    });
-  }
   return redirect('/dashboard');
+  // const response = await axios.patch('/user/info', editProfileInfo);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status
+  //   });
+  // }
+  // return redirect('/dashboard');
 };

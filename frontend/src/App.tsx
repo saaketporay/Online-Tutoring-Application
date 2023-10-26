@@ -8,22 +8,26 @@ import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
+import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import MultifactorAuth from './components/MultifactorAuth';
 import StudentSignup, { userSignupAction } from './pages/StudentSignup';
-import MeetingScheduler, {
-  loader as meetingSchedulerLoader,
-  action as meetingSchedulerAction,
-} from './pages/MeetingScheduler';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import TutorSignup, {
   loader as tutorSignupLoader,
   action as tutorSignupAction,
 } from './pages/TutorSignup';
+import MeetingScheduler, {
+  loader as meetingSchedulerLoader,
+  action as meetingSchedulerAction,
+} from './pages/MeetingScheduler';
 import UserDashboard, { dashboardLoader } from './pages/UserDashboard';
 import StudentEditProfileModal, { studentEditProfileAction } from './components/StudentEditProfileModal';
 import DeleteAppointmentModal, { deleteAppointmentAction } from './components/DeleteAppointmentModal';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
+import EditTutorProfile, {
+  loader as editTutorProfileLoader,
+  action as editTutorProfileAction,
+} from './pages/EditTutorProfile';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -61,6 +65,12 @@ const router = createBrowserRouter(
           action={tutorSignupAction}
         />
       </Route>
+      <Route
+        path="edit-tutor-profile"
+        element={<EditTutorProfile />}
+        loader={editTutorProfileLoader}
+        action={editTutorProfileAction}
+      />
       <Route
         id='dashboard'
         path='dashboard'

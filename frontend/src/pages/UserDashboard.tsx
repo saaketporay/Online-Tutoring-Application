@@ -4,7 +4,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { ThemeProvider } from '@emotion/react';
-import { Link as RouterLink, LoaderFunction, Outlet, useLoaderData, useSearchParams, useNavigate, json } from 'react-router-dom';
+import {
+  Link as RouterLink,
+  LoaderFunction,
+  Outlet,
+  useLoaderData,
+  useSearchParams,
+  useNavigate,
+  json
+} from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../hooks';
@@ -99,7 +107,7 @@ const UserDashboard = () => {
       <Box className="grid justify-items-center bg-[#191919]">
         <ThemeProvider theme={theme}>
           <Outlet context={handleModalClose} />
-          {searchParams.get('user_type') != "student" ? // temporary, this will be provided by loaderData when backend endpoints are ready
+          {DUMMY_STUDENT_INFO.user_type != "tutor" ? // temporary, this will be provided by loaderData when backend endpoints are ready
             <Button
               to='/new-appt'
               component={RouterLink}
@@ -125,7 +133,7 @@ const UserDashboard = () => {
               }}
             >
               <Link
-                to="/edit-schedule"
+                to="/edit-tutor-profile"
                 component={RouterLink}
                 className="no-underline"
                 color="#F4F4F4"
@@ -137,11 +145,7 @@ const UserDashboard = () => {
             </Button>
           }
         </ThemeProvider>
-        {searchParams.get('user_type') != "student" ?
-          <Dashboard {...DUMMY_STUDENT_INFO} /> // temporary, this will be provided by loaderData when backend endpoints are ready
-          :
-          <Dashboard {...DUMMY_TUTOR_INFO} />
-        }
+        <Dashboard {...DUMMY_STUDENT_INFO} />
       </Box>
     </>
   );
@@ -150,12 +154,13 @@ const UserDashboard = () => {
 export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
-  const response = await axios.get('/user/info')
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.data
-    });
-  }
-  return response.data;
+  return null;
+  // const response = await axios.get('/user/info')
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.data
+  //   });
+  // }
+  // return response.data;
 };

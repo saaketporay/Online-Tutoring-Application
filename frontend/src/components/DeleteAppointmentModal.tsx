@@ -3,7 +3,15 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
-import { Form, useActionData, useOutletContext, json, redirect, ActionFunction } from 'react-router-dom';
+import {
+  Form,
+  useActionData,
+  useOutletContext,
+  json,
+  redirect,
+  ActionFunction,
+  useSubmit
+} from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../hooks';
 import { toggleModal, clearAppointmentId } from "../features/modalSlice";
 import axios from 'axios';
@@ -23,8 +31,6 @@ const modalStyle = {
 const DeleteAppointmentModal = () => {
   const handleModalClose = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);
-  const appointmentId = useAppSelector((state) => state.modal.appointmentId);
-  
 
   return (
     <>
@@ -34,7 +40,7 @@ const DeleteAppointmentModal = () => {
         aria-label="delete-appt-title"
         aria-describedby="delete-appt-description">
         <Box sx={modalStyle} className='flex'>
-          <Form method="delete" action={`/appointment/${'hi'}`}>
+          <Form method="delete">
             <Stack direction={'column'} spacing={2}>
               <Typography id="delete-appt-title" variant="h5">
                 Are you sure you want to cancel this appointment?
@@ -58,17 +64,20 @@ const DeleteAppointmentModal = () => {
 
 export default DeleteAppointmentModal;
 
-export const deleteAppointmentAction: ActionFunction = async ({request}) => {
+export const deleteAppointmentAction: ActionFunction = async ({ request, params }) => {
   const data = await request.formData();
   const appointmentInfo = Object.fromEntries(data);
-  const response = await axios.delete('/appointment/delete', appointmentInfo);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      "status": response.status
-    });
-  }
-  const dispatch = useAppDispatch();
-  dispatch(clearAppointmentId());
+  console.log(appointmentInfo);
+  console.log(params.apptId);
   return redirect("/dashboard");
+  // const response = await axios.delete(`/appointment/:${appointmentId}`, appointmentInfo);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     "status": response.status
+  //   });
+  // }
+  // const dispatch = useAppDispatch();
+  // dispatch(clearAppointmentId());
+  // return redirect("/dashboard");
 };
