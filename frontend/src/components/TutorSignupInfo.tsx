@@ -45,19 +45,17 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
-const TutorSignupInfo = () => {
+interface availableCoursesType {
+  subject_id: number;
+  subject_name: string;
+}
+
+const TutorSignupInfo = ({ availableCourses: availableCoursesType }) => {
   const [aboutMe, setAboutMe] = useState<string>('');
   const [courses, setCourses] = useState<{ label: string }[]>([]);
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
-
-  const submitHandler = () => {
-    console.log(aboutMe, courses, schedule);
-    setAboutMe('');
-    setCourses([]);
-    setSchedule([]);
-  };
 
   const marks = [];
   for (let i = 0; i <= 24; i++) {
@@ -88,10 +86,11 @@ const TutorSignupInfo = () => {
 
   return (
     <ThemeProvider theme={theme}>
-      <Stack spacing={4}>
+      <Stack spacing={6}>
         <TextField
-          className='my-5'
+          className='my-6'
           id='tutor-about-me-field'
+          name='about-me'
           label='About me'
           multiline
           rows={3}
@@ -104,7 +103,7 @@ const TutorSignupInfo = () => {
           <Typography
             variant='h6'
             align='center'
-            className='mb-4'>
+            className='mb-6'>
             Select the courses you are able to teach
           </Typography>
           <Autocomplete
@@ -124,12 +123,12 @@ const TutorSignupInfo = () => {
             isOptionEqualToValue={getOptionEquality}
           />
         </Box>
-        <Stack spacing={3}>
+        <Stack spacing={6}>
           <Box>
             <Typography
               variant='h6'
               align='center'
-              className='mb-4'>
+              className='mb-6'>
               Select your available times
             </Typography>
             <Typography gutterBottom>Time range</Typography>
@@ -173,13 +172,21 @@ const TutorSignupInfo = () => {
             onChange={setSchedule}
           />
         </Stack>
+        <input
+          hidden
+          name='courses'
+          value={JSON.stringify(courses)}></input>
+        <input
+          hidden
+          name='schedule'
+          value={JSON.stringify(schedule)}></input>
         <Button
           variant='contained'
           color='success'
           size='large'
           className='mx-auto'
           disabled={!aboutMe || courses.length == 0 || schedule.length == 0}
-          onClick={submitHandler}>
+          type='submit'>
           Submit
         </Button>
       </Stack>

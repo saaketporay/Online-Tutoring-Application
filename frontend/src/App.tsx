@@ -2,17 +2,23 @@ import {
   createBrowserRouter,
   createRoutesFromElements,
   RouterProvider,
-  Route
+  Route,
 } from 'react-router-dom';
-import AppLayout from './components/AppLayout'
+import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 // import GeneralSignin from './pages/GeneralSignin';
 import StudentSignup from './pages/StudentSignup';
-import MeetingScheduler from './pages/MeetingScheduler';
+import MeetingScheduler, {
+  loader as meetingSchedulerLoader,
+  action as meetingSchedulerAction,
+} from './pages/MeetingScheduler';
 import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import FormSuccess from './pages/FormSuccess';
-import TutorSignup from './pages/TutorSignup';
+import TutorSignup, {
+  loader as tutorSignupLoader,
+  action as tutorSignupAction,
+} from './pages/TutorSignup';
 import StudentDashboard from './pages/StudentDashboard';
 import TutorDashboard from './pages/TutorDashboard';
 import MultifactorAuth from './components/MultifactorAuth';
@@ -24,62 +30,62 @@ import PrivateRoute from './components/PrivateRoute';
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/"
+      path='/'
       element={<AppLayout />}
       errorElement={<ErrorPage />}
-      id="root"
-      loader={tokenLoader}
-    >
+      id='root'
+      loader={tokenLoader}>
       <Route
         index={true}
         element={<Home />}
       />
       <Route
-        path="signin"
+        path='signin'
         element={<EmailSignIn />}
         action={authAction}
       />
       <Route
-        path="signin-email/:tokenId"
-        id="mfa-auth"
+        path='signin-email/:tokenId'
+        id='mfa-auth'
         element={<MultifactorAuth />}
       />
-      <Route
-        path="signup"
-      >
+      <Route path='signup'>
         <Route
-          path="student"
+          path='student'
           element={<StudentSignup />}
           action={userInfoAction}
         />
         <Route
-          path="tutor"
+          path='tutor'
           element={<TutorSignup />}
+          loader={tutorSignupLoader}
+          action={tutorSignupAction}
         />
       </Route>
       <Route
-        id="dashboard"
-        loader={dashboardLoader}
-      >
+        id='dashboard'
+        loader={dashboardLoader}>
         <Route
-          path="student"
+          path='student'
           element={<StudentDashboard />}
         />
         <Route
-          path="tutor"
+          path='tutor'
           element={<TutorDashboard />}
         />
       </Route>
       <Route
-        path="success"
+        path='success'
         element={<FormSuccess />}
       />
       <Route
-        path="new-appt"
+        path='new-appt'
         element={<MeetingScheduler />}
+        loader={meetingSchedulerLoader}
+        action={meetingSchedulerAction}
       />
       <Route
-        path="logout"
+        path='logout'
         action={logoutAction}
       />
     </Route>

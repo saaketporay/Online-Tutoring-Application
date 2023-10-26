@@ -1,4 +1,11 @@
-import { Form } from 'react-router-dom';
+import {
+  Form,
+  json,
+  redirect,
+  useLoaderData,
+  LoaderFunction,
+  ActionFunction,
+} from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
@@ -7,6 +14,8 @@ import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 
 const TutorSignup = () => {
+  const data = useLoaderData();
+
   return (
     <Form
       method='post'
@@ -20,10 +29,38 @@ const TutorSignup = () => {
         <GeneralSignupInfo />
       </Box>
       <Box className='w-[500px] justify-self-center'>
-        <TutorSignupInfo />
+        <TutorSignupInfo availableCourses={data} />
       </Box>
     </Form>
   );
+};
+
+export const loader: LoaderFunction = async () => {
+  // const response = await axios.get('subject/subjects');
+  // if (response.status !== 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
+  // console.log(response);
+  // return response.data as { subject_id: number; subject_name: string }[];
+  return null;
+};
+
+export const action: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const userInfo = Object.fromEntries(data);
+  console.log(userInfo);
+  // const response = await axios.post('/user/register?tutor=true', userInfo);
+  // console.log(response);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     "status": response.status
+  //   })
+  // }
+  return redirect('/signin');
 };
 
 export default TutorSignup;
