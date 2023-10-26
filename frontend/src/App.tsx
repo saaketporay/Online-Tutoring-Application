@@ -26,6 +26,10 @@ import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
 import { dashboardLoader, userInfoAction } from './utils/actions';
 import PrivateRoute from './components/PrivateRoute';
+import EditTutorProfile, {
+  loader as editTutorProfileLoader,
+  action as editTutorProfileAction,
+} from './pages/EditTutorProfile';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -63,6 +67,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route
+        path='dashboard'
         id='dashboard'
         loader={dashboardLoader}>
         <Route
@@ -83,6 +88,12 @@ const router = createBrowserRouter(
         element={<MeetingScheduler />}
         loader={meetingSchedulerLoader}
         action={meetingSchedulerAction}
+      />
+      <Route
+        path='edit-schedule'
+        element={<EditTutorProfile />}
+        loader={editTutorProfileLoader}
+        action={editTutorProfileAction}
       />
       <Route
         path='logout'
