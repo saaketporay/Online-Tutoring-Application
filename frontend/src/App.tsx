@@ -8,7 +8,6 @@ import AppLayout from './components/AppLayout'
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
-// import GeneralSignin from './pages/GeneralSignin';
 import EmailSignIn, { authAction } from './pages/EmailSignIn';
 import StudentSignup from './pages/StudentSignup';
 import TutorSignup from './pages/TutorSignup';
