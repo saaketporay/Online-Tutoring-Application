@@ -1,6 +1,6 @@
 const express = require('express');
 const cors = require('cors')
-const tutorAvailabilityRoutes = require('./routes/availabilityRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 const app = express();
 const http = require('http');
 const port = 3000;
@@ -11,7 +11,7 @@ app.use(cors());
 
 
 // Basic route
-app.use('/tutor-availability', tutorAvailabilityRoutes);
+app.use('/appointments', appointmentRoutes);
 
 app.get('*', (req, res) => {
   res.json({ message: 'Hello, world!' });
