@@ -3,6 +3,7 @@
 const { getUserByEmail, createUser } = require('../models/User');
 const { createTutor } = require('../models/Tutor'); // Import createTutor function
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
+const decodeToken = require('../utils/jwtUtil');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -43,39 +44,41 @@ const login = async (req, res) => {
 
 const register = async (req, res) => {
   const {
-    firstname,
-    lastname,
+    first_name,
+    last_name,
     email,
     password,
     user_type,
-    aboutMe,
-    profilePicture,
-    isCriminal,
+    about_Me,
+    profile_Picture,
+    is_Criminal,
   } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
-    const userId = await createUser(
-      firstname,
-      lastname,
+    const user_Id = await createUser(
+      first_name,
+      last_name,
       email,
       hashedPassword,
       user_type
     );
-    console.log(`New User ID: ${userId}`);
+    console.log(`New User ID: ${user_Id}`);
 
     // If user is a tutor, create a corresponding entry in the Tutors table
     if (user_type === 'tutor') {
       const tutorId = await createTutor(
-        userId,
-        aboutMe,
-        profilePicture,
-        isCriminal
+        user_Id,
+        about_Me,
+        profile_Picture,
+        is_Criminal
       );
       console.log(`New Tutor created with ID: ${tutorId}`);
     }
-
-    return res.status(200).send('Register Successful: ');
+    const user = await getUserByEmail(email);
+    const token = generateToken(user);
+    return res.status(200).json({token});
+    //return res.status(200).send('Register Successful: ');
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
