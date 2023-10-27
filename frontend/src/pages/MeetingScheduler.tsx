@@ -16,6 +16,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
+import { getAuthToken } from '../utils/auth';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
@@ -177,6 +178,7 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Course'
+                  name='course'
                 />
               )}
             />
@@ -191,6 +193,7 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Tutor'
+                  name='tutor'
                 />
               )}
             />
@@ -212,6 +215,7 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Timeslot'
+                  name='timeslot'
                 />
               )}
             />
@@ -225,6 +229,7 @@ const MeetingScheduler = () => {
             <TextField
               id='meeting-title-field'
               label='Meeting title'
+              name='meeting_title'
               required
               value={meetingTitle}
               onChange={(e) => {
@@ -234,6 +239,7 @@ const MeetingScheduler = () => {
             <TextField
               id='meeting-desc-field'
               label='Meeting description'
+              name='meeting_desc'
               multiline
               rows={3}
               value={meetingDesc}
@@ -263,9 +269,13 @@ const MeetingScheduler = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  // TODO: extract JWT from logged in user and send with request
+  // Retrieve logged in user's token
+  const token = getAuthToken();
+  if (!token) {
+    return redirect('/signin');
+  }
 
-  // const response = await axios.get('/timeslot/timeslots');
+  // const response = await axios.get('/availability');
   // if (response.status !== 200) {
   //   throw json({
   //     ...response.data,
@@ -273,15 +283,45 @@ export const loader: LoaderFunction = async () => {
   //   });
   // }
   // console.log(response);
-  // return response.data as { day: number, start_time: string, end_time: string }[];
+
+  // Map response.data to match the format of exampleAvailabilityData
+
+  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am
+  // const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
+  // const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+  // const t = (userInfo.timeslot as string).split(/[- :]/).map(str => +str);
+  // const m = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
+  // const day = m.getDate();
+  // const hour = m.getHours();
+  // const modifiedHour = (hour === 0 || hour === 11) ? 12 : hour < 11 ? hour : hour - 12;
+  // const minutes = m.getHours();
+  // const modifiedMinutes = minutes === 0 ? '00': minutes;
+  // const am = hour < 11;
+  // const suffix = {1: 'st', 2: 'nd', 3: 'rd'};
+  // const readable_date_time = `${weekday[m.getDay()]}, ${month[m.getMonth()]} ${day}${suffix.hasOwnProperty(day) ? suffix[day]} : 'th', ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${am ? 'am' : 'pm}`;
+  // Add the key readable_date_time to each object in each tutor instance's timeslots array
+
+  // return response.data;
+  // TODO: adjust MeetingScheduler to use the new data format
   return null;
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
+
+  // Retrieve logged in user's token
+  const token = getAuthToken();
+  if (!token) {
+    return redirect('/signin');
+  }
+  userInfo.token = token;
+
+  // TODO: extract tutor_id, date_time, and duration from userInfo and make new object with them as well as token
+
   console.log(userInfo);
-  // TODO: extract JWT from logged in user and send with request
+
+  // TODO: make backend accept meeting_title and meeting_desc
 
   // const response = await axios.post('/user/register?tutor=true', userInfo);
   // console.log(response);
@@ -292,8 +332,28 @@ export const action: ActionFunction = async ({ request }) => {
   //   })
   // }
 
-  // TODO: add logged-in student's id to redirect to the right dashboard
+  // TODO: add logged in student's id to redirect to the right dashboard
   return redirect('/dashboard');
+};
+
+const exampleAvailabilityData = {
+  'CS 1336': {
+    'Shyam Karrah': {
+      tutor_id: 45,
+      timeslots: [{ date_time: '2023-10-27 14:00:00', duration: '60' }],
+    },
+    'Srimathi Srinvasan': {},
+    'Laurie Tompson': {},
+  },
+  'CS 1337': {
+    'Scott Dollinger': {},
+    'Miguel Razo Razo': {},
+    'Srimathi Srinivasan': {},
+    'Khiem Le': {},
+    'Jeyakesavan Veerasamy': {},
+    'Jason Smith': {},
+    'Doug DeGroot': {},
+  },
 };
 
 export default MeetingScheduler;
