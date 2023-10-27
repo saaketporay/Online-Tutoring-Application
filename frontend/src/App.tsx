@@ -20,15 +20,14 @@ import MeetingScheduler, {
   action as meetingSchedulerAction,
 } from './pages/MeetingScheduler';
 import UserDashboard, { dashboardLoader } from './pages/UserDashboard';
-import StudentEditProfileModal, { studentEditProfileAction } from './components/StudentEditProfileModal';
-import DeleteAppointmentModal, { deleteAppointmentAction } from './components/DeleteAppointmentModal';
+import StudentEditProfileModal, {
+  studentEditProfileAction,
+} from './components/StudentEditProfileModal';
+import DeleteAppointmentModal, {
+  deleteAppointmentAction,
+} from './components/DeleteAppointmentModal';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
-<<<<<<< HEAD
-import { dashboardLoader, userInfoAction } from './utils/actions';
-import PrivateRoute from './components/PrivateRoute';
-=======
->>>>>>> main
 import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
@@ -41,8 +40,7 @@ const router = createBrowserRouter(
       element={<AppLayout />}
       errorElement={<ErrorPage />}
       id='root'
-      loader={tokenLoader}
-    >
+      loader={tokenLoader}>
       <Route
         index={true}
         element={<Home />}
@@ -71,28 +69,23 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route
-<<<<<<< HEAD
-        path='dashboard'
-=======
-        path="edit-tutor-profile"
+        path='edit-tutor-profile'
         element={<EditTutorProfile />}
         loader={editTutorProfileLoader}
         action={editTutorProfileAction}
       />
       <Route
->>>>>>> main
         id='dashboard'
         path='dashboard'
         element={<UserDashboard />}
-        loader={dashboardLoader}
-      >
+        loader={dashboardLoader}>
         <Route
-          path="edit-profile"
+          path='edit-profile'
           element={<StudentEditProfileModal />}
           action={studentEditProfileAction}
         />
         <Route
-          path="delete-appt/:apptId"
+          path='delete-appt/:apptId'
           element={<DeleteAppointmentModal />}
           action={deleteAppointmentAction}
         />
@@ -104,15 +97,8 @@ const router = createBrowserRouter(
         action={meetingSchedulerAction}
       />
       <Route
-<<<<<<< HEAD
-        path='edit-schedule'
-        element={<EditTutorProfile />}
-        loader={editTutorProfileLoader}
-        action={editTutorProfileAction}
-=======
         path='success'
         element={<FormSuccess />}
->>>>>>> main
       />
       <Route
         path='logout'

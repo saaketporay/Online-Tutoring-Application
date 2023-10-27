@@ -46,11 +46,7 @@ const Home = () => {
             </Typography>
             <div className='w-[72px] h-[1px] bg-[#F4F4F4] mt-6' />
             <Button
-<<<<<<< HEAD
               to='/signup/tutor'
-=======
-              to="/signup/tutor"
->>>>>>> main
               component={Link}
               sx={{
                 backgroundColor: '#6D28D9',
