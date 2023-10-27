@@ -9,7 +9,7 @@ import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 
 const theme = createTheme(autocompleteTheme, {
   components: {
@@ -45,12 +45,20 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
-interface availableCoursesType {
+export interface AvailableCourseType {
   subject_id: number;
   subject_name: string;
 }
 
-const TutorSignupInfo = ({ availableCourses: availableCoursesType }) => {
+interface TutorSignupInfoProps {
+  subjects: AvailableCourseType[];
+}
+
+const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
+  const availableCourses = subjects.map((course) => ({
+    label: course.subject_name,
+  })) as { label: string }[];
+
   const [aboutMe, setAboutMe] = useState<string>('');
   const [courses, setCourses] = useState<{ label: string }[]>([]);
   const [schedule, setSchedule] = useState<Array<Date>>([]);
@@ -109,7 +117,7 @@ const TutorSignupInfo = ({ availableCourses: availableCoursesType }) => {
           <Autocomplete
             multiple
             id='tutor-course-select'
-            options={DUMMY_COURSES}
+            options={availableCourses}
             disablePortal
             onChange={(e, v) => {
               setCourses(v);

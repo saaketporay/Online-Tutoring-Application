@@ -12,9 +12,10 @@ import axios from 'axios';
 
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
+import { AvailableCourseType } from '../components/TutorSignupInfo';
 
 const TutorSignup = () => {
-  const data = useLoaderData();
+  const data = useLoaderData() as AvailableCourseType[];
 
   return (
     <Form
@@ -29,23 +30,22 @@ const TutorSignup = () => {
         <GeneralSignupInfo />
       </Box>
       <Box className='w-[500px] justify-self-center'>
-        <TutorSignupInfo availableCourses={data} />
+        <TutorSignupInfo subjects={data} />
       </Box>
     </Form>
   );
 };
 
 export const loader: LoaderFunction = async () => {
-  // const response = await axios.get('subject/subjects');
-  // if (response.status !== 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
-  //   });
-  // }
-  // console.log(response);
-  // return response.data as { subject_id: number; subject_name: string }[];
-  return null;
+  const response = await axios.get('availability/subjects');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  console.log(response.data);
+  return response.data as AvailableCourseType[];
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -81,7 +81,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const token = response.data.token;
+  const token = (response.data as { token: string }).token;
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   localStorage.setItem('token', token);
   const expiration = new Date();

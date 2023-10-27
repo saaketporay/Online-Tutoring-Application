@@ -18,7 +18,7 @@ import {
 } from 'react-router-dom';
 import { getAuthToken } from '../utils/auth';
 
-interface responseDataType {
+interface ResponseDataType {
   [key: string]: {
     [key: string]: {
       tutor_availiability_id: number;
@@ -82,7 +82,7 @@ const getOptionEquality = (
 ) => option.label === value.label;
 
 const MeetingScheduler = () => {
-  const data = useLoaderData() as responseDataType;
+  const data = useLoaderData() as ResponseDataType;
 
   const courses = Object.keys(data).map((name) => ({
     label: name,
@@ -302,7 +302,7 @@ export const loader: LoaderFunction = async () => {
       status: response.status,
     });
   }
-  const data = response.data as responseDataType;
+  const data = response.data as ResponseDataType;
   console.log(data);
 
   // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
