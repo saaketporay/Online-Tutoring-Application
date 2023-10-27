@@ -57,17 +57,16 @@ export const action: ActionFunction = async ({ request }) => {
     (date) => new Date(date)
   );
   const modifiedUserInfo = {
-    // TODO: standardize key names to either camelCase, snake_case, or kebab-case
     // TODO: fix string key names in Forms
-    firstname: userInfo['first-name'],
-    lastname: userInfo['last-name'],
+    first_name: userInfo['first-name'],
+    last_name: userInfo['last-name'],
     email: userInfo.email,
     password: userInfo.password,
-    phoneNumber: userInfo['phone-number'], // TODO: accept in the backend
+    phone_number: userInfo['phone-number'], // TODO: accept in the backend
     user_type: 'tutor',
-    aboutMe: userInfo['about-me'],
-    profilePicture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
-    isCriminal: false, // TODO: remove from request and generate on backend instead
+    about_me: userInfo['about-me'],
+    profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
+    is_criminal: false, // TODO: remove from request and generate on backend instead
     courses, // TODO: accept in the backend
     schedule, // TODO: accept in the backend
   };
