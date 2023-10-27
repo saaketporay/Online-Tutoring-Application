@@ -49,7 +49,10 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const studentInfo = Object.fromEntries(data);
   console.log(studentInfo);
-  const response = await axios.post('/user/register', studentInfo);
+  const response = await axios.post('/user/register', {
+    ...studentInfo,
+    user_type: 'student',
+  });
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -57,5 +60,12 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
+  const token = response.data.token;
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  localStorage.setItem('token', token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + (24 * 7));
+  localStorage.setItem('expiration', expiration.toISOString());
+  localStorage.setItem('user_type', 'student');
   return redirect("/dashboard");
 };
