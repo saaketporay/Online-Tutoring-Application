@@ -5,7 +5,7 @@ const Appointment = {
         try 
         {
             const addAppointmentQuery = `INSERT INTO Appointments (student_id, tutor_id, date_time, duration) VALUES (?, ?, ?, ?);`;
-            const results = await connection.promise().query(addAppointmentQuery, [student_id, tutor_id, date_time, 60]);
+            const results = await connection.promise().query(addAppointmentQuery, [student_id, tutor_id, date_time, duration]);
             console.log(results[0].insertId)
             return results[0].insertId;
         }
