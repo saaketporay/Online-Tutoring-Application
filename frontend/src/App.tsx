@@ -20,8 +20,12 @@ import MeetingScheduler, {
   action as meetingSchedulerAction,
 } from './pages/MeetingScheduler';
 import UserDashboard, { dashboardLoader } from './pages/UserDashboard';
-import StudentEditProfileModal, { studentEditProfileAction } from './components/StudentEditProfileModal';
-import DeleteAppointmentModal, { deleteAppointmentAction } from './components/DeleteAppointmentModal';
+import StudentEditProfileModal, {
+  studentEditProfileAction,
+} from './components/StudentEditProfileModal';
+import DeleteAppointmentModal, {
+  deleteAppointmentAction,
+} from './components/DeleteAppointmentModal';
 import { logoutAction } from './utils/logout';
 import { tokenLoader } from './utils/auth';
 import EditTutorProfile, {
@@ -36,8 +40,7 @@ const router = createBrowserRouter(
       element={<AppLayout />}
       errorElement={<ErrorPage />}
       id='root'
-      loader={tokenLoader}
-    >
+      loader={tokenLoader}>
       <Route
         index={true}
         element={<Home />}
@@ -66,7 +69,7 @@ const router = createBrowserRouter(
         />
       </Route>
       <Route
-        path="edit-tutor-profile"
+        path='edit-tutor-profile'
         element={<EditTutorProfile />}
         loader={editTutorProfileLoader}
         action={editTutorProfileAction}
@@ -75,15 +78,14 @@ const router = createBrowserRouter(
         id='dashboard'
         path='dashboard'
         element={<UserDashboard />}
-        loader={dashboardLoader}
-      >
+        loader={dashboardLoader}>
         <Route
-          path="edit-profile"
+          path='edit-profile'
           element={<StudentEditProfileModal />}
           action={studentEditProfileAction}
         />
         <Route
-          path="delete-appt/:apptId"
+          path='delete-appt/:apptId'
           element={<DeleteAppointmentModal />}
           action={deleteAppointmentAction}
         />
