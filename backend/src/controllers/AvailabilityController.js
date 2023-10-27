@@ -6,7 +6,7 @@ const AvailabilityController = {
   
       try {
         const availability = await TutorAvailability.getAllByTutorId(tutor_Id);
-        return res.json({ data: availability });
+        return res.status(200).json(availability[0]);
       } catch (error) {
         console.error(error);
         return res.status(500).json({ success: false, error: 'Internal Server Error' });
