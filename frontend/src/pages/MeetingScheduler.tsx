@@ -151,23 +151,6 @@ const MeetingScheduler = () => {
     }
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
 
-  const submitHandler = () => {
-    console.log(
-      selectedCourse,
-      selectedTutor,
-      selectedTimeslot,
-      meetingTitle,
-      meetingDesc
-    );
-
-    setSelectedCourse('');
-    setSelectedTutor('');
-    setSelectedTimeslot('');
-    setMeetingTitle('');
-    setMeetingDesc('');
-    return;
-  };
-
   return (
     <Form
       method='post'
@@ -270,7 +253,7 @@ const MeetingScheduler = () => {
               !selectedTimeslot ||
               !meetingTitle
             }
-            onClick={submitHandler}>
+            type='submit'>
             Submit
           </Button>
         </Stack>
@@ -310,7 +293,7 @@ export const action: ActionFunction = async ({ request }) => {
   // }
 
   // TODO: add logged-in student's id to redirect to the right dashboard
-  return redirect('/dashboard/student');
+  return redirect('/dashboard');
 };
 
 export default MeetingScheduler;
