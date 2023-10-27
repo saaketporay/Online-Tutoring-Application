@@ -22,8 +22,8 @@ const GeneralSignupInfo = () => {
       <ThemeProvider theme={theme}>
         <TextField
           required
-          id='first-name'
-          name='first-name'
+          id='first_name'
+          name='first_name'
           label='Required'
           placeholder='First Name'
           autoComplete='off'
@@ -32,8 +32,8 @@ const GeneralSignupInfo = () => {
         />
         <TextField
           required
-          id='last-name'
-          name='last-name'
+          id='last_name'
+          name='last_name'
           label='Required'
           placeholder='Last Name'
           autoComplete='off'
@@ -52,8 +52,8 @@ const GeneralSignupInfo = () => {
         />
         <TextField
           required
-          id='phone-number'
-          name='phone-number'
+          id='phone_number'
+          name='phone_number'
           label='Required'
           placeholder='Phone Number'
           type='tel'
