@@ -28,14 +28,14 @@ const login = async (req, res) => {
 
   try {
     const user = await getUserByEmail(email);
-    console.log(password);
+    console.log(user);
     if (!user || !(await comparePasswords(password, user.hashed_password))) {
       return res.status(400).send('Failed to login. Wrong credentials');
     }
 
     const token = generateToken(user);
     console.log(token);
-    res.json({ token });
+    return res.status(200).json({ token });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
