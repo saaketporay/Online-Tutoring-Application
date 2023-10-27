@@ -18,6 +18,19 @@ import {
 } from 'react-router-dom';
 import { getAuthToken } from '../utils/auth';
 
+interface responseDataType {
+  [key: string]: {
+    [key: string]: {
+      tutor_availiability_id: number;
+      tutor_id: number;
+      weekday: string;
+      start_time: string;
+      end_time: string;
+      readable_date_time?: string;
+    }[];
+  };
+}
+
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
   { day: 'Monday', from: '3pm', to: '4pm' },
@@ -69,6 +82,13 @@ const getOptionEquality = (
 ) => option.label === value.label;
 
 const MeetingScheduler = () => {
+  const data = useLoaderData() as responseDataType;
+
+  const courses = Object.keys(data).map((name) => ({
+    label: name,
+    value: data[name],
+  }));
+
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedTutor, setSelectedTutor] = useState<string>('');
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
@@ -76,17 +96,15 @@ const MeetingScheduler = () => {
   const [meetingDesc, setMeetingDesc] = useState<string>('');
 
   const availableTutors = selectedCourse
-    ? Object.keys(DUMMY_DATA[selectedCourse]).map((name) => ({
+    ? Object.keys(data[selectedCourse]).map((name) => ({
         label: name,
       }))
     : [];
 
   const availableTimeslots =
-    selectedCourse &&
-    selectedTutor &&
-    selectedTutor in DUMMY_DATA[selectedCourse]
-      ? DUMMY_DATA[selectedCourse][selectedTutor].map((timeslot) => ({
-          label: `${timeslot.day} ${timeslot.from} - ${timeslot.to}`,
+    selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
+      ? data[selectedCourse][selectedTutor].map((timeslot) => ({
+          label: timeslot.readable_date_time || '',
         }))
       : [];
 
@@ -136,15 +154,13 @@ const MeetingScheduler = () => {
 
   useEffect(() => {
     if (selectedCourse && selectedTutor) {
-      if (!(selectedTutor in DUMMY_DATA[selectedCourse])) {
+      if (!(selectedTutor in data[selectedCourse])) {
         setSelectedTutor('');
         setSelectedTimeslot('');
       } else if (
         selectedTimeslot &&
-        !DUMMY_DATA[selectedCourse][selectedTutor].find(
-          (timeslot: { day: string; from: string; to: string }) =>
-            `${timeslot.day} ${timeslot.from} - ${timeslot.to}` ===
-            selectedTimeslot
+        !data[selectedCourse][selectedTutor].find(
+          (timeslot) => timeslot.readable_date_time === selectedTimeslot
         )
       ) {
         setSelectedTimeslot('');
@@ -169,7 +185,7 @@ const MeetingScheduler = () => {
             </Typography>
             <Autocomplete
               id='student-course-select'
-              options={DUMMY_COURSES}
+              options={courses}
               disablePortal
               value={selectedCourse ? { label: selectedCourse } : null}
               onInputChange={courseSelectChangeHandler}
@@ -263,23 +279,14 @@ const MeetingScheduler = () => {
             Submit
           </Button>
         </Stack>
+        <input
+          hidden
+          name='data'
+          value={JSON.stringify(data)}></input>
       </ThemeProvider>
     </Form>
   );
 };
-
-interface responseDataType {
-  [key: string]: {
-    [key: string]: {
-      tutor_availiability_id: number;
-      tutor_id: number;
-      weekday: string;
-      start_time: string;
-      end_time: string;
-      readable_date_time?: string;
-    }[];
-  };
-}
 
 export const loader: LoaderFunction = async () => {
   // Retrieve logged in user's token

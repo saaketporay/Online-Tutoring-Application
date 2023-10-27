@@ -58,12 +58,12 @@ export const action: ActionFunction = async ({ request }) => {
   );
   const modifiedUserInfo = {
     // TODO: fix string key names in Forms
-    first_name: userInfo['first-name'],
-    last_name: userInfo['last-name'],
+    first_name: userInfo.first_name,
+    last_name: userInfo.last_name,
     email: userInfo.email,
     password: userInfo.password,
-    phone_number: userInfo['phone-number'], // TODO: accept in the backend
-    user_type: 'tutor',
+    phone_number: userInfo.phone_number, // TODO: accept in the backend
+    user_type: 'student', // change to tutor
     about_me: userInfo['about-me'],
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
     is_criminal: false, // TODO: remove from request and generate on backend instead
@@ -80,7 +80,16 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  return redirect('/signin');
+
+  const token = response.data.token;
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  localStorage.setItem('token', token);
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 24 * 7);
+  localStorage.setItem('expiration', expiration.toISOString());
+  localStorage.setItem('user_type', 'student');
+
+  return redirect('/dashboard');
 };
 
 export default TutorSignup;
