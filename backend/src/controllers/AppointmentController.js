@@ -23,7 +23,7 @@ const appointmentController = {
         try 
         {
             const appointments = await Appointment.getByStudentId(student_Id);
-            return res.status(200).json(appointments);
+            return res.status(200).json(appointments[0]);
         }
         catch (err)
         {
