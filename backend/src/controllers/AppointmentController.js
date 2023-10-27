@@ -1,35 +1,44 @@
 const Appointment = require('../models/Appointment');
+const jwtUtil = require('../utils/jwtUtil');
 
 const appointmentController = {
-    createAppointment: async (req, res) => {
-        const {student_Id, tutor_Id, date_time, duration} = req.body;
+  createAppointment: async (req, res) => {
+    const { token, tutor_Id, date_time, duration } = req.body;
 
-        try
-        {
-            const appointment_id = await Appointment.create(student_Id, tutor_Id, date_time, duration);
-            console.log(appointment_id);
-            return res.status(200).json(appointment_id);
-        }
-        catch (err)
-        {
-            return res.status(500).send("Internal Server Error");
-        }
-    },
+    console.log(token, tutor_Id, date_time, duration);
 
-    getByStudentId: async (req, res) => {
-        const {student_Id} = req.params;
-        console.log(student_Id);
+    const decodedToken = jwtUtil.decodeToken(token);
+    const student_Id = decodedToken.id;
 
-        try 
-        {
-            const appointments = await Appointment.getByStudentId(student_Id);
-            return res.status(200).json(appointments[0]);
-        }
-        catch (err)
-        {
-            return res.status(500).send(err);
-        }
+    console.log(student_Id, tutor_Id, date_time, duration);
+
+    try {
+      const appointment_id = await Appointment.create(
+        student_Id,
+        tutor_Id,
+        date_time,
+        duration
+      );
+      return res.status(200).json(appointment_id);
+    } catch (err) {
+      return res.status(500).send('Internal Server Error');
     }
-}
+  },
+
+  getByToken: async (req, res) => {
+    const { token } = req.params;
+    console.log(token);
+    const decodedToken = jwtUtil.decodeToken(token);
+    console.log(decodedToken);
+
+    try {
+      const appointments = await Appointment.getByStudentId(decodedToken.id);
+      console.log(appointments);
+      return res.status(200).json(appointments[0]);
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  },
+};
 
 module.exports = appointmentController;

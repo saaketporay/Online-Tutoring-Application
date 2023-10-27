@@ -1,11 +1,32 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const KEY = 'supersecret';
+
 const decodeToken = (token) => {
-    try {
-        const decoded = jwt.verify(token, secretKey);
-        return decoded;
-    } catch (err) {
-        return null; // Token is invalid or expired
+  try {
+    const decoded = jwt.verify(token, KEY);
+    return decoded;
+  } catch (err) {
+    return null; // Token is invalid or expired
+  }
+};
+
+const generateToken = (user) => {
+  const token = jwt.sign(
+    {
+      id: user.user_id,
+      email: user.email,
+    },
+    KEY,
+    {
+      expiresIn: '1hr',
     }
-  };
+  );
+  return token;
+};
+
+module.exports = {
+  decodeToken,
+  generateToken,
+};

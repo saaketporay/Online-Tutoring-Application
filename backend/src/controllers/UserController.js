@@ -3,25 +3,9 @@
 const { getUserByEmail, createUser } = require('../models/User');
 const { createTutor } = require('../models/Availability'); // Import createTutor function
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
-const decodeToken = require('../utils/jwtUtil');
+const { decodeToken, generateToken } = require('../utils/jwtUtil');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-
-const KEY = 'supersecret';
-
-const generateToken = (user) => {
-  const token = jwt.sign(
-    {
-      id: user.user_id,
-      email: user.email,
-    },
-    KEY,
-    {
-      expiresIn: '1h',
-    }
-  );
-  return token;
-};
 
 const login = async (req, res) => {
   const { email, password } = req.body;

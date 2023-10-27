@@ -10,7 +10,7 @@ const Availability = {
       const results = await connection
         .promise()
         .query(availableQuery, [tutorId]);
-      return results;
+      return results[0];
     } catch (err) {
       return err;
     }
@@ -21,7 +21,7 @@ const Availability = {
       const results = await connection
         .promise()
         .query(availableQuery, [userId]);
-      return results;
+      return results[0][0];
     } catch (err) {
       return err;
     }
@@ -30,7 +30,7 @@ const Availability = {
     try {
       const availableQuery = `SELECT * FROM Subjects;`;
       const results = await connection.promise().query(availableQuery);
-      return results;
+      return results[0];
     } catch (err) {
       return err;
     }
@@ -39,7 +39,7 @@ const Availability = {
     try {
       const availableQuery = `SELECT * FROM Tutors;`;
       const results = await connection.promise().query(availableQuery);
-      return results;
+      return results[0];
     } catch (err) {
       return err;
     }
@@ -50,7 +50,7 @@ const Availability = {
       const results = await connection
         .promise()
         .query(availableQuery, [subjectId]);
-      return results;
+      return results[0];
     } catch (err) {
       return err;
     }
