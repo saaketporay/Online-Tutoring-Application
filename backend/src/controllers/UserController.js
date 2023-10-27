@@ -51,9 +51,6 @@ const register = async (req, res) => {
     email,
     password,
     user_type,
-    aboutMe,
-    profilePicture,
-    isCriminal,
   } = req.body;
 
   try {
