@@ -1,5 +1,5 @@
 const express = require('express');
-const cors = require('cors')
+const cors = require('cors');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const availabilityRoutes = require('./routes/availabilityRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -11,9 +11,8 @@ const port = 3000;
 app.use(express.json());
 app.use(cors());
 
-
 // Basic route
-app.use('/users', userRoutes); // user routes
+app.use('/user', userRoutes); // user routes
 app.use('/appointments', appointmentRoutes); // appointment routes
 app.use('/availability', availabilityRoutes); // availability routes
 
