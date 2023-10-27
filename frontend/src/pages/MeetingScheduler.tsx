@@ -268,6 +268,19 @@ const MeetingScheduler = () => {
   );
 };
 
+interface responseDataType {
+  [key: string]: {
+    [key: string]: {
+      tutor_availiability_id: number;
+      tutor_id: number;
+      weekday: string;
+      start_time: string;
+      end_time: string;
+      readable_date_time?: string;
+    }[];
+  };
+}
+
 export const loader: LoaderFunction = async () => {
   // Retrieve logged in user's token
   const token = getAuthToken();
@@ -275,40 +288,86 @@ export const loader: LoaderFunction = async () => {
     return redirect('/signin');
   }
 
-  // const response = await axios.get('/availability');
-  // if (response.status !== 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
-  //   });
-  // }
-  // console.log(response);
+  const response = await axios.get('/availability/all');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  const data = response.data as responseDataType;
+  console.log(data);
 
-  // Map response.data to match the format of exampleAvailabilityData
+  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
+  const weekday = [
+    'Sunday',
+    'Monday',
+    'Tuesday',
+    'Wednesday',
+    'Thursday',
+    'Friday',
+    'Saturday',
+  ];
+  const month = [
+    'January',
+    'February',
+    'March',
+    'April',
+    'May',
+    'June',
+    'July',
+    'August',
+    'September',
+    'October',
+    'November',
+    'December',
+  ];
 
-  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am
-  // const weekday = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"];
-  // const month = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-  // const t = (userInfo.timeslot as string).split(/[- :]/).map(str => +str);
-  // const m = new Date(Date.UTC(t[0], t[1]-1, t[2], t[3], t[4], t[5]));
-  // const day = m.getDate();
-  // const hour = m.getHours();
-  // const modifiedHour = (hour === 0 || hour === 11) ? 12 : hour < 11 ? hour : hour - 12;
-  // const minutes = m.getHours();
-  // const modifiedMinutes = minutes === 0 ? '00': minutes;
-  // const am = hour < 11;
-  // const suffix = {1: 'st', 2: 'nd', 3: 'rd'};
-  // const readable_date_time = `${weekday[m.getDay()]}, ${month[m.getMonth()]} ${day}${suffix.hasOwnProperty(day) ? suffix[day]} : 'th', ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${am ? 'am' : 'pm}`;
+  const suffixMap = new Map([
+    ['1', 'st'],
+    ['2', 'nd'],
+    ['3', 'rd'],
+  ]);
+
+  for (const [subjectName, tutorsObject] of Object.entries(data)) {
+    for (const [tutorName, timeslotsArr] of Object.entries(tutorsObject)) {
+      for (let i = 0; i < timeslotsArr.length; i++) {
+        //     const t = data[subjectName][tutorName][i].start_time;
+        //       .split(/[- :]/)
+        //       .map((str) => +str);
+        //     const m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+        //     const day = m.getDate();
+        //     const suffix =
+        // (suffixMap.has(day.toString()) ? suffixMap.get(day.toString()) : 'th') ||
+        // '';
+        //     const hour = m.getHours();
+        //     const modifiedHour =
+        //       hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
+        //     const minutes = m.getHours();
+        //     const modifiedMinutes = minutes === 0 ? '00' : minutes;
+        //     const am = hour < 11;
+        //     const readable_date_time = `${weekday[m.getDay()]}, ${
+        //       month[m.getMonth()]
+        //     } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
+        //       am ? 'am' : 'pm'
+        //     }`;
+        const t = data[subjectName][tutorName][i];
+        const readable_date_time = `${t.weekday} ${t.start_time}-${t.end_time}`;
+        data[subjectName][tutorName][i].readable_date_time = readable_date_time;
+      }
+    }
+  }
+
   // Add the key readable_date_time to each object in each tutor instance's timeslots array
 
-  // return response.data;
+  return data;
   // TODO: adjust MeetingScheduler to use the new data format
-  return null;
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
+  console.log(userInfo);
 
   // Retrieve logged in user's token
   const token = getAuthToken();
@@ -334,26 +393,6 @@ export const action: ActionFunction = async ({ request }) => {
 
   // TODO: add logged in student's id to redirect to the right dashboard
   return redirect('/dashboard');
-};
-
-const exampleAvailabilityData = {
-  'CS 1336': {
-    'Shyam Karrah': {
-      tutor_id: 45,
-      timeslots: [{ date_time: '2023-10-27 14:00:00', duration: '60' }],
-    },
-    'Srimathi Srinvasan': {},
-    'Laurie Tompson': {},
-  },
-  'CS 1337': {
-    'Scott Dollinger': {},
-    'Miguel Razo Razo': {},
-    'Srimathi Srinivasan': {},
-    'Khiem Le': {},
-    'Jeyakesavan Veerasamy': {},
-    'Jason Smith': {},
-    'Doug DeGroot': {},
-  },
 };
 
 export default MeetingScheduler;
