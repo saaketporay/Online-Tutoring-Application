@@ -13,11 +13,12 @@ const getUserByEmail = async (email) => {
 const createUser = async (firstname, lastname, email, password, user_type) => {
     try
     {
-        const [check_user] = await connection.promise().query(getUserByEmail(email));
-        if (check_user)
-        {
-            return false;
-        }
+        // const [check_user] = await getUserByEmail(email);
+        // console.log(check_user)
+        // if (check_user)
+        // {
+        //     return false;
+        // }
         const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES (?, ?, ?, ?, ?);`, [firstname, lastname, email, password, user_type]);
         const userId = result.insertId;
         console.log(`New user created with ID: ${userId}`);

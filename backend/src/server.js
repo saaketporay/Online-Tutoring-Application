@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors')
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const availabilityRoutes = require('./routes/availabilityRoutes');
+const userRoutes = require('./routes/userRoutes');
 const app = express();
 const http = require('http');
 const port = 3000;
@@ -12,6 +13,7 @@ app.use(cors());
 
 
 // Basic route
+app.use('/users', userRoutes); // user routes
 app.use('/appointments', appointmentRoutes); // appointment routes
 app.use('/availability', availabilityRoutes); // availability routes
 
