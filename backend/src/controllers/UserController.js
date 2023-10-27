@@ -1,28 +1,48 @@
 // user auth controller
 
-const { getUserByEmail, createUser } = require("../models/User");
-const { createTutor } = require("../models/Tutor"); // Import createTutor function
-const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
+ const { getUserByEmail, createUser } = require('../models/User');
+ const { createTutor } = require("../models/Tutor"); // Import createTutor function
+ const { comparePasswords, hashPassword } = require('../utils/passwordUtils')
+ const jwt = require('jsonwebtoken');
+ const bcrypt = require('bcrypt');
 
-const login = async (req, res) => {
-  const { email, hashed_password } = req.body;
+ const KEY = 'supersecret';
 
-  try {
-    const user = await getUserByEmail(email);
-    console.log(hashed_password);
-    if (
-      !user ||
-      !(await comparePasswords(hashed_password, user.hashed_password))
-    ) {
-      return res.status(400).send("Failed to login. Wrong credentials");
+ const generateToken = (user) => {
+     const token = jwt.sign(
+         {
+             id: user.user_id, email: user.email
+         },
+         KEY,
+         {
+             expiresIn: '1h'
+         }
+     );
+     return token;
+ };
+
+ const login = async (req, res) => {
+    const { email, password } = req.body;
+
+    try
+    {
+        const user = await getUserByEmail(email);
+        console.log(password);
+        if (!user || !(await comparePasswords(password, user.hashed_password)))
+        {
+            return res.status(400).send("Failed to login. Wrong credentials");
+        }
+
+        const token = generateToken(user);
+        console.log(token);
+        res.json({token});
     }
-
-    return res.status(200).send("Login Successful: ");
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
-  }
-};
+    catch (err)
+    {
+        console.error(err);
+        res.status(500).send('Internal Server Error');
+    }
+ };
 
 const register = async (req, res) => {
   const {
@@ -31,9 +51,6 @@ const register = async (req, res) => {
     email,
     password,
     user_type,
-    aboutMe,
-    profilePicture,
-    isCriminal,
   } = req.body;
 
   try {
@@ -65,7 +82,8 @@ const register = async (req, res) => {
   }
 };
 
-module.exports = {
-  login,
-  register,
-};
+ module.exports = 
+ {
+    login,
+    register,
+ };

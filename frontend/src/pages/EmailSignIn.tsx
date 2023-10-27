@@ -12,12 +12,12 @@ import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
-interface authError {
+type authError = {
   message?: string,
   errors: string[]
 };
 
-function EmailSignin() {
+const EmailSignin = () => {
   const data = useActionData() as authError;
   console.log(data);
 
@@ -104,14 +104,15 @@ export const authAction: ActionFunction = async ({ request }) => {
   if (response.status != 200) {
     throw json({
       ...response.data,
-      "status": response.status
-    })
+      status: response.status
+    });
   }
   const token = response.data.token;
+  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   localStorage.setItem('token', token);
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + (24 * 7));
   localStorage.setItem('expiration', expiration.toISOString());
   localStorage.setItem('user_type', 'student');
-  return redirect('/student');
+  return redirect('/dashboard');
 };
