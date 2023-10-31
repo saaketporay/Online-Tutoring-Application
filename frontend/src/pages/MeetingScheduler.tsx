@@ -16,7 +16,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
-import { getAuthToken } from '../utils/auth';
+import store from '../store';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
@@ -270,7 +270,7 @@ const MeetingScheduler = () => {
 
 export const loader: LoaderFunction = async () => {
   // Retrieve logged in user's token
-  const token = getAuthToken();
+  const token = store.getState().auth.token;
   if (!token) {
     return redirect('/signin');
   }
@@ -311,7 +311,7 @@ export const action: ActionFunction = async ({ request }) => {
   const userInfo = Object.fromEntries(data);
 
   // Retrieve logged in user's token
-  const token = getAuthToken();
+  const token = store.getState().auth.token;
   if (!token) {
     return redirect('/signin');
   }

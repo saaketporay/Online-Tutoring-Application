@@ -1,27 +1,31 @@
 import Header from './Header';
 import Footer from './Footer';
-import { Outlet, useSubmit, useLoaderData } from 'react-router-dom';
+import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { getTokenDuration } from '../utils/auth';
+import { useAppSelector, useAppDispatch } from '../hooks';
+import { logout } from '../features/authSlice';
 
-function AppLayout() {
-  const token = useLoaderData() as string;
-  const submit = useSubmit();
-
+const AppLayout = () => {
+  const dispatch = useAppDispatch();
+  const token = useAppSelector((state) => state.auth.token);
+  const expiration = useAppSelector((state) => state.auth.expiration);
+  const navigate = useNavigate();
+  
   useEffect(() => {
     if (token) {
       console.log(token);
-      if (token == null) {
-        return;
+      if (!token) {
+        navigate('/');
       }
-      if (token == "EXPIRED") {
-        submit(null, { action: "/logout", method: "post" });
-      } else {
-        const tokenDuration = getTokenDuration();
-        console.log(tokenDuration);
+      else if (expiration) {
+        const expirationDate = new Date(expiration);
+        const now = new Date();
+        const duration = expirationDate.getTime() - now.getTime();
+        console.log(duration);
         setTimeout(() => {
-          submit(null, { action: "/logout", method: "post" });
-        }, tokenDuration);
+          dispatch(logout());
+          navigate('/');
+        }, duration);
       }
     }
   }, [token]);

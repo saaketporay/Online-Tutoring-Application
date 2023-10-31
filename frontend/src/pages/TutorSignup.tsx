@@ -9,9 +9,11 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-
+import { useAppDispatch } from '../hooks';
+import { setExpiration, setToken } from '../features/authSlice';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
+import store from '../store';
 
 const TutorSignup = () => {
   const data = useLoaderData();
@@ -58,11 +60,11 @@ export const action: ActionFunction = async ({ request }) => {
   );
   const modifiedUserInfo = {
     // TODO: fix string key names in Forms
-    first_name: userInfo['first-name'],
-    last_name: userInfo['last-name'],
+    first_name: userInfo['first_name'],
+    last_name: userInfo['last_name'],
     email: userInfo.email,
     password: userInfo.password,
-    phone_number: userInfo['phone-number'], // TODO: accept in the backend
+    phone_number: userInfo['phone_number'],
     user_type: 'tutor',
     about_me: userInfo['about-me'],
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
@@ -80,6 +82,12 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
+  const token = response.data.token;
+  store.dispatch(setToken(token));
+  axios.defaults.headers['Authorization'] = token;
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + (24 * 7));
+  store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/signin');
 };
 
