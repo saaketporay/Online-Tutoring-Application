@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { autocompleteTheme } from '../theme';
+import { autocompleteTheme } from '../utils/theme';
 import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';

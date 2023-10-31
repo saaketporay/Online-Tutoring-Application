@@ -27,12 +27,14 @@ const login = async (req, res) => {
 };
 
 const register = async (req, res) => {
+  console.log(req.body);
   const {
     first_name,
     last_name,
     email,
     password,
     user_type,
+    phone_number,
     about_Me,
     profile_Picture,
     is_Criminal,
@@ -45,10 +47,11 @@ const register = async (req, res) => {
       last_name,
       email,
       hashedPassword,
-      user_type
+      user_type,
+      phone_number,
     );
     console.log(`New User ID: ${user_Id}`);
-
+    console.log('Hashed Password:', hashedPassword);
     // If user is a tutor, create a corresponding entry in the Tutors table
     if (user_type === 'tutor') {
       const tutorId = await createTutor(
@@ -62,7 +65,6 @@ const register = async (req, res) => {
     const user = await getUserByEmail(email);
     const token = generateToken(user);
     return res.status(200).json({ token });
-    //return res.status(200).send('Register Successful: ');
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');

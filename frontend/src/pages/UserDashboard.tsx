@@ -1,4 +1,4 @@
-import { roundButtonTheme, textFieldTheme } from '../theme';
+import { roundButtonTheme, textFieldTheme } from '../utils/theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,8 +15,8 @@ import {
 } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal } from "../redux/modalSlice";
 import axios from 'axios';
 
 const DUMMY_STUDENT_INFO = {

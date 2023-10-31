@@ -12,8 +12,8 @@ import {
   ActionFunction,
   useSubmit
 } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal, clearAppointmentId } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal, clearAppointmentId } from "../redux/modalSlice";
 import axios from 'axios';
 
 const modalStyle = {

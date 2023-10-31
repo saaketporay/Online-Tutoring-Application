@@ -1,4 +1,4 @@
-import { cardTheme, textFieldTheme } from '../theme';
+import { cardTheme, textFieldTheme } from '../utils/theme';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon'
@@ -11,8 +11,8 @@ import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { useState } from 'react';
 import { createTheme } from '@mui/material';
 import { useActionData, Link } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal, setAppointmentId } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal, setAppointmentId } from "../redux/modalSlice";
 
 type userProps = {
   first_name: string,

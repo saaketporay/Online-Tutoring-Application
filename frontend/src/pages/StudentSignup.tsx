@@ -5,10 +5,12 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from "react-router-dom";
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
-import { squareButtonTheme } from '../theme';
+import { squareButtonTheme } from '../utils/theme';
 import { ThemeProvider } from '@emotion/react';
 import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
+import store from '../redux/store';
+import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 
 const StudentSignup = () => {
@@ -60,12 +62,10 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  const token = response.data.token;
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  localStorage.setItem('token', token);
+  const token = response.data.token
+  store.dispatch(setToken(token));
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + (24 * 7));
-  localStorage.setItem('expiration', expiration.toISOString());
-  localStorage.setItem('user_type', 'student');
+  store.dispatch(setExpiration(expiration.toISOString()));
   return redirect("/dashboard");
 };
