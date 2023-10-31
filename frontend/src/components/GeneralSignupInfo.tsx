@@ -1,6 +1,6 @@
 import TextField from "@mui/material/TextField";
 import { ThemeProvider } from "@emotion/react";
-import { squareButtonTheme, textFieldTheme } from '../theme';
+import { squareButtonTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
 import { useEffect, useState } from "react";
 

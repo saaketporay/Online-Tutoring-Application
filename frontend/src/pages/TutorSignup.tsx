@@ -9,11 +9,10 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import { useAppDispatch } from '../hooks';
-import { setExpiration, setToken } from '../features/authSlice';
+import { setExpiration, setToken } from '../redux/authSlice';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
-import store from '../store';
+import store from '../redux/store';
 
 const TutorSignup = () => {
   const data = useLoaderData();

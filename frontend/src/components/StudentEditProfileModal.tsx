@@ -14,7 +14,7 @@ import {
   json,
   redirect
 } from 'react-router-dom';
-import { useAppSelector } from '../hooks';
+import { useAppSelector } from '../redux/hooks';
 import axios from 'axios';
 
 const modalStyle = {

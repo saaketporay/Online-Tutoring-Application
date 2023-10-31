@@ -5,12 +5,12 @@ import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
 import { Link as RouterLink } from "react-router-dom";
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
-import { squareButtonTheme } from '../theme';
+import { squareButtonTheme } from '../utils/theme';
 import { ThemeProvider } from '@emotion/react';
 import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
-import store from '../store';
-import { setToken, setExpiration } from '../features/authSlice';
+import store from '../redux/store';
+import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 
 const StudentSignup = () => {

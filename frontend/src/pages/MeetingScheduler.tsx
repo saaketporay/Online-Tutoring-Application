@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { autocompleteTheme } from '../theme';
+import { autocompleteTheme } from '../utils/theme';
 import FormControl from '@mui/material/FormControl';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
@@ -16,7 +16,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
-import store from '../store';
+import store from '../redux/store';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },

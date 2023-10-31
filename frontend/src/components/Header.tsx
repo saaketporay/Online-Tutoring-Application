@@ -11,8 +11,8 @@ import {
 } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import { Button, Stack } from '@mui/material';
-import { useAppSelector, useAppDispatch } from '../hooks';
-import { logout } from '../features/authSlice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { logout } from '../redux/authSlice';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);

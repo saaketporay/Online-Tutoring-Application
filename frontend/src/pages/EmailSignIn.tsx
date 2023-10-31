@@ -6,10 +6,10 @@ import Link from '@mui/material/Link';
 import { Link as RouterLink, Form, json, redirect, useActionData } from 'react-router-dom';
 import type { ActionFunction } from "react-router";
 import { ThemeProvider } from '@emotion/react';
-import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
+import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
-import store from '../store';
-import { setToken, setExpiration } from '../features/authSlice';
+import store from '../redux/store';
+import { setToken, setExpiration } from '../redux/authSlice';
 import { useEffect, useState } from "react";
 import axios from 'axios';
 

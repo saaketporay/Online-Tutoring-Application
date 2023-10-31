@@ -2,8 +2,8 @@ import Header from './Header';
 import Footer from './Footer';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
-import { useAppSelector, useAppDispatch } from '../hooks';
-import { logout } from '../features/authSlice';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { logout } from '../redux/authSlice';
 
 const AppLayout = () => {
   const dispatch = useAppDispatch();
