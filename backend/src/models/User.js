@@ -10,7 +10,7 @@ const getUserByEmail = async (email) => {
 };
 
 
-const createUser = async (firstname, lastname, email, password, user_type) => {
+const createUser = async (firstname, lastname, email, password, user_type, phone_number) => {
     try
     {
         // const [check_user] = await getUserByEmail(email);
@@ -19,7 +19,7 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
         // {
         //     return false;
         // }
-        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type) VALUES (?, ?, ?, ?, ?);`, [firstname, lastname, email, password, user_type]);
+        const [result] = await connection.promise().query(`INSERT INTO Users (first_name, last_name, email, hashed_password, user_type, phone_number) VALUES (?, ?, ?, ?, ?, ?);`, [firstname, lastname, email, password, user_type, phone_number]);
         const userId = result.insertId;
         console.log(`New user created with ID: ${userId}`);
         return userId;
