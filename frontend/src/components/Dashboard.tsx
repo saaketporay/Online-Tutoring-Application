@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
-import { useState } from 'react';
 import { createTheme } from '@mui/material';
 import { useActionData, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -17,13 +16,7 @@ import { toggleModal, setAppointmentId } from "../redux/modalSlice";
 type userProps = {
   first_name: string,
   last_name: string,
-  email: string,
-  monthly_meeting_time: string,
   total_meeting_time: string,
-  avg_meeting_time_per_course: string,
-  avg_meeting_time_per_user: string,
-  avg_monthly_meeting_time: string,
-  avg_weekly_meeting_time: string,
   user_type: string,
   user_id: string,
   appointments: {
@@ -58,13 +51,7 @@ type modalResponse = {
 const Dashboard = ({
   first_name,
   last_name,
-  email,
   total_meeting_time,
-  avg_meeting_time_per_course,
-  avg_meeting_time_per_user,
-  monthly_meeting_time,
-  avg_monthly_meeting_time,
-  avg_weekly_meeting_time,
   user_type,
   appointments,
 }: userProps) => {
@@ -84,7 +71,7 @@ const Dashboard = ({
           <Card
             sx={{
               width: 250,
-              height: 500
+              height: 600
             }}>
             <CardContent>
               <Stack
@@ -134,74 +121,14 @@ const Dashboard = ({
                     {total_meeting_time}
                   </Typography>
                 </Stack>
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                  <Typography variant='body2'>
-                    Avg. monthly meeting time
-                  </Typography>
-                  <Typography variant='body2'>
-                    {avg_monthly_meeting_time}
-                  </Typography>
-                </Stack>
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                  <Typography variant='body2'>
-                    Avg. weekly meeting time
-                  </Typography>
-                  <Typography variant='body2'>
-                    {avg_weekly_meeting_time}
-                  </Typography>
-                </Stack>
               </Stack>
             </CardContent>
           </Card>
-          <Stack direction={'column'} spacing={3}>
-            <Stack direction={'row'} spacing={3}>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Avg. meeting time / course
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {avg_meeting_time_per_course}
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Meeting time for last 30 days
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {monthly_meeting_time}
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Avg. meeting time / {user_type == 'student' ? 'Instructor' : 'Student'}
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {avg_meeting_time_per_user}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Stack>
             <Card
               className='justify-self-stretch'
               sx={{
-                height: 350
+                width: 800,
+                height: 600
               }}>
               <CardContent>
                 <Typography variant='h6' align='center' className='mb-3'>
@@ -242,7 +169,6 @@ const Dashboard = ({
                 </Stack>
               </CardContent>
             </Card>
-          </Stack>
         </Stack>
       </ThemeProvider >
     </>
