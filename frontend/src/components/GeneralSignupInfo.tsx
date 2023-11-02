@@ -3,23 +3,33 @@ import { ThemeProvider } from "@emotion/react";
 import { squareButtonTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
 import { useEffect, useState } from "react";
+import { useActionData } from "react-router-dom";
 
 const theme = createTheme(textFieldTheme, squareButtonTheme);
 
-const GeneralSignupInfo = () => {
-  const [firstName, setFirstName] = useState<string>('');
-  const [lastName, setLastName] = useState<string>('');
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  const [phoneNumber, setPhoneNumber] = useState<string>('');
+type signupError = {
+  errors: string[],
+};
 
-  useEffect(() => {
-    // TODO: Form validation
-  }, [firstName, lastName, email, password, phoneNumber])
+const GeneralSignupInfo = () => {
+  const data = useActionData() as signupError;
 
   return (
     <>
       <ThemeProvider theme={theme}>
+        {data && data.errors && 
+          <>
+            <ul className='mt-0'>
+              {data.errors.map((error, i) => {
+                return (
+                  <li key={i} className='text-red-500'>
+                    {error}
+                  </li>
+                )
+              })}
+            </ul>
+          </>
+        }
         <TextField
           required
           id='first_name'
@@ -27,8 +37,7 @@ const GeneralSignupInfo = () => {
           label='Required'
           placeholder='First Name'
           autoComplete='off'
-          className='w-[410px] mb-10'
-          onChange={(e) => setFirstName(e.target.value)}
+          className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
           required
@@ -37,8 +46,7 @@ const GeneralSignupInfo = () => {
           label='Required'
           placeholder='Last Name'
           autoComplete='off'
-          className='w-[410px] mb-10'
-          onChange={(e) => setLastName(e.target.value)}
+          className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
           required
@@ -47,8 +55,7 @@ const GeneralSignupInfo = () => {
           label='Required'
           placeholder='Email Address'
           autoComplete='off'
-          className='w-[410px] mb-10'
-          onChange={(e) => setEmail(e.target.value)}
+          className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
           required
@@ -57,8 +64,7 @@ const GeneralSignupInfo = () => {
           label='Required'
           placeholder='Phone Number'
           type='tel'
-          className='w-[410px] mb-10'
-          onChange={(e) => setPhoneNumber(e.target.value)}
+          className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
           required
@@ -67,8 +73,7 @@ const GeneralSignupInfo = () => {
           label='Required'
           placeholder='Password'
           type='password'
-          className='w-[410px] mb-4'
-          onChange={(e) => setPassword(e.target.value)}
+          className='w-[410px] mb-4 justify-self-center'
         />
       </ThemeProvider>
     </>

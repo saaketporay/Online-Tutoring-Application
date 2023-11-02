@@ -10,25 +10,16 @@ import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../utils/theme
 import { createTheme } from '@mui/material';
 import store from '../redux/store';
 import { setToken, setExpiration } from '../redux/authSlice';
-import { useEffect, useState } from "react";
 import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
 type authError = {
-  message?: string,
-  errors: string[]
+  error: string
 };
 
 const EmailSignin = () => {
-  const [email, setEmail] = useState<string>('');
-  const [password, setPassword] = useState<string>('');
-  useEffect(() => {
-    // TODO: Form validation
-  }, [email, password])
-
   const data = useActionData() as authError;
-  console.log(data);
 
   return (
     <>
@@ -40,15 +31,11 @@ const EmailSignin = () => {
           >
             Sign in
           </Typography>
-          {data && data.errors &&
-            <ul className="mt-0">
-              {Object.values(data.errors).map((error: string) => {
-                return (
-                  <li key={error}>
-                    {error}
-                  </li>
-                )
-              })}
+          {data && data.error &&
+            <ul className='mt-0'>
+              <li className='text-red-500'>
+                {data.error}
+              </li>
             </ul>
           }
           <ThemeProvider theme={theme}>
@@ -60,7 +47,6 @@ const EmailSignin = () => {
               placeholder="Email Address"
               autoComplete="off"
               className="w-[410px] mb-10"
-              onChange={(e) => setEmail(e.target.value)}
             />
             <TextField
               required
@@ -70,7 +56,6 @@ const EmailSignin = () => {
               placeholder="Password"
               type="password"
               className="w-[410px] mb-4"
-              onChange={(e) => setPassword(e.target.value)}
             />
             <Button
               className="mt-8 py-2"
@@ -110,6 +95,9 @@ export default EmailSignin;
 export const authAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
+  if (!userInfo.email.toString().includes('@')) {
+    return json({ error: "Email address must have the '@' symbol." });
+  }
   const response = await axios.post('/user/login', userInfo);
   console.log(response);
   if (response.status != 200) {

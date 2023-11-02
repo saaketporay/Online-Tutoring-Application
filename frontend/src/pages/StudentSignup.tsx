@@ -20,24 +20,24 @@ const StudentSignup = () => {
         <Box className='grid justify-center bg-[#191919]'>
           <Typography
             variant='h4'
-            className='mt-8 mb-10 justify-self-center'>
+            className='mt-12 mb-6 justify-self-center'>
             Sign up
           </Typography>
           <GeneralSignupInfo />
           <ThemeProvider theme={squareButtonTheme}>
-            <Button
-              className='mt-4 py-2'
-              type='submit'>
-              SIGN UP
-            </Button>
-            <Link
-              to='/signin'
-              component={RouterLink}
-              className='mt-2 justify-self-end'
-              color='#A3A3A3'
-              fontSize={14}>
-              Already have an account? Sign in
-            </Link>
+          <Button
+            className='mt-4 py-2 px-44 place-self-center'
+            type='submit'>
+            SIGN UP
+          </Button>
+          <Link
+            to='/signin'
+            component={RouterLink}
+            className='mt-2 place-self-center'
+            color='#A3A3A3'
+            fontSize={14}>
+            Already have an account? Sign in
+          </Link>
           </ThemeProvider>
         </Box>
       </Form>
@@ -50,6 +50,23 @@ export default StudentSignup;
 export const userSignupAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const studentInfo = Object.fromEntries(data);
+  let errors = [];
+  const { email, phone_number, password } = studentInfo;
+  if (!email.toString().includes('@')) {
+    errors.push('Email address is invalid.');
+  }
+  if (isNaN(parseInt(phone_number.toString()))) {
+    errors.push('Phone number can only contain numbers.');
+  }
+  if (password.toString().length < 9) {
+    errors.push('Password must have at least 8 characters.');
+  }
+  if (password.toString().search(/`~!@#%&-=_,.<>;/)) {
+    errors.push('Password must contain one of the following special characters: `~!@#%&-=_,.<>;')
+  }
+  if (errors) {
+    return json({ errors: errors });
+  }
   console.log(studentInfo);
   const response = await axios.post('/user/register', {
     ...studentInfo,
