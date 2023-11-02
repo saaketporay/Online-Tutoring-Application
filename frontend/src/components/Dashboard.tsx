@@ -208,7 +208,7 @@ const Dashboard = ({
                   Upcoming Appointments
                 </Typography>
                 <Stack direction={'column'}>
-                  {appointments.map(function (appt, i) {
+                  {appointments.map((appt, i) => {
                     return (
                       <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
                         <Typography variant='body1'>
