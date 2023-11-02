@@ -1,13 +1,13 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
+import App from "./App";
 import "./index.css";
 import { CssBaseline } from "@mui/material";
 import { ThemeProvider } from "@emotion/react";
-import { globalTheme } from "./utils/theme.tsx";
+import { globalTheme } from "./utils/theme";
 import axios from "axios";
 import { Provider } from "react-redux";
-import store from "./redux/store.ts";
+import store from "./redux/store";
 
 axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
 axios.defaults.headers.common["Content-Type"] = "application/json";
