@@ -32,7 +32,7 @@ const EmailSignin = () => {
             Sign in
           </Typography>
           {data && data.error &&
-            <ul className="mt-0">
+            <ul className='mt-0'>
               <li className='text-red-500'>
                 {data.error}
               </li>
