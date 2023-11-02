@@ -23,6 +23,20 @@ const generateToken = (user) => {
   return token;
 };
 
+const getAllUserInfo = async (req, res) => {
+  try{
+
+    const decodedToken = decodeToken(req.headers.authorization);
+    const student_email = decodedToken.email;
+    const user = await getUserByEmail(student_email);
+    return res.json(user);
+  }
+  catch (err)
+  {
+    return err;
+  }
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -85,7 +99,10 @@ const register = async (req, res) => {
   }
 };
 
+
+
 module.exports = {
   login,
   register,
+  getAllUserInfo
 };

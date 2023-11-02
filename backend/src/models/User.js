@@ -30,9 +30,24 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
     }
 };
 
+const getAllUserInfo = async (email) => {
+    try {
+        const [rows, fields] = await connection.promise().query(`SELECT * FROM Users WHERE email = '${email}';`);
+        console.log(rows[0]);
+        return rows[0];
+        
+      } 
+      catch (error) 
+      {
+        return error;
+      }
+    };
+
+
 
 module.exports = 
 {
     getUserByEmail,
     createUser,
+    getAllUserInfo
 };
