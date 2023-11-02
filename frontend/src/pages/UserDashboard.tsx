@@ -47,8 +47,37 @@ const DUMMY_STUDENT_INFO = {
       day: 'Thursday',
       time: '3 pm - 4 pm',
       id: '2'
-    }
-  ]
+    },
+  ],
+  favorite_tutors: [
+    {
+      tutor_name: "James Smith",
+    },
+    {
+      tutor_name: "Maria Garcia",
+    },
+    {
+      tutor_name: "Anurag Nagar",
+    },
+    {
+      tutor_name: "John Cole",
+    },
+    {
+      tutor_name: "Deepak Kumar",
+    },
+    {
+      tutor_name: "James Wilson",
+    },
+    {
+      tutor_name: "James Franco",
+    },
+    {
+      tutor_name: "Vince Gilligan",
+    },
+    {
+      tutor_name: "Johnathan Carpenter",
+    },
+  ],
 };
 
 const DUMMY_TUTOR_INFO = {
@@ -72,7 +101,7 @@ const DUMMY_TUTOR_INFO = {
       time: '11:15 am - 12:15 pm',
       id: '1'
     },
-  ]
+  ],
 };
 
 const theme = createTheme(roundButtonTheme, textFieldTheme, {
