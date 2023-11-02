@@ -8,7 +8,6 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
-import { useState } from 'react';
 import { createTheme } from '@mui/material';
 import { useActionData, Link } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -17,13 +16,7 @@ import { toggleModal, setAppointmentId } from "../redux/modalSlice";
 type userProps = {
   first_name: string,
   last_name: string,
-  email: string,
-  monthly_meeting_time: string,
   total_meeting_time: string,
-  avg_meeting_time_per_course: string,
-  avg_meeting_time_per_user: string,
-  avg_monthly_meeting_time: string,
-  avg_weekly_meeting_time: string,
   user_type: string,
   user_id: string,
   appointments: {
@@ -33,6 +26,9 @@ type userProps = {
     day: string,
     time: string,
     id: string
+  }[],
+  favorite_tutors: {
+    tutor_name: string,
   }[],
 };
 
@@ -58,18 +54,12 @@ type modalResponse = {
 const Dashboard = ({
   first_name,
   last_name,
-  email,
   total_meeting_time,
-  avg_meeting_time_per_course,
-  avg_meeting_time_per_user,
-  monthly_meeting_time,
-  avg_monthly_meeting_time,
-  avg_weekly_meeting_time,
   user_type,
   appointments,
+  favorite_tutors,
 }: userProps) => {
   const showModal = useAppSelector((state) => state.modal.showModal);
-  console.log("From dashboard: ", showModal);
   const dispatch = useAppDispatch();
 
   const actionData = useActionData() as modalResponse;
@@ -84,7 +74,7 @@ const Dashboard = ({
           <Card
             sx={{
               width: 250,
-              height: 500
+              height: 600
             }}>
             <CardContent>
               <Stack
@@ -123,10 +113,7 @@ const Dashboard = ({
                     </Button>
                   </>
                 }
-                <Typography variant='subtitle1' align='center' className="mt-5">
-                  Overall Stats
-                </Typography>
-                <Stack direction={'row'} justifyContent={'space-between'}>
+                <Stack direction={'row'} justifyContent={'space-between'} className="mt-5">
                   <Typography variant='body2'>
                     Total meeting time
                   </Typography>
@@ -134,115 +121,87 @@ const Dashboard = ({
                     {total_meeting_time}
                   </Typography>
                 </Stack>
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                  <Typography variant='body2'>
-                    Avg. monthly meeting time
-                  </Typography>
-                  <Typography variant='body2'>
-                    {avg_monthly_meeting_time}
-                  </Typography>
-                </Stack>
-                <Stack direction={'row'} justifyContent={'space-between'}>
-                  <Typography variant='body2'>
-                    Avg. weekly meeting time
-                  </Typography>
-                  <Typography variant='body2'>
-                    {avg_weekly_meeting_time}
-                  </Typography>
-                </Stack>
               </Stack>
             </CardContent>
           </Card>
-          <Stack direction={'column'} spacing={3}>
-            <Stack direction={'row'} spacing={3}>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Avg. meeting time / course
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {avg_meeting_time_per_course}
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Meeting time for last 30 days
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {monthly_meeting_time}
-                  </Typography>
-                </CardContent>
-              </Card>
-              <Card
-                sx={{
-                  width: 250,
-                  height: 125
-                }}>
-                <CardContent>
-                  <Typography variant='body1' align='center'>
-                    Avg. meeting time / {user_type == 'student' ? 'Instructor' : 'Student'}
-                  </Typography>
-                  <Typography variant='h6' align='center' className='pt-4'>
-                    {avg_meeting_time_per_user}
-                  </Typography>
-                </CardContent>
-              </Card>
-            </Stack>
-            <Card
-              className='justify-self-stretch'
-              sx={{
-                height: 350
-              }}>
+          <Card
+            className='justify-self-stretch'
+            sx={{
+              width: 800,
+              height: 600
+            }}
+          >
+            <Typography variant='h6' align='center' className='mt-6'>
+              Favorite Tutors
+            </Typography>
+            {favorite_tutors ?
               <CardContent>
-                <Typography variant='h6' align='center' className='mb-3'>
-                  Upcoming Appointments
-                </Typography>
-                <Stack direction={'column'}>
-                  {appointments.map((appt, i) => {
+                <div className='flex flex-wrap gap-x-4 gap-y-4 justify-around'>
+                  {favorite_tutors.map(function (tutor, i) {
                     return (
-                      <Stack direction={'row'} key={i} alignItems={'center'} justifyContent={'space-between'}>
-                        <Typography variant='body1'>
+                      <Card 
+                        key={i}
+                        className='shadow-lg bg-neutral-700'
+                      >
+                        <CardContent className='break-normal'>
+                          {tutor.tutor_name}
+                        </CardContent>
+                      </Card>
+                    )
+                  })}
+                </div>
+              </CardContent>
+            :
+              <Typography variant='body1' align='center'>
+                You have not selected any tutors as favorites yet.
+              </Typography>
+            }
+            <CardContent>
+              <Typography variant='h6' align='center' className='mb-3'>
+                Upcoming Appointments
+              </Typography>
+              {appointments ? 
+                <Stack direction={'column'} spacing={1}>
+                  {appointments.map(function (appt, i) {
+                    return (
+                      <Card
+                        key={i}
+                        className='flex bg-neutral-700 px-3 py-1 justify-between align-center'
+                      >
+                        <Typography variant='body1' className='self-center'>
                           {appt.course} {user_type == "student" ? appt.tutor_name : appt.student_name} {appt.day} {appt.time}
                         </Typography>
-                        <div>
-                          <Button
-                            component={Link}
-                            to={`delete-appt/${appt.id}`}
-                            onClick={() => {
-                              dispatch(setAppointmentId(appt.id));
-                              dispatch(toggleModal());
-                            }}
+                        <Button
+                          component={Link}
+                          to={`delete-appt/${appt.id}`}
+                          onClick={() => {
+                            dispatch(setAppointmentId(appt.id));
+                            dispatch(toggleModal());
+                          }}
+                          sx={{
+                            "&:hover": {
+                              backgroundColor: 'transparent'
+                            }
+                          }}>
+                          <SvgIcon
+                            viewBox='0 0 45 45'
                             sx={{
-                              "&:hover": {
-                                backgroundColor: 'transparent'
-                              }
+                              fontSize: 30
                             }}>
-                            <SvgIcon
-                              viewBox='0 0 45 45'
-                              sx={{
-                                fontSize: 35
-                              }}>
-                              <DeleteAppointmentIcon />
-                            </SvgIcon>
-                          </Button>
-                        </div>
-                      </ Stack>
+                            <DeleteAppointmentIcon />
+                          </SvgIcon>
+                        </Button>
+                      </Card>
                     )
                   })}
                 </Stack>
-              </CardContent>
-            </Card>
-          </Stack>
+              : 
+                <Typography variant='body1' align='center'>
+                  You have no scheduled appointments at this time.
+                </Typography>
+              }
+            </CardContent>
+          </Card>
         </Stack>
       </ThemeProvider >
     </>
