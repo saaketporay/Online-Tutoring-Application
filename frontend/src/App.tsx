@@ -32,6 +32,7 @@ import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
 } from './pages/EditTutorProfile';
+import Search from './pages/Search';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -99,6 +100,10 @@ const router = createBrowserRouter(
       <Route
         path='success'
         element={<FormSuccess />}
+      />
+      <Route
+        path='search'
+        element={<Search />}
       />
       <Route
         path='logout'

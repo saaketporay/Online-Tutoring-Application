@@ -45,6 +45,15 @@ function Header() {
             </Stack>
           </Link>
           <div className='ms-auto'>
+            <NavLink
+              to='/search'
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-yellow-300 no-underline mr-6 hover:underline'
+                  : 'text-slate-100 no-underline mr-6 hover:underline'
+              }>
+              Sign in
+            </NavLink>
             {!signedIn ? (
               <NavLink
                 to='/signin'
