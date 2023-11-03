@@ -14,8 +14,12 @@ import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { AvailableCourseType } from '../components/TutorSignupInfo';
 
+type LoaderData = {
+  subjects: AvailableCourseType[];
+};
+
 const TutorSignup = () => {
-  const data = useLoaderData() as AvailableCourseType[];
+  const { subjects } = useLoaderData() as LoaderData;
 
   return (
     <Form
@@ -30,7 +34,7 @@ const TutorSignup = () => {
         <GeneralSignupInfo />
       </Box>
       <Box className='w-[500px] justify-self-center'>
-        <TutorSignupInfo subjects={data} />
+        <TutorSignupInfo subjects={subjects} />
       </Box>
     </Form>
   );
