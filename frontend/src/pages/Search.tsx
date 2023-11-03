@@ -13,36 +13,51 @@ import { autocompleteTheme } from '../theme';
 
 const theme = createTheme(autocompleteTheme, {
   components: {
-    MuiComponent: {
+    MuiAccordion: {
       styleOverrides: {
-        root: {},
+        root: {
+          backgroundColor: '#2d2d2d',
+          color: '#f5f5f5',
+        },
+      },
+    },
+    MuiAccordionSummary: {
+      styleOverrides: {
+        root: {
+          '& .MuiAccordionSummary-content': {
+            justifyContent: 'center',
+          },
+        },
       },
     },
   },
 });
 
-const DUMMY_DATA = {
-  1: {
-    first_name: 'John',
-    last_name: 'Doe',
+interface DUMMY_DATA_TYPE {
+  [key: string]: {
+    email: string;
+    about_me: string;
+    profile_picture: string;
+    total_tutoring_hours: number;
+  };
+}
+
+const DUMMY_DATA: DUMMY_DATA_TYPE = {
+  'John Doe': {
     email: 'john.doe@test.com',
     about_me: 'I love teaching math!',
     profile_picture:
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
     total_tutoring_hours: 30,
   },
-  2: {
-    first_name: 'Jane',
-    last_name: 'Doe',
+  'Jane Doe': {
     email: 'jane.doe@test.com',
     about_me: 'I love teaching science!',
     profile_picture:
       'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
     total_tutoring_hours: 45,
   },
-  3: {
-    first_name: 'John',
-    last_name: 'Smith',
+  'John Smith': {
     email: 'john.smith@test.com',
     about_me: 'I love teaching history!',
     profile_picture:
@@ -51,36 +66,31 @@ const DUMMY_DATA = {
   },
 };
 
-const DUMMY_TUTORS = Object.entries(DUMMY_DATA).map(([key, val]) => ({
-  label: `${val.first_name} ${val.last_name}`,
-  tutor_id: key,
+const DUMMY_TUTORS = Object.keys(DUMMY_DATA).map((key) => ({
+  label: key,
 }));
 
-const getOptionEquality = (option: { label: string }, value: TutorInput) =>
-  option.label === value.label;
-
-interface TutorInput {
-  label: string;
-  tutor_id: string;
-}
-
-const defaultTutorInput = { label: '', tutor_id: '' };
+const getOptionEquality = (
+  option: { label: string },
+  value: { label: string }
+) => option.label === value.label;
 
 const Search = () => {
-  const [selectedTutor, setSelectedTutor] =
-    useState<TutorInput>(defaultTutorInput);
+  const [selectedTutor, setSelectedTutor] = useState<string>('');
 
   const tutorSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
-    value: TutorInput,
+    value: string,
     reason: string
   ) => {
     if (reason === 'clear') {
-      defaultTutorInput;
+      setSelectedTutor('');
       return;
     }
     setSelectedTutor(value);
   };
+
+  const tutorInfo = DUMMY_DATA[selectedTutor];
 
   return (
     <ThemeProvider theme={theme}>
@@ -90,42 +100,73 @@ const Search = () => {
           className='my-24 justify-self-center'>
           Search for a Tutor
         </Typography>
-        <Stack spacing={6}>
-          <Autocomplete
-            freeSolo
-            autoSelect
-            id='instructor-search'
-            className='w-[500px]'
-            options={DUMMY_TUTORS}
-            disablePortal
-            value={selectedTutor}
-            onInputChange={tutorSelectChangeHandler}
-            isOptionEqualToValue={getOptionEquality}
-            renderInput={(params) => (
-              <TextField
-                {...params}
-                label='Tutor'
-                name='tutor'
-              />
-            )}
-          />
-          {selectedTutor === defaultTutorInput ? (
-            Object.entries(DUMMY_DATA).map(([key, val]) => (
-              <Accordion>
-                <AccordionSummary id={key}>
-                  <Typography className='text-center'>
-                    {`${val.first_name} ${val.last_name}`}
-                  </Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography></Typography>
-                </AccordionDetails>
-              </Accordion>
-            ))
-          ) : (
-            <></>
+        <Autocomplete
+          freeSolo
+          autoSelect
+          id='instructor-search'
+          className='w-[500px] mb-20'
+          options={DUMMY_TUTORS}
+          value={selectedTutor ? { label: selectedTutor } : null}
+          disablePortal
+          onInputChange={tutorSelectChangeHandler}
+          isOptionEqualToValue={getOptionEquality}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label='Search'
+              name='tutor'
+            />
           )}
-        </Stack>
+        />
+        {selectedTutor === '' || !(selectedTutor in DUMMY_DATA) ? (
+          Object.entries(DUMMY_DATA).map(([key, val]) => (
+            <Accordion>
+              <AccordionSummary>
+                <Typography>{key}</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box>
+                  <Stack
+                    direction='row'
+                    spacing={2}
+                    className='flex items-center'>
+                    <img
+                      className='max-w-[100px] h-auto rounded-full mx-3'
+                      src={val.profile_picture}
+                      alt={`${key}'s profile picture`}
+                    />
+                    <Stack
+                      spacing={2}
+                      className='w-full flex justify-center'>
+                      <Typography>{val.about_me}</Typography>
+                      <Typography>{`${val.total_tutoring_hours} total tutoring hours`}</Typography>
+                      <Typography>{val.email}</Typography>
+                    </Stack>
+                  </Stack>
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+          ))
+        ) : (
+          <Box>
+            <Stack
+              direction='row'
+              spacing={2}>
+              <img
+                className='max-w-[100px] h-auto rounded-full'
+                src={tutorInfo.profile_picture}
+                alt={`${selectedTutor}'s profile picture`}
+              />
+              <Stack
+                spacing={2}
+                className='items-center'>
+                <Typography>{tutorInfo.about_me}</Typography>
+                <Typography>{`Total tutoring hours: ${tutorInfo.total_tutoring_hours}`}</Typography>
+                <Typography>{tutorInfo.email}</Typography>
+              </Stack>
+            </Stack>
+          </Box>
+        )}
       </Box>
     </ThemeProvider>
   );
