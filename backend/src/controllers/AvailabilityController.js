@@ -67,7 +67,10 @@ const AvailabilityController = {
           );
           responseData[subject.subject_name][
             `${tutorInfo.first_name} ${tutorInfo.last_name}`
-          ] = tutorTimes.length === 0 ? [] : tutorTimes;
+          ] = {
+            tutor_id: tutor_id,
+            timeslots: tutorTimes.length === 0 ? [] : tutorTimes,
+          };
         }
       }
 

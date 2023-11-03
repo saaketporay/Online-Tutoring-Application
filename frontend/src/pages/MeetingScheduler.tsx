@@ -5,7 +5,6 @@ import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { autocompleteTheme } from '../theme';
-import FormControl from '@mui/material/FormControl';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -18,49 +17,20 @@ import {
 } from 'react-router-dom';
 import { getAuthToken } from '../utils/auth';
 
+// TODO: Update interface timeslot values based on updated table
 interface ResponseDataType {
   [key: string]: {
     [key: string]: {
       tutor_availiability_id: number;
+      subject_id: number;
       tutor_id: number;
       weekday: string;
       start_time: string;
       end_time: string;
-      readable_date_time?: string;
+      readable_date_time: string;
     }[];
   };
 }
-
-const DUMMY_TIMES = [
-  { day: 'Monday', from: '10:30am', to: '12pm' },
-  { day: 'Monday', from: '3pm', to: '4pm' },
-  { day: 'Wednesday', from: '9:45am', to: '10:45pm' },
-  { day: 'Thursday', from: '1pm', to: '2pm' },
-  { day: 'Friday', from: '4:15pm', to: '5:30pm' },
-];
-
-const DUMMY_DATA: {
-  [key: string]: {
-    [key: string]: { day: string; from: string; to: string }[];
-  };
-} = {
-  'CS 1336': {
-    'Shyam Karrah': DUMMY_TIMES,
-    'Srimathi Srinvasan': DUMMY_TIMES,
-    'Laurie Tompson': DUMMY_TIMES,
-  },
-  'CS 1337': {
-    'Scott Dollinger': DUMMY_TIMES,
-    'Miguel Razo Razo': DUMMY_TIMES,
-    'Srimathi Srinivasan': DUMMY_TIMES,
-    'Khiem Le': DUMMY_TIMES,
-    'Jeyakesavan Veerasamy': DUMMY_TIMES,
-    'Jason Smith': DUMMY_TIMES,
-    'Doug DeGroot': DUMMY_TIMES,
-  },
-};
-
-const DUMMY_COURSES = Object.keys(DUMMY_DATA).map((name) => ({ label: name }));
 
 const theme = createTheme(autocompleteTheme, {
   components: {
@@ -104,7 +74,7 @@ const MeetingScheduler = () => {
   const availableTimeslots =
     selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
       ? data[selectedCourse][selectedTutor].map((timeslot) => ({
-          label: timeslot.readable_date_time || '',
+          label: timeslot.readable_date_time,
         }))
       : [];
 
@@ -288,23 +258,7 @@ const MeetingScheduler = () => {
   );
 };
 
-export const loader: LoaderFunction = async () => {
-  // Retrieve logged in user's token
-  const token = getAuthToken();
-  if (!token) {
-    return redirect('/signin');
-  }
-
-  const response = await axios.get('/availability/all');
-  if (response.status !== 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
-  }
-  const data = response.data as ResponseDataType;
-  console.log(data);
-
+export const getReadableDateTime = (dateTime: string) => {
   // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
   const weekday = [
     'Sunday',
@@ -336,30 +290,65 @@ export const loader: LoaderFunction = async () => {
     ['3', 'rd'],
   ]);
 
+  // Split dateTime (formatted like YYYY-MM-DD hh:mm:ss) into an array of strings based on dashes, spaces, or colons
+  const t = dateTime.split(/[- :]/).map((str) => +str);
+  // Create a new Date object based on the year, month, day, etc, values from t
+  const m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+  // Get the day as a number in the range 1-31
+  const day = m.getDate();
+  // Select the appropriate suffix for the numerical day
+  const suffix =
+    (suffixMap.has(day.toString()) ? suffixMap.get(day.toString()) : 'th') ||
+    '';
+  // Get the hour as a number in the range 0-23
+  const hour = m.getHours();
+  // Convert hour to a human-readable 12-hour value
+  const modifiedHour =
+    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
+  // Get the minutes as a number in the range 0-59
+  const minutes = m.getMinutes();
+  // Convert minutes to a double-digit zeros if it's a 0
+  const modifiedMinutes = minutes === 0 ? '00' : minutes;
+  // Check whether an 'am' or 'pm' should be present
+  const am = hour < 11;
+  // Construct the human-readable date time value to display in the available timeslots autocomplete
+  const readable_date_time = `${weekday[m.getDay()]}, ${
+    month[m.getMonth()]
+  } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
+    am ? 'am' : 'pm'
+  }`;
+};
+
+export const loader: LoaderFunction = async () => {
+  // Retrieve logged in user's token
+  const token = getAuthToken();
+  if (!token) {
+    return redirect('/signin');
+  }
+
+  const response = await axios.get('/availability/all');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  const data = response.data as ResponseDataType;
+  console.log(data);
+
+  // For every subject
   for (const [subjectName, tutorsObject] of Object.entries(data)) {
+    // For every tutor
     for (const [tutorName, timeslotsArr] of Object.entries(tutorsObject)) {
+      // For every timeslot
       for (let i = 0; i < timeslotsArr.length; i++) {
-        //     const t = data[subjectName][tutorName][i].start_time;
-        //       .split(/[- :]/)
-        //       .map((str) => +str);
-        //     const m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-        //     const day = m.getDate();
-        //     const suffix =
-        // (suffixMap.has(day.toString()) ? suffixMap.get(day.toString()) : 'th') ||
-        // '';
-        //     const hour = m.getHours();
-        //     const modifiedHour =
-        //       hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
-        //     const minutes = m.getHours();
-        //     const modifiedMinutes = minutes === 0 ? '00' : minutes;
-        //     const am = hour < 11;
-        //     const readable_date_time = `${weekday[m.getDay()]}, ${
-        //       month[m.getMonth()]
-        //     } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
-        //       am ? 'am' : 'pm'
-        //     }`;
+        // const readable_date_time = getReadableDateTime(data[subjectName][tutorName][i]);
+        // data[subjectName][tutorName][i].readable_date_time = readable_date_time;
+
+        // Temporary way to construct a date time value assuming each timeslot object has a weekday, start_time, and end_time
+        // e.g. Monday 2023-11-03 13:00:00 - 2023-11-03 13:30:00
         const t = data[subjectName][tutorName][i];
-        const readable_date_time = `${t.weekday} ${t.start_time}-${t.end_time}`;
+        const readable_date_time = `${t.weekday} ${t.start_time} - ${t.end_time}`;
         data[subjectName][tutorName][i].readable_date_time = readable_date_time;
       }
     }
@@ -372,8 +361,8 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const data = await request.formData();
-  const userInfo = Object.fromEntries(data);
+  const formData = await request.formData();
+  const userInfo = Object.fromEntries(formData);
   console.log(userInfo);
 
   // Retrieve logged in user's token
@@ -383,9 +372,21 @@ export const action: ActionFunction = async ({ request }) => {
   }
   userInfo.token = token;
 
-  // TODO: extract tutor_id, date_time, and duration from userInfo and make new object with them as well as token
+  const data = JSON.parse(userInfo.data as string) as ResponseDataType;
+  const timeslot = data[userInfo.course as string][
+    userInfo.tutor as string
+  ].find((timeslot) => timeslot.readable_date_time === userInfo.timeslot)!;
 
-  console.log(userInfo);
+  const payload = {
+    token,
+    subject_id: timeslot.subject_id,
+    tutor_id: timeslot.tutor_id,
+    start_time: timeslot.start_time,
+    end_time: timeslot.end_time,
+    meeting_title: userInfo.meeting_title,
+    meeting_desc: userInfo.meeting_desc,
+  };
+  console.log(payload);
 
   // TODO: make backend accept meeting_title and meeting_desc
 
