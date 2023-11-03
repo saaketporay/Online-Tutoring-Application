@@ -52,7 +52,7 @@ function Header() {
                   ? 'text-yellow-300 no-underline mr-6 hover:underline'
                   : 'text-slate-100 no-underline mr-6 hover:underline'
               }>
-              Sign in
+              Search
             </NavLink>
             {!signedIn ? (
               <NavLink
