@@ -5,6 +5,7 @@ import {
   useLoaderData,
   LoaderFunction,
   ActionFunction,
+  useActionData,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -13,6 +14,7 @@ import axios from 'axios';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { AvailableCourseType } from '../components/TutorSignupInfo';
+import { authError } from './EmailSignIn';
 
 type LoaderData = {
   subjects: AvailableCourseType[];
@@ -20,6 +22,7 @@ type LoaderData = {
 
 const TutorSignup = () => {
   const { subjects } = useLoaderData() as LoaderData;
+  const data = useActionData() as authError;
 
   return (
     <Form
@@ -30,6 +33,13 @@ const TutorSignup = () => {
         className='mt-8 mb-10 justify-self-center'>
         Sign up
       </Typography>
+      {data && data.errors && (
+        <ul className='mt-0'>
+          {Object.values(data.errors).map((error: string) => {
+            return <li key={error}>{error}</li>;
+          })}
+        </ul>
+      )}
       <Box className='w-[410px] justify-self-center'>
         <GeneralSignupInfo />
       </Box>
