@@ -1,29 +1,30 @@
-const connection = require('../config/dbConfig');
-
+const { Scheduled_Appointments: AppointmentModel } = require('./index')
 const Appointment = {
-  create: async (student_id, tutor_id, date_time, duration) => {
+  create: async (student_id, tutor_id, date_time, duration,meeting_title, meeting_desc) => {
     try {
-      const addAppointmentQuery = `INSERT INTO Appointments (student_id, tutor_id, date_time, duration) VALUES (?, ?, ?, ?);`;
-      const results = await connection
-        .promise()
-        .query(addAppointmentQuery, [
-          student_id,
-          tutor_id,
-          date_time,
-          duration,
-        ]);
-      console.log(results[0].insertId);
-      return results[0].insertId;
+      const newAppointment = await AppointmentModel.create({
+        student_id,
+        tutor_id,
+        date_time,
+        duration,
+        meeting_title,
+        meeting_desc
+      });
+      console.log(newAppointment.appointment_id);
+      return newAppointment.appointment_id;
     } catch (err) {
       return err;
     }
   },
   getByStudentId: async (student_Id) => {
     try {
-      const query = `SELECT * FROM Appointments WHERE student_id = '${student_Id}'`;
-      const results = await connection.promise().query(query);
-      console.log(query);
-      return results;
+      const appointments = await AppointmentModel.findAll({
+        where: {
+          student_id: student_Id,
+        },
+      });
+      console.log(appointments);
+      return appointments;
     } catch (error) {
       throw error;
     }

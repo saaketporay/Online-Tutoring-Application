@@ -2,7 +2,7 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/sequelize'); 
 
-// Users model
+// User model
 class User extends Model {}
 User.init({
   user_id: {
@@ -30,12 +30,13 @@ User.init({
   user_type: {
     type: DataTypes.ENUM('student', 'tutor'),
     allowNull: false,
+    defaultValue: 'student',
   },
   total_tutoring_hours: {
     type: DataTypes.INTEGER,
     defaultValue: 0,
   },
-}, { sequelize, modelName: 'user' });
+}, { sequelize, modelName: 'Users' });
 
 // Tutors model
 class Tutor extends Model {}
@@ -56,7 +57,7 @@ Tutor.init({
   about_me: DataTypes.TEXT,
   profile_picture: DataTypes.STRING(255),
   is_criminal: DataTypes.BOOLEAN,
-}, { sequelize, modelName: 'tutor' });
+}, { sequelize, modelName: 'Tutors' });
 
 // Subjects model
 class Subject extends Model {}
@@ -70,7 +71,7 @@ Subject.init({
     type: DataTypes.STRING(100),
     allowNull: false,
   },
-}, { sequelize, modelName: 'subject' });
+}, { sequelize, modelName: 'Subjects' });
 
 // Tutor_Subjects model
 class Tutor_Subject extends Model {}
@@ -94,11 +95,11 @@ Tutor_Subject.init({
       key: 'subject_id',
     },
   },
-}, { sequelize, modelName: 'tutor_subject' });
+}, { sequelize, modelName: 'Tutor_Subjects' });
 
 // Appointments model
-class Appointment extends Model {}
-Appointment.init({
+class Scheduled_Appointments extends Model {}
+Scheduled_Appointments.init({
   appointment_id: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -123,7 +124,9 @@ Appointment.init({
     allowNull: false,
   },
   duration: DataTypes.INTEGER,
-}, { sequelize, modelName: 'appointment' });
+  meeting_title: DataTypes.STRING(255),
+  meeting_desc: DataTypes.TEXT,
+}, { sequelize, modelName: 'Scheduled_Appointments' });
 
 // Favorites model
 class Favorite extends Model {}
@@ -144,7 +147,7 @@ Favorite.init({
     },
     primaryKey: true,
   },
-}, { sequelize, modelName: 'favorite' });
+}, { sequelize, modelName: 'Favorites' });
 
 // Tutor_Availability model
 class Tutor_Availability extends Model {}
@@ -161,19 +164,16 @@ Tutor_Availability.init({
       key: 'tutor_id',
     },
   },
-  weekday: {
-    type: DataTypes.STRING(20),
+  date_time: { 
+    type: DataTypes.DATE,
     allowNull: false,
   },
-  start_time: {
-    type: DataTypes.TIME,
+  duration: {  
+    type: DataTypes.INTEGER,
     allowNull: false,
   },
-  end_time: {
-    type: DataTypes.TIME,
-    allowNull: false,
-  },
-}, { sequelize, modelName: 'tutor_availability' });
+
+}, { sequelize, modelName: 'Tutor_Availability' });
 
 // Associations
 User.hasOne(Tutor, {
@@ -221,7 +221,7 @@ module.exports = {
   Tutor,
   Subject,
   Tutor_Subject,
-  Appointment,
+  Scheduled_Appointments,
   Favorite,
   Tutor_Availability,
 };
