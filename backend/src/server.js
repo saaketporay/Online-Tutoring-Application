@@ -3,6 +3,7 @@ const cors = require('cors');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 const availabilityRoutes = require('./routes/availabilityRoutes');
 const userRoutes = require('./routes/userRoutes');
+const favoriteRoutes = require('./routes/favoriteRoutes');
 const app = express();
 const http = require('http');
 const port = 3000;
@@ -15,6 +16,7 @@ app.use(cors());
 app.use('/user', userRoutes); // user routes
 app.use('/appointments', appointmentRoutes); // appointment routes
 app.use('/availability', availabilityRoutes); // availability routes
+app.use('/favorite', favoriteRoutes); // favorite routes
 
 app.get('*', (req, res) => {
   res.json({ message: 'Hello, world!' });
