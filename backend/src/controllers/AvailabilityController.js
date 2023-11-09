@@ -3,6 +3,7 @@ const Availability = require('../models/Availability');
 const AvailabilityController = {
   getAllTimesByTutorId: async (req, res) => {
     const { tutor_Id } = req.params;
+    console.log(tutor_Id);
 
     try {
       const availability = await Availability.getAllTimesByTutorId(tutor_Id);

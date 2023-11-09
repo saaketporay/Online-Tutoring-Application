@@ -12,20 +12,24 @@ import {
 } from 'react-router-dom';
 import type { ActionFunction } from 'react-router';
 import { ThemeProvider } from '@emotion/react';
-import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../theme';
+import {
+  squareButtonTheme,
+  checkboxTheme,
+  textFieldTheme,
+} from '../utils/theme';
 import { createTheme } from '@mui/material';
+import store from '../redux/store';
+import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
 export type authError = {
-  message?: string;
-  errors: string[];
+  error: string;
 };
 
 const EmailSignin = () => {
   const data = useActionData() as authError;
-  console.log(data);
 
   return (
     <>
@@ -38,11 +42,9 @@ const EmailSignin = () => {
             className='mt-24 mb-12 justify-self-center'>
             Sign in
           </Typography>
-          {data && data.errors && (
+          {data && data.error && (
             <ul className='mt-0'>
-              {Object.values(data.errors).map((error: string) => {
-                return <li key={error}>{error}</li>;
-              })}
+              <li className='text-red-500'>{data.error}</li>
             </ul>
           )}
           <ThemeProvider theme={theme}>
@@ -99,6 +101,9 @@ export default EmailSignin;
 export const authAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const userInfo = Object.fromEntries(data);
+  if (!userInfo.email.toString().includes('@')) {
+    return json({ error: "Email address must have the '@' symbol." });
+  }
   const response = await axios.post('/user/login', userInfo);
   console.log(response);
   if (response.status != 200) {
@@ -109,10 +114,9 @@ export const authAction: ActionFunction = async ({ request }) => {
   }
   const token = response.data.token;
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  localStorage.setItem('token', token);
+  store.dispatch(setToken(token));
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 24 * 7);
-  localStorage.setItem('expiration', expiration.toISOString());
-  localStorage.setItem('user_type', 'student');
+  store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

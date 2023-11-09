@@ -15,7 +15,7 @@ function ErrorPage() {
     if (error.status == 404) {
       show404 = true
     } else {
-      errorMessage = error.error?.message || error.data?.message || error.statusText;
+      errorMessage = error.data?.message || error.statusText;
     }
   } else if (error instanceof Error) {
     errorMessage = error.message;

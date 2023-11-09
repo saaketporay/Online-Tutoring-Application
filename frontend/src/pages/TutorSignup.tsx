@@ -10,7 +10,7 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-
+import { setExpiration, setToken } from '../redux/authSlice';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { AvailableCourseType } from '../components/TutorSignupInfo';
@@ -19,6 +19,7 @@ import { authError } from './EmailSignIn';
 type LoaderData = {
   subjects: AvailableCourseType[];
 };
+import store from '../redux/store';
 
 const TutorSignup = () => {
   const { subjects } = useLoaderData() as LoaderData;
@@ -63,30 +64,45 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const userInfo = Object.fromEntries(await request.formData());
+  const tutorInfo = Object.fromEntries(await request.formData());
+
+  const errors = [];
+  const { email, phone_number, password } = tutorInfo;
+  if (!email.toString().includes('@')) {
+    errors.push('Email address is invalid.');
+  }
+  if (isNaN(parseInt(phone_number.toString()))) {
+    errors.push('Phone number can only contain numbers.');
+  }
+  if (password.toString().length < 9) {
+    errors.push('Password must have at least 8 characters.');
+  }
+  if (password.toString().search(/`~!@#%&-=_,.<>;/)) {
+    errors.push(
+      'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
+    );
+  }
+  if (errors) {
+    return json({ errors: errors });
+  }
+  console.log(tutorInfo);
+
   const courses = (
-    JSON.parse(userInfo.courses as string) as { label: string }[]
+    JSON.parse(tutorInfo.courses as string) as { label: string }[]
   ).map(({ label }) => label);
-  const schedule = (JSON.parse(userInfo.schedule as string) as string[]).map(
+  const schedule = (JSON.parse(tutorInfo.schedule as string) as string[]).map(
     (date) => new Date(date)
   );
-  const modifiedUserInfo = {
-    // TODO: fix string key names in Forms
-    first_name: userInfo.first_name,
-    last_name: userInfo.last_name,
-    email: userInfo.email,
-    password: userInfo.password,
-    phone_number: userInfo.phone_number, // TODO: accept in the backend
-    user_type: 'student', // change to tutor
-    about_me: userInfo['about-me'],
+  const modifiedTutorInfo = {
+    ...tutorInfo,
+    user_type: 'tutor',
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
-    is_criminal: false, // TODO: remove from request and generate on backend instead
     courses, // TODO: accept in the backend
     schedule, // TODO: accept in the backend
   };
-  console.log(modifiedUserInfo);
+  console.log(modifiedTutorInfo);
 
-  const response = await axios.post('/user/register', modifiedUserInfo);
+  const response = await axios.post('/user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -94,16 +110,13 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-
-  const token = (response.data as { token: string }).token;
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-  localStorage.setItem('token', token);
+  const token = response.data.token;
+  store.dispatch(setToken(token));
+  axios.defaults.headers['Authorization'] = token;
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 24 * 7);
-  localStorage.setItem('expiration', expiration.toISOString());
-  localStorage.setItem('user_type', 'student');
-
-  return redirect('/dashboard');
+  store.dispatch(setExpiration(expiration.toISOString()));
+  return redirect('/signin');
 };
 
 export default TutorSignup;

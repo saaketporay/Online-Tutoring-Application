@@ -1,4 +1,4 @@
-import { roundButtonTheme, textFieldTheme } from '../theme';
+import { roundButtonTheme, textFieldTheme } from '../utils/theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,8 +15,8 @@ import {
 } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal } from "../redux/modalSlice";
 import axios from 'axios';
 
 const DUMMY_STUDENT_INFO = {
@@ -47,8 +47,37 @@ const DUMMY_STUDENT_INFO = {
       day: 'Thursday',
       time: '3 pm - 4 pm',
       id: '2'
-    }
-  ]
+    },
+  ],
+  favorite_tutors: [
+    {
+      tutor_name: "James Smith",
+    },
+    {
+      tutor_name: "Maria Garcia",
+    },
+    {
+      tutor_name: "Anurag Nagar",
+    },
+    {
+      tutor_name: "John Cole",
+    },
+    {
+      tutor_name: "Deepak Kumar",
+    },
+    {
+      tutor_name: "James Wilson",
+    },
+    {
+      tutor_name: "James Franco",
+    },
+    {
+      tutor_name: "Vince Gilligan",
+    },
+    {
+      tutor_name: "Johnathan Carpenter",
+    },
+  ],
 };
 
 const DUMMY_TUTOR_INFO = {
@@ -72,7 +101,7 @@ const DUMMY_TUTOR_INFO = {
       time: '11:15 am - 12:15 pm',
       id: '1'
     },
-  ]
+  ],
 };
 
 const theme = createTheme(roundButtonTheme, textFieldTheme, {

@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { autocompleteTheme } from '../theme';
+import { autocompleteTheme } from '../utils/theme';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 import {
@@ -15,7 +15,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
-import { getAuthToken } from '../utils/auth';
+import store from '../redux/store';
 
 // TODO: Update interface timeslot values based on updated table
 interface ResponseDataType {
@@ -321,7 +321,7 @@ export const getReadableDateTime = (dateTime: string) => {
 
 export const loader: LoaderFunction = async () => {
   // Retrieve logged in user's token
-  const token = getAuthToken();
+  const token = store.getState().auth.token;
   if (!token) {
     return redirect('/signin');
   }
@@ -366,7 +366,7 @@ export const action: ActionFunction = async ({ request }) => {
   console.log(userInfo);
 
   // Retrieve logged in user's token
-  const token = getAuthToken();
+  const token = store.getState().auth.token;
   if (!token) {
     return redirect('/signin');
   }

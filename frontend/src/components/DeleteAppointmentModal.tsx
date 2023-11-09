@@ -12,8 +12,8 @@ import {
   ActionFunction,
   useSubmit
 } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal, clearAppointmentId } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal, clearAppointmentId } from "../redux/modalSlice";
 import axios from 'axios';
 
 const modalStyle = {
@@ -22,8 +22,7 @@ const modalStyle = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 400,
-  bgcolor: '#404040',
-  border: '2px solid #000',
+  bgcolor: '#191919',
   boxShadow: 24,
   p: 4,
 };

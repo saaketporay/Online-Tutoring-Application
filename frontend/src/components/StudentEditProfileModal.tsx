@@ -14,7 +14,7 @@ import {
   json,
   redirect
 } from 'react-router-dom';
-import { useAppSelector } from '../hooks';
+import { useAppSelector } from '../redux/hooks';
 import axios from 'axios';
 
 const modalStyle = {
@@ -24,7 +24,6 @@ const modalStyle = {
   transform: 'translate(-50%, -50%)',
   width: 400,
   bgcolor: '#191919',
-  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
