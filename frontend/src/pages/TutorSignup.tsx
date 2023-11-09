@@ -12,7 +12,7 @@ import axios from 'axios';
 import { setExpiration, setToken } from '../redux/authSlice';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
-import store from '../redux/store';
+import { store } from '../redux/store';
 
 const TutorSignup = () => {
   const data = useLoaderData();

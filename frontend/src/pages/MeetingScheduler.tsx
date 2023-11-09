@@ -16,7 +16,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
-import store from '../redux/store';
+import { store } from '../redux/store';
 
 const DUMMY_TIMES = [
   { day: 'Monday', from: '10:30am', to: '12pm' },
