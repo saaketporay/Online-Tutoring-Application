@@ -5,7 +5,7 @@ const FavoriteController = {
     // add favorite
     addNewFavorite: async (req, res) => {
         const { student_id, tutor_id } = req.body;
-        console.log(student_id, tutor_id);
+        //console.log(student_id, tutor_id);
         try {
             const newFavorite = await Favorite.addFavorite(student_id, tutor_id);
             console.log(newFavorite);
