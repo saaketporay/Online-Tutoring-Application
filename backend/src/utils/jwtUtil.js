@@ -5,6 +5,7 @@ const KEY = 'supersecret';
 
 const decodeToken = (token) => {
   try {
+    token = token.split("Bearer ")[1];
     const decoded = jwt.verify(token, KEY);
     return decoded;
   } catch (err) {
