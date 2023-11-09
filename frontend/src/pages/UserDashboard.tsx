@@ -24,11 +24,6 @@ const DUMMY_STUDENT_INFO = {
   last_name: "Smith",
   email: "johnsmith@gmail.com",
   total_meeting_time: "32 h",
-  avg_meeting_time_per_course: "1.5 h",
-  avg_meeting_time_per_user: "8 h",
-  monthly_meeting_time: "12 h",
-  avg_monthly_meeting_time: "16 h",
-  avg_weekly_meeting_time: "4h",
   user_type: "student",
   user_id: "qwer",
   appointments: [
@@ -94,11 +89,6 @@ const DUMMY_TUTOR_INFO = {
   last_name: "Smith",
   email: "jamesmith@outlook.com",
   total_meeting_time: "16 h",
-  avg_meeting_time_per_course: "1 h",
-  avg_meeting_time_per_user: "2 h",
-  monthly_meeting_time: "9 h",
-  avg_monthly_meeting_time: "8 h",
-  avg_weekly_meeting_time: "2h",
   user_type: "tutor",
   user_id: "asdf",
   appointments: [
