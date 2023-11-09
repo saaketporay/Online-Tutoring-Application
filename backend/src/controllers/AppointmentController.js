@@ -3,11 +3,13 @@ const jwtUtil = require('../utils/jwtUtil');
 
 const appointmentController = {
   createAppointment: async (req, res) => {
-    const { token, tutor_Id, date_time, duration, meeting_title, meeting_desc} = req.body;
+    const token = req.headers.authorization;
+    const decodedToken = jwtUtil.decodeToken(token);
+
+    const { tutor_Id, date_time, duration, meeting_title, meeting_desc} = req.body;
 
     console.log(token, tutor_Id, date_time, duration, meeting_title, meeting_desc);
 
-    const decodedToken = jwtUtil.decodeToken(token);
     const student_Id = decodedToken.id;
 
 
@@ -27,10 +29,8 @@ const appointmentController = {
   },
 
   getByToken: async (req, res) => {
-    const { token } = req.params;
-    console.log(token);
+    const token = req.headers.authorization;
     const decodedToken = jwtUtil.decodeToken(token);
-    console.log(decodedToken);
 
     try {
       const appointments = await Appointment.getByStudentId(decodedToken.id);
