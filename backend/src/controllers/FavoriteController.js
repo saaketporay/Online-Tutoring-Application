@@ -20,7 +20,7 @@ const FavoriteController = {
 
     // get all favorites by student id
     getFavoriteByStudentId: async (req, res) => {
-        const { student_id } = req.body;
+        const { student_id } = req.params;
         try {
             const favorites = await Favorite.getFavorite(student_id);
             return res.status(200).json(favorites);
