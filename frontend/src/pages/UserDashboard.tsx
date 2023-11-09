@@ -38,7 +38,7 @@ const DUMMY_STUDENT_INFO = {
       course: 'CS 2305',
       day: 'Monday',
       time: '11:15 am - 12:15 pm',
-      id: '1'
+      appointment_id: '1',
     },
     {
       student_name: "John Smith",
@@ -46,36 +46,45 @@ const DUMMY_STUDENT_INFO = {
       course: 'CS 2336',
       day: 'Thursday',
       time: '3 pm - 4 pm',
-      id: '2'
+      appointment_id: '2',
     },
   ],
   favorite_tutors: [
     {
       tutor_name: "James Smith",
+      tutor_id: '1',
     },
     {
       tutor_name: "Maria Garcia",
+      tutor_id: '2',
     },
     {
       tutor_name: "Anurag Nagar",
+      tutor_id: '3',
     },
     {
       tutor_name: "John Cole",
+      tutor_id: '4',
     },
     {
       tutor_name: "Deepak Kumar",
+      tutor_id: '5',
     },
     {
       tutor_name: "James Wilson",
+      tutor_id: '6',
     },
     {
       tutor_name: "James Franco",
+      tutor_id: '7',
     },
     {
       tutor_name: "Vince Gilligan",
+      tutor_id: '8',
     },
     {
       tutor_name: "Johnathan Carpenter",
+      tutor_id: '9',
     },
   ],
 };
