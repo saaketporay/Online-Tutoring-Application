@@ -24,7 +24,7 @@ import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
-export type authError = {
+type authError = {
   error: string;
 };
 

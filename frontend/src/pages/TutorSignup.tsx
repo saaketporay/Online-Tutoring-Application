@@ -11,19 +11,16 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
 import { setExpiration, setToken } from '../redux/authSlice';
-import GeneralSignupInfo from '../components/GeneralSignupInfo';
+import GeneralSignupInfo, {
+  signupError,
+} from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { AvailableCourseType } from '../components/TutorSignupInfo';
-import { authError } from './EmailSignIn';
-
-type LoaderData = {
-  subjects: AvailableCourseType[];
-};
 import store from '../redux/store';
 
 const TutorSignup = () => {
-  const { subjects } = useLoaderData() as LoaderData;
-  const data = useActionData() as authError;
+  const subjects = useLoaderData();
+  const data = useActionData() as signupError;
 
   return (
     <Form
@@ -35,11 +32,19 @@ const TutorSignup = () => {
         Sign up
       </Typography>
       {data && data.errors && (
-        <ul className='mt-0'>
-          {Object.values(data.errors).map((error: string) => {
-            return <li key={error}>{error}</li>;
-          })}
-        </ul>
+        <>
+          <ul className='mt-0'>
+            {data.errors.map((error, i) => {
+              return (
+                <li
+                  key={i}
+                  className='text-red-500'>
+                  {error}
+                </li>
+              );
+            })}
+          </ul>
+        </>
       )}
       <Box className='w-[410px] justify-self-center'>
         <GeneralSignupInfo />
@@ -52,8 +57,11 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  console.log('test1');
-  const response = await axios.get('availability/subjects');
+  console.log('loader');
+  const response = await axios.get(
+    'http://localhost:3000/availability/subjects'
+  );
+  console.log('response:', response);
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -86,7 +94,6 @@ export const action: ActionFunction = async ({ request }) => {
   if (errors) {
     return json({ errors: errors });
   }
-  console.log(tutorInfo);
 
   const courses = (
     JSON.parse(tutorInfo.courses as string) as { label: string }[]
