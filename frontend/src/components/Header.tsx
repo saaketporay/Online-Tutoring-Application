@@ -7,7 +7,7 @@ import {
   Link as RouterLink,
   NavLink,
   NavLinkProps,
-  useNavigate
+  useNavigate,
 } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import { Button, Stack } from '@mui/material';
@@ -46,6 +46,15 @@ function Header() {
             </Stack>
           </Link>
           <div className='ms-auto'>
+            <NavLink
+              to='/search'
+              className={({ isActive }) =>
+                isActive
+                  ? 'text-yellow-300 no-underline mr-6 hover:underline'
+                  : 'text-slate-100 no-underline mr-6 hover:underline'
+              }>
+              Search
+            </NavLink>
             {!token ? (
               <NavLink
                 to='/signin'
