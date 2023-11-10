@@ -173,7 +173,7 @@ Tutor_Availability.init({
     allowNull: false,
   },
 
-}, { sequelize, modelName: 'Tutor_Availability' });
+}, { sequelize, modelName: 'Tutor_Availability', tableName: 'Tutor_Availability' });
 
 // Associations
 User.hasOne(Tutor, {

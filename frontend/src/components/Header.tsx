@@ -28,7 +28,7 @@ function Header() {
         }}>
         <Toolbar>
           <Link
-            to=''
+            to={ token ? '/dashboard' : '' }
             component={RouterLink}
             className='no-underline'
             color='#F4F4F4'>
