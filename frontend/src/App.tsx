@@ -3,111 +3,107 @@ import {
   createRoutesFromElements,
   RouterProvider,
   Route,
-} from "react-router-dom";
-import AppLayout from "./components/AppLayout";
-import Home from "./pages/Home";
-import ErrorPage from "./pages/ErrorPage";
-import FormSuccess from "./pages/FormSuccess";
-import EmailSignIn, { authAction } from "./pages/EmailSignIn";
-import MultifactorAuth from "./components/MultifactorAuth";
-import StudentSignup, { userSignupAction } from "./pages/StudentSignup";
+} from 'react-router-dom';
+import AppLayout from './components/AppLayout';
+import Home from './pages/Home';
+import ErrorPage from './pages/ErrorPage';
+import FormSuccess from './pages/FormSuccess';
+import EmailSignIn, { authAction } from './pages/EmailSignIn';
+import MultifactorAuth from './components/MultifactorAuth';
+import StudentSignup, { userSignupAction } from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
   action as tutorSignupAction,
-} from "./pages/TutorSignup";
+} from './pages/TutorSignup';
 import MeetingScheduler, {
   loader as meetingSchedulerLoader,
   action as meetingSchedulerAction,
-} from "./pages/MeetingScheduler";
-import UserDashboard, { dashboardLoader } from "./pages/UserDashboard";
+} from './pages/MeetingScheduler';
+import UserDashboard, { dashboardLoader } from './pages/UserDashboard';
 import StudentEditProfileModal, {
   studentEditProfileAction,
-} from "./components/StudentEditProfileModal";
+} from './components/StudentEditProfileModal';
 import DeleteAppointmentModal, {
   deleteAppointmentAction,
-} from "./components/DeleteAppointmentModal";
+} from './components/DeleteAppointmentModal';
 import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
-} from "./pages/EditTutorProfile";
-import FavoriteTutorModal, { 
+} from './pages/EditTutorProfile';
+import FavoriteTutorModal, {
   favoriteTutorAction,
-} from "./components/FavoriteTutorModal";
+} from './components/FavoriteTutorModal';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <Route
-      path="/"
+      path='/'
       element={<AppLayout />}
       errorElement={<ErrorPage />}
-      id="root"
-    >
-      <Route 
-        index={true} 
-        element={<Home />} 
-      />
-      <Route 
-        path="signin" 
-        element={<EmailSignIn />} 
-        action={authAction} 
+      id='root'>
+      <Route
+        index={true}
+        element={<Home />}
       />
       <Route
-        path="signin/:tokenId"
-        id="mfa-auth"
+        path='signin'
+        element={<EmailSignIn />}
+        action={authAction}
+      />
+      <Route
+        path='signin/:tokenId'
+        id='mfa-auth'
         element={<MultifactorAuth />}
       />
-      <Route 
-        path="signup"
-      >
+      <Route path='signup'>
         <Route
-          path="student"
+          path='student'
           element={<StudentSignup />}
           action={userSignupAction}
         />
         <Route
-          path="tutor"
+          path='tutor'
           element={<TutorSignup />}
           loader={tutorSignupLoader}
           action={tutorSignupAction}
         />
       </Route>
       <Route
-        path="edit-tutor-profile"
+        path='edit-tutor-profile'
         element={<EditTutorProfile />}
         loader={editTutorProfileLoader}
         action={editTutorProfileAction}
       />
       <Route
-        id="dashboard"
-        path="dashboard"
+        id='dashboard'
+        path='dashboard'
         element={<UserDashboard />}
-        loader={dashboardLoader}
-      >
+        loader={dashboardLoader}>
         <Route
-          path="edit-profile"
+          path='edit-profile'
           element={<StudentEditProfileModal />}
           action={studentEditProfileAction}
         />
-        <Route 
-          path="favorite/:tutorId"
+        <Route
+          path='favorite/:tutorId'
           element={<FavoriteTutorModal />}
           action={favoriteTutorAction}
         />
         <Route
-          path="delete-appt/:apptId"
+          path='delete-appt/:apptId'
           element={<DeleteAppointmentModal />}
           action={deleteAppointmentAction}
         />
       </Route>
       <Route
-        path="new-appt"
+        path='new-appt'
         element={<MeetingScheduler />}
         loader={meetingSchedulerLoader}
         action={meetingSchedulerAction}
       />
-      <Route 
-        path="success" 
-        element={<FormSuccess />} 
+      <Route
+        path='success'
+        element={<FormSuccess />}
       />
     </Route>
   )

@@ -34,30 +34,30 @@ const register = async (req, res) => {
     password,
     user_type,
     phone_number,
-    about_Me,
-    profile_Picture,
-    is_Criminal,
+    about_me,
+    profile_picture,
+    is_criminal,
   } = req.body;
 
   try {
     const hashedPassword = await hashPassword(password);
-    const user_Id = await createUser(
+    const user_id = await createUser(
       first_name,
       last_name,
       email,
       hashedPassword,
       user_type,
-      phone_number,
+      phone_number
     );
-    console.log(`New User ID: ${user_Id}`);
+    console.log(`New User ID: ${user_id}`);
     console.log('Hashed Password:', hashedPassword);
     // If user is a tutor, create a corresponding entry in the Tutors table
     if (user_type === 'tutor') {
       const tutorId = await createTutor(
-        user_Id,
-        about_Me,
-        profile_Picture,
-        is_Criminal
+        user_id,
+        about_me,
+        profile_picture,
+        is_criminal
       );
       console.log(`New Tutor created with ID: ${tutorId}`);
     }

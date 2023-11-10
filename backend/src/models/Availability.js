@@ -1,15 +1,20 @@
-const { User, Tutor, Subject, Tutor_Subject, Tutor_Availability } = require('./index');
+const {
+  User,
+  Tutor,
+  Subject,
+  Tutor_Subject,
+  Tutor_Availability,
+} = require('./index');
 
 const Availability = {
-
   // not yet tested
   getAllTimesByTutorId: async (tutorId) => {
     // Get all times for a tutor by tutor id
     try {
       const times = await Tutor_Availability.findAll({
         where: {
-          tutor_id: tutorId
-        }
+          tutor_id: tutorId,
+        },
       });
       return times;
     } catch (err) {
@@ -22,10 +27,12 @@ const Availability = {
     try {
       const tutor = await Tutor.findOne({
         where: { tutor_id: tutorId },
-        include: [{
-          model: User,
-          attributes: ['first_name', 'last_name'],
-        }]
+        include: [
+          {
+            model: User,
+            attributes: ['first_name', 'last_name'],
+          },
+        ],
       });
       if (tutor && tutor.User) {
         console.log(tutor.User.first_name, tutor.User.last_name);
@@ -58,17 +65,28 @@ const Availability = {
 
   getAllTutorsBySubjectId: async (subjectId) => {
     try {
-      const tutors = await Tutor_Subject.findAll({
+      const tutors = await Subject.findAll({
         where: {
-          subject_id: subjectId
+          subject_id: subjectId,
         },
-        include: [Tutor]
+        include: [Tutor],
       });
-      return tutors.map(tutorSubject => tutorSubject.tutor); // Return only the tutors
+      return tutors;
     } catch (err) {
       return err;
     }
-  }
+  },
+
+  getAllAvailabilityInfo: async () => {
+    try {
+      const data = await Subject.findAll({
+        include: [{ model: Tutor, include: Tutor_Availability }],
+      });
+      return data;
+    } catch (err) {
+      return err;
+    }
+  },
 };
 
 module.exports = Availability;

@@ -3,7 +3,7 @@ import Box from '@mui/material/Box';
 import { Form } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import Link from '@mui/material/Link';
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink } from 'react-router-dom';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import { squareButtonTheme } from '../utils/theme';
 import { ThemeProvider } from '@emotion/react';
@@ -16,7 +16,7 @@ import axios from 'axios';
 const StudentSignup = () => {
   return (
     <>
-      <Form method="post">
+      <Form method='post'>
         <Box className='grid justify-center bg-[#191919]'>
           <Typography
             variant='h4'
@@ -25,19 +25,19 @@ const StudentSignup = () => {
           </Typography>
           <GeneralSignupInfo />
           <ThemeProvider theme={squareButtonTheme}>
-          <Button
-            className='mt-4 py-2 px-44 place-self-center'
-            type='submit'>
-            SIGN UP
-          </Button>
-          <Link
-            to='/signin'
-            component={RouterLink}
-            className='mt-2 place-self-center'
-            color='#A3A3A3'
-            fontSize={14}>
-            Already have an account? Sign in
-          </Link>
+            <Button
+              className='mt-4 py-2 px-44 place-self-center'
+              type='submit'>
+              SIGN UP
+            </Button>
+            <Link
+              to='/signin'
+              component={RouterLink}
+              className='mt-2 place-self-center'
+              color='#A3A3A3'
+              fontSize={14}>
+              Already have an account? Sign in
+            </Link>
           </ThemeProvider>
         </Box>
       </Form>
@@ -61,14 +61,16 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
   }
-  if (password.toString().search(/`~!@#%&-=_,.<>;/)) {
-    errors.push('Password must contain one of the following special characters: `~!@#%&-=_,.<>;')
+  if (password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
+    errors.push(
+      'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
+    );
   }
-  if (errors) {
+  if (errors.length > 0) {
     return json({ errors: errors });
   }
   console.log(studentInfo);
-  const response = await axios.post('/user/register', {
+  const response = await axios.post('http://localhost:3000/user/register', {
     ...studentInfo,
     user_type: 'student',
   });
@@ -79,10 +81,10 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  const token = response.data.token
+  const token = response.data.token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + (24 * 7));
+  expiration.setHours(expiration.getHours() + 24 * 7);
   store.dispatch(setExpiration(expiration.toISOString()));
-  return redirect("/dashboard");
+  return redirect('/dashboard');
 };
