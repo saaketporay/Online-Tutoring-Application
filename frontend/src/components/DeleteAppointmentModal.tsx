@@ -14,18 +14,22 @@ import {
 } from 'react-router-dom';
 import { modalStyle } from '../utils/theme';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { toggleModal, clearAppointmentId } from "../redux/modalSlice";
+import { clearAppointmentId } from "../redux/modalSlice";
 import axios from 'axios';
 
 const DeleteAppointmentModal = () => {
-  const handleModalClose = useOutletContext() as VoidFunction;
+  const handleCloseModal = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);
+  const dispatch = useAppDispatch();
 
   return (
     <>
       <Modal
         open={showModal}
-        onClose={handleModalClose}
+        onClose={() => {
+          dispatch(clearAppointmentId());
+          handleCloseModal();
+        }}
         aria-label="delete-appt-title"
         aria-describedby="delete-appt-description"
       >

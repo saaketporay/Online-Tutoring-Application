@@ -14,8 +14,8 @@ export const modalSlice = createSlice({
   name: 'modal',
   initialState: initialState,
   reducers: {
-    toggleModal: (state) => {
-      state.showModal = !state.showModal;
+    setShowModal: (state, action: PayloadAction<boolean>) => {
+      state.showModal = action.payload;
     },
     setAppointmentId: (state, action: PayloadAction<string>) => {
       state.appointmentId = action.payload;
@@ -26,6 +26,6 @@ export const modalSlice = createSlice({
   },
 });
 
-export const { toggleModal, setAppointmentId, clearAppointmentId } = modalSlice.actions;
+export const { setShowModal, setAppointmentId, clearAppointmentId } = modalSlice.actions;
 
 export default modalSlice.reducer;

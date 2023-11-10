@@ -132,25 +132,29 @@ const App = () => {
           loader={dashboardLoader}
         >
           <Route
+            path='edit-profile'
             element={
               <ProtectedRoute
                 isAllowed={user_type == 'student'}
                 redirectTo='/'
-                children={null}
-              />
+              >
+                <StudentEditProfileModal />
+              </ProtectedRoute>
             }
-          >
-            <Route
-              path='edit-profile'
-              element={<StudentEditProfileModal />}
-              action={studentEditProfileAction}
-            />
-            <Route 
-              path='favorite/:tutorId'
-              element={<FavoriteTutorModal />}
-              action={favoriteTutorAction}
-            />
-          </Route>
+            action={studentEditProfileAction}
+          />
+          <Route 
+            path='favorite/:tutorId'
+            element={
+              <ProtectedRoute
+                isAllowed={user_type == 'student'}
+                redirectTo='/'
+              >
+                <FavoriteTutorModal />
+              </ProtectedRoute>
+            }
+            action={favoriteTutorAction}
+          />
           <Route
             path='delete-appt/:apptId'
             element={<DeleteAppointmentModal />}
