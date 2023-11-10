@@ -11,12 +11,12 @@ import {
   useLoaderData,
   useSearchParams,
   useNavigate,
-  json
+  json,
 } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { toggleModal } from "../redux/modalSlice";
+import { setShowModal } from "../redux/modalSlice";
 import axios from 'axios';
 
 const DUMMY_STUDENT_INFO = {
@@ -125,8 +125,8 @@ const UserDashboard = () => {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
-  const handleModalClose = () => {
-    dispatch(toggleModal());
+  const handleCloseModal = () => {
+    dispatch(setShowModal(false));
     navigate('/dashboard');
   };
 
@@ -134,7 +134,7 @@ const UserDashboard = () => {
     <>
       <Box className="grid justify-items-center bg-[#191919]">
         <ThemeProvider theme={theme}>
-          <Outlet context={handleModalClose} />
+          <Outlet context={handleCloseModal} />
           {DUMMY_STUDENT_INFO.user_type != "tutor" ? // temporary, this will be provided by loaderData when backend endpoints are ready
             <Button
               to='/new-appt'

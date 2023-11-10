@@ -19,14 +19,14 @@ import { useAppSelector } from '../redux/hooks';
 import axios from 'axios';
 
 const StudentEditProfileModal = () => {
-  const handleModalClose = useOutletContext() as VoidFunction;
+  const handleCloseModal = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);
 
   return (
     <>
       <Modal
         open={showModal}
-        onClose={handleModalClose}
+        onClose={() => handleCloseModal()}
         aria-label="edit-profile-title"
         aria-describedby="edit-profile-description"
       >
