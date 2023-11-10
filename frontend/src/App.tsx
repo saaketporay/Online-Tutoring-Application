@@ -33,6 +33,11 @@ import EditTutorProfile, {
 import FavoriteTutorModal, {
   favoriteTutorAction,
 } from './components/FavoriteTutorModal';
+import { useAppSelector } from './redux/hooks';
+import ProtectedRoute from './components/ProtectedRoute';
+
+const App = () => {
+  const user_type = useAppSelector((state) => state.auth.user_type)
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,22 +45,25 @@ const router = createBrowserRouter(
       path='/'
       element={<AppLayout />}
       errorElement={<ErrorPage />}
-      id='root'>
-      <Route
-        index={true}
-        element={<Home />}
+      id='root'
+    >
+      <Route 
+        index={true} 
+        element={<Home />} 
       />
-      <Route
-        path='signin'
-        element={<EmailSignIn />}
-        action={authAction}
+      <Route 
+        path='signin' 
+        element={<EmailSignIn />} 
+        action={authAction} 
       />
       <Route
         path='signin/:tokenId'
         id='mfa-auth'
         element={<MultifactorAuth />}
       />
-      <Route path='signup'>
+      <Route 
+        path='signup'
+      >
         <Route
           path='student'
           element={<StudentSignup />}
@@ -78,13 +86,14 @@ const router = createBrowserRouter(
         id='dashboard'
         path='dashboard'
         element={<UserDashboard />}
-        loader={dashboardLoader}>
+        loader={dashboardLoader}
+      >
         <Route
           path='edit-profile'
           element={<StudentEditProfileModal />}
           action={studentEditProfileAction}
         />
-        <Route
+        <Route 
           path='favorite/:tutorId'
           element={<FavoriteTutorModal />}
           action={favoriteTutorAction}
@@ -101,15 +110,14 @@ const router = createBrowserRouter(
         loader={meetingSchedulerLoader}
         action={meetingSchedulerAction}
       />
-      <Route
-        path='success'
-        element={<FormSuccess />}
+      <Route 
+        path='success' 
+        element={<FormSuccess />} 
       />
     </Route>
   )
 );
 
-const App = () => {
   return (
     <>
       <RouterProvider router={router} />

@@ -18,7 +18,11 @@ const login = async (req, res) => {
     }
 
     const token = generateToken(user);
-    return res.status(200).json({ token });
+    const { user_type } = user;
+    return res.status(200).json({
+      token: token,
+      user_type: user_type,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
@@ -63,7 +67,10 @@ const register = async (req, res) => {
     }
     const user = await getUserByEmail(email);
     const token = generateToken(user);
-    return res.status(200).json({ token });
+    return res.status(200).json({
+      token: token,
+      user_type: user_type,
+    });
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');

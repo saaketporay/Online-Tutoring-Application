@@ -10,7 +10,7 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import axios from 'axios';
-import { setExpiration, setToken } from '../redux/authSlice';
+import { setExpiration, setToken, setUserType } from '../redux/authSlice';
 import GeneralSignupInfo, {
   signupError,
 } from '../components/GeneralSignupInfo';
@@ -120,9 +120,10 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  const token = response.data.token;
-  store.dispatch(setToken(token));
+  const { token, user_type } = response.data;
+  store.dispatch(setUserType(user_type));
   axios.defaults.headers['Authorization'] = token;
+  store.dispatch(setToken(token));
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 24 * 7);
   store.dispatch(setExpiration(expiration.toISOString()));
