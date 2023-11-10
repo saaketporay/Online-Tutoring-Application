@@ -7,7 +7,7 @@ import { useActionData } from "react-router-dom";
 
 const theme = createTheme(textFieldTheme, squareButtonTheme);
 
-type signupError = {
+export type signupError = {
   errors: string[],
 };
 
