@@ -56,7 +56,7 @@ const Availability = {
 
   getAllTutors: async () => {
     try {
-      const tutors = await Tutor.findAll();
+      const tutors = await Tutor.findAll({ include: User });
       return tutors;
     } catch (err) {
       return err;

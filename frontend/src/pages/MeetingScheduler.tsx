@@ -61,6 +61,15 @@ const MeetingScheduler = () => {
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
   const [meetingTitle, setMeetingTitle] = useState<string>('');
   const [meetingDesc, setMeetingDesc] = useState<string>('');
+  const [meetingInfo, setMeetingInfo] = useState<TimeslotType>({
+    tutor_availiability_id: 0,
+    subject_id: 0,
+    tutor_id: 0,
+    weekday: '',
+    start_time: '',
+    end_time: '',
+    readable_date_time: '',
+  });
 
   const availableTutors = selectedCourse
     ? Object.keys(data[selectedCourse]).map((name) => ({
@@ -117,6 +126,11 @@ const MeetingScheduler = () => {
       return;
     }
     setSelectedTimeslot(value);
+    setMeetingInfo(
+      data[selectedCourse][selectedTutor].find(
+        (timeslot) => timeslot.readable_date_time === selectedTimeslot
+      )!
+    );
   };
 
   useEffect(() => {
@@ -248,8 +262,8 @@ const MeetingScheduler = () => {
         </Stack>
         <input
           hidden
-          name='data'
-          value={JSON.stringify(data)}></input>
+          name='meeting_info'
+          value={JSON.stringify(meetingInfo)}></input>
       </ThemeProvider>
     </Form>
   );
@@ -366,10 +380,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
   userInfo.token = token;
 
-  const data = JSON.parse(userInfo.data as string) as ResponseDataType;
-  const timeslot = data[userInfo.course as string][
-    userInfo.tutor as string
-  ].find((timeslot) => timeslot.readable_date_time === userInfo.timeslot)!;
+  const meetingInfo = JSON.parse(
+    userInfo.meeting_info as string
+  ) as TimeslotType;
 
   const payload = {
     token,
