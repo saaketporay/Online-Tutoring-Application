@@ -14,19 +14,9 @@ import {
   json,
   redirect
 } from 'react-router-dom';
+import { modalStyle } from '../utils/theme';
 import { useAppSelector } from '../redux/hooks';
 import axios from 'axios';
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: '#191919',
-  boxShadow: 24,
-  p: 4,
-};
 
 const StudentEditProfileModal = () => {
   const handleModalClose = useOutletContext() as VoidFunction;
@@ -49,7 +39,8 @@ const StudentEditProfileModal = () => {
               <GeneralSignupInfo />
               <Button
                 type="submit"
-                variant="contained">
+                variant="contained"
+              >
                 Submit profile changes
               </Button>
             </Stack>

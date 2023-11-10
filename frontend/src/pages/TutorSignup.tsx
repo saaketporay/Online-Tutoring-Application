@@ -16,7 +16,7 @@ import GeneralSignupInfo, {
 } from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { AvailableCourseType } from '../components/TutorSignupInfo';
-import store from '../redux/store';
+import { store } from '../redux/store';
 
 const TutorSignup = () => {
   const subjects = useLoaderData();

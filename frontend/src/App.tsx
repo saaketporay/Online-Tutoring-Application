@@ -30,6 +30,9 @@ import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
 } from './pages/EditTutorProfile';
+import FavoriteTutorModal, {
+  favoriteTutorAction,
+} from './components/FavoriteTutorModal';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -80,6 +83,11 @@ const router = createBrowserRouter(
           path='edit-profile'
           element={<StudentEditProfileModal />}
           action={studentEditProfileAction}
+        />
+        <Route
+          path='favorite/:tutorId'
+          element={<FavoriteTutorModal />}
+          action={favoriteTutorAction}
         />
         <Route
           path='delete-appt/:apptId'

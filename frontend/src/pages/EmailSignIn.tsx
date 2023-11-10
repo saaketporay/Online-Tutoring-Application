@@ -18,7 +18,7 @@ import {
   textFieldTheme,
 } from '../utils/theme';
 import { createTheme } from '@mui/material';
-import store from '../redux/store';
+import { store } from '../redux/store';
 import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 

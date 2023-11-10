@@ -15,7 +15,7 @@ import {
   json,
   redirect,
 } from 'react-router-dom';
-import store from '../redux/store';
+import { store } from '../redux/store';
 
 interface ResponseDataType {
   [key: string]: {

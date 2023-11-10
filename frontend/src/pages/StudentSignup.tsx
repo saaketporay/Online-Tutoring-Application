@@ -9,7 +9,7 @@ import { squareButtonTheme } from '../utils/theme';
 import { ThemeProvider } from '@emotion/react';
 import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
-import store from '../redux/store';
+import { store } from '../redux/store';
 import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 
