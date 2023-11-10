@@ -6,12 +6,19 @@ const appointmentController = {
     const token = req.headers.authorization;
     const decodedToken = jwtUtil.decodeToken(token);
 
-    const { tutor_Id, date_time, duration, meeting_title, meeting_desc} = req.body;
+    const { tutor_Id, date_time, duration, meeting_title, meeting_desc } =
+      req.body;
 
-    console.log(token, tutor_Id, date_time, duration, meeting_title, meeting_desc);
+    console.log(
+      token,
+      tutor_Id,
+      date_time,
+      duration,
+      meeting_title,
+      meeting_desc
+    );
 
     const student_Id = decodedToken.id;
-
 
     try {
       const appointment_id = await Appointment.create(

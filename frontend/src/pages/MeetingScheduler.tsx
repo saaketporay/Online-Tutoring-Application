@@ -17,15 +17,25 @@ import {
 } from 'react-router-dom';
 import { store } from '../redux/store';
 
+interface TimeslotType {
+  subject_id: number;
+  tutor_id: number;
+  date_time: string;
+  duration: number;
+  readable_date_time: string;
+}
+
+const defaultMeetingInfo = {
+  subject_id: 0,
+  tutor_id: 0,
+  date_time: '',
+  duration: 0,
+  readable_date_time: '',
+};
+
 interface ResponseDataType {
   [key: string]: {
-    [key: string]: {
-      subject_id: number;
-      tutor_id: number;
-      date_time: string;
-      duration: number;
-      readable_date_time: string;
-    }[];
+    [key: string]: TimeslotType[];
   };
 }
 
@@ -61,15 +71,8 @@ const MeetingScheduler = () => {
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
   const [meetingTitle, setMeetingTitle] = useState<string>('');
   const [meetingDesc, setMeetingDesc] = useState<string>('');
-  const [meetingInfo, setMeetingInfo] = useState<TimeslotType>({
-    tutor_availiability_id: 0,
-    subject_id: 0,
-    tutor_id: 0,
-    weekday: '',
-    start_time: '',
-    end_time: '',
-    readable_date_time: '',
-  });
+  const [meetingInfo, setMeetingInfo] =
+    useState<TimeslotType>(defaultMeetingInfo);
 
   const availableTutors = selectedCourse
     ? Object.keys(data[selectedCourse]).map((name) => ({
@@ -128,7 +131,7 @@ const MeetingScheduler = () => {
     setSelectedTimeslot(value);
     setMeetingInfo(
       data[selectedCourse][selectedTutor].find(
-        (timeslot) => timeslot.readable_date_time === selectedTimeslot
+        (timeslot) => timeslot.readable_date_time === value
       )!
     );
   };
@@ -138,6 +141,7 @@ const MeetingScheduler = () => {
       if (!(selectedTutor in data[selectedCourse])) {
         setSelectedTutor('');
         setSelectedTimeslot('');
+        setMeetingInfo(defaultMeetingInfo);
       } else if (
         selectedTimeslot &&
         !data[selectedCourse][selectedTutor].find(
@@ -145,6 +149,7 @@ const MeetingScheduler = () => {
         )
       ) {
         setSelectedTimeslot('');
+        setMeetingInfo(defaultMeetingInfo);
       }
     }
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
@@ -175,7 +180,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Course'
-                  name='course'
                 />
               )}
             />
@@ -190,7 +194,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Tutor'
-                  name='tutor'
                 />
               )}
             />
@@ -212,7 +215,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Timeslot'
-                  name='timeslot'
                 />
               )}
             />
@@ -302,7 +304,8 @@ export const getReadableDateTime = (dateTime: string, duration: number) => {
   ]);
 
   // Split dateTime (formatted like YYYY-MM-DD hh:mm:ss) into an array of strings based on dashes, spaces, or colons
-  const t = dateTime.split(/[- :]/).map((str) => +str);
+  // Split dateTime (formatted as an ISO string) into an array of numbers based on anything that's not a number
+  const t = dateTime.split(/\D+/).map((str) => +str);
   // Create a new Date object based on the year, month, day, etc, values from t
   const m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
   // Get the day as a number in the range 1-31
@@ -378,11 +381,9 @@ export const action: ActionFunction = async ({ request }) => {
   if (!token) {
     return redirect('/signin');
   }
-  userInfo.token = token;
 
-  const meetingInfo = JSON.parse(
-    userInfo.meeting_info as string
-  ) as TimeslotType;
+  const timeslot = JSON.parse(userInfo.meeting_info as string) as TimeslotType;
+  console.log('timeslot:', timeslot);
 
   const payload = {
     token,

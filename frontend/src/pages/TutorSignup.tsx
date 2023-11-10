@@ -97,11 +97,16 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const courses = (
-    JSON.parse(tutorInfo.courses as string) as { label: string }[]
-  ).map(({ label }) => label);
+    JSON.parse(tutorInfo.courses as string) as {
+      label: string;
+      subject_id: number;
+    }[]
+  ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
+
   const schedule = (JSON.parse(tutorInfo.schedule as string) as string[]).map(
     (date) => new Date(date)
   );
+
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
@@ -109,6 +114,7 @@ export const action: ActionFunction = async ({ request }) => {
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
     courses, // TODO: accept in the backend
     schedule, // TODO: accept in the backend
+    hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
 

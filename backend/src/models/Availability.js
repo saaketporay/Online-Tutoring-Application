@@ -80,7 +80,12 @@ const Availability = {
   getAllAvailabilityInfo: async () => {
     try {
       const data = await Subject.findAll({
-        include: [{ model: Tutor, include: Tutor_Availability }],
+        include: [
+          {
+            model: Tutor,
+            include: [{ model: Tutor_Availability }, { model: User }],
+          },
+        ],
       });
       return data;
     } catch (err) {
