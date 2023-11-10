@@ -17,16 +17,13 @@ import {
 } from 'react-router-dom';
 import store from '../redux/store';
 
-// TODO: Update interface timeslot values based on updated table
 interface ResponseDataType {
   [key: string]: {
     [key: string]: {
-      tutor_availiability_id: number;
       subject_id: number;
       tutor_id: number;
-      weekday: string;
-      start_time: string;
-      end_time: string;
+      date_time: string;
+      duration: number;
       readable_date_time: string;
     }[];
   };
@@ -258,7 +255,7 @@ const MeetingScheduler = () => {
   );
 };
 
-export const getReadableDateTime = (dateTime: string) => {
+export const getReadableDateTime = (dateTime: string, duration: number) => {
   // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
   const weekday = [
     'Sunday',
@@ -316,7 +313,9 @@ export const getReadableDateTime = (dateTime: string) => {
     month[m.getMonth()]
   } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
     am ? 'am' : 'pm'
-  }`;
+  }, ${duration}m`;
+
+  return readable_date_time;
 };
 
 export const loader: LoaderFunction = async () => {
@@ -326,7 +325,7 @@ export const loader: LoaderFunction = async () => {
     return redirect('/signin');
   }
 
-  const response = await axios.get('/availability/all');
+  const response = await axios.get('availability/all');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -342,22 +341,17 @@ export const loader: LoaderFunction = async () => {
     for (const [tutorName, timeslotsArr] of Object.entries(tutorsObject)) {
       // For every timeslot
       for (let i = 0; i < timeslotsArr.length; i++) {
-        // const readable_date_time = getReadableDateTime(data[subjectName][tutorName][i]);
-        // data[subjectName][tutorName][i].readable_date_time = readable_date_time;
-
-        // Temporary way to construct a date time value assuming each timeslot object has a weekday, start_time, and end_time
-        // e.g. Monday 2023-11-03 13:00:00 - 2023-11-03 13:30:00
-        const t = data[subjectName][tutorName][i];
-        const readable_date_time = `${t.weekday} ${t.start_time} - ${t.end_time}`;
-        data[subjectName][tutorName][i].readable_date_time = readable_date_time;
+        const timeslot = data[subjectName][tutorName][i];
+        const readable_date_time = getReadableDateTime(
+          timeslot.date_time,
+          timeslot.duration
+        );
+        timeslot.readable_date_time = readable_date_time;
       }
     }
   }
 
-  // Add the key readable_date_time to each object in each tutor instance's timeslots array
-
   return data;
-  // TODO: adjust MeetingScheduler to use the new data format
 };
 
 export const action: ActionFunction = async ({ request }) => {
@@ -381,23 +375,21 @@ export const action: ActionFunction = async ({ request }) => {
     token,
     subject_id: timeslot.subject_id,
     tutor_id: timeslot.tutor_id,
-    start_time: timeslot.start_time,
-    end_time: timeslot.end_time,
+    date_time: timeslot.date_time,
+    duration: timeslot.duration,
     meeting_title: userInfo.meeting_title,
     meeting_desc: userInfo.meeting_desc,
   };
   console.log(payload);
 
-  // TODO: make backend accept meeting_title and meeting_desc
-
-  // const response = await axios.post('/user/register?tutor=true', userInfo);
-  // console.log(response);
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     "status": response.status
-  //   })
-  // }
+  const response = await axios.post('/appointments/create', userInfo);
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
 
   // TODO: add logged in student's id to redirect to the right dashboard
   return redirect('/dashboard');

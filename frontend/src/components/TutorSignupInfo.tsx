@@ -55,7 +55,6 @@ interface TutorSignupInfoProps {
 }
 
 const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
-  console.log('subjects', subjects);
   const availableCourses = subjects.map((course) => ({
     label: course.subject_name,
   })) as { label: string }[];

@@ -61,16 +61,16 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
   }
-  if (password.toString().search(/`~!@#%&-=_,.<>;/)) {
+  if (password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
     errors.push(
       'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
     );
   }
-  if (errors) {
+  if (errors.length > 0) {
     return json({ errors: errors });
   }
   console.log(studentInfo);
-  const response = await axios.post('/user/register', {
+  const response = await axios.post('http://localhost:3000/user/register', {
     ...studentInfo,
     user_type: 'student',
   });

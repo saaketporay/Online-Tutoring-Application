@@ -4,6 +4,7 @@ const AvailabilityController = require('../controllers/AvailabilityController');
 
 router.get('/subjects', AvailabilityController.getAllSubjects);
 router.get('/tutors', AvailabilityController.getAllTutors);
+router.get('/tutors/:subject_id', AvailabilityController.getAllTutorsBySubjectId);
 router.get('/all', AvailabilityController.getAllAvailabilityInfo); // not availiable at the moment
 router.get('/:tutor_Id', AvailabilityController.getAllTimesByTutorId); // not availiable at the moment
 

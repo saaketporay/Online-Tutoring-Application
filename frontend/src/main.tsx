@@ -9,7 +9,7 @@ import axios from 'axios';
 import { Provider } from 'react-redux';
 import store from './redux/store';
 
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
+axios.defaults.baseURL = import.meta.env.VITE_BACKEND_BASE_URL;
 axios.defaults.headers.common['Content-Type'] = 'application/json';
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(

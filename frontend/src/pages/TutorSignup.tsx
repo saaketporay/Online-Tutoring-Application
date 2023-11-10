@@ -57,11 +57,7 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  console.log('loader');
-  const response = await axios.get(
-    'http://localhost:3000/availability/subjects'
-  );
-  console.log('response:', response);
+  const response = await axios.get('availability/subjects');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -73,7 +69,11 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
+  console.log('action');
+
   const tutorInfo = Object.fromEntries(await request.formData());
+
+  console.log(tutorInfo);
 
   const errors = [];
   const { email, phone_number, password } = tutorInfo;
@@ -86,12 +86,13 @@ export const action: ActionFunction = async ({ request }) => {
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
   }
-  if (password.toString().search(/`~!@#%&-=_,.<>;/)) {
+  if (password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
     errors.push(
       'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
     );
   }
-  if (errors) {
+  console.log('errors:', errors);
+  if (errors.length > 0) {
     return json({ errors: errors });
   }
 
@@ -104,13 +105,14 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
+    is_criminal: false,
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
     courses, // TODO: accept in the backend
     schedule, // TODO: accept in the backend
   };
   console.log(modifiedTutorInfo);
 
-  const response = await axios.post('/user/register', modifiedTutorInfo);
+  const response = await axios.post('user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -124,7 +126,7 @@ export const action: ActionFunction = async ({ request }) => {
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + 24 * 7);
   store.dispatch(setExpiration(expiration.toISOString()));
-  return redirect('/signin');
+  return redirect('/dashboard');
 };
 
 export default TutorSignup;
