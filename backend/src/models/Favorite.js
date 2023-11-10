@@ -9,8 +9,8 @@ const Favorite = {
                 student_id,
                 tutor_id
             });
-            console.log(newFavorite.favorite_id);
-            return newFavorite.favorite_id;
+            console.log(newFavorite);
+            return newFavorite;
         } catch (err) {
             return err;
         }
@@ -38,6 +38,7 @@ const Favorite = {
                     tutor_id: tutor_id
                 }
             });
+            console.log(removedFavorite)
             return removedFavorite;
         } catch (err) {
             return err;

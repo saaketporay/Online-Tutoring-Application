@@ -6,6 +6,7 @@ const FavoriteController = {
     // add favorite
     addNewFavorite: async (req, res) => {
         const token = req.headers.authorization;
+        console.log(token)
         const decodedToken = jwtUtil.decodeToken(token);
 
         const student_id = decodedToken.id;
@@ -21,6 +22,7 @@ const FavoriteController = {
                 .status(500)
                 .json({ success: false, error: 'Internal Server Error' });
         }
+
     },
 
     // get all favorites by student id
