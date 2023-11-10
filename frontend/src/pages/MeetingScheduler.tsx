@@ -17,22 +17,6 @@ import {
 } from 'react-router-dom';
 import { store } from '../redux/store';
 
-<<<<<<< HEAD
-// TODO: Update based on updated table
-interface TimeslotType {
-  tutor_availiability_id: number;
-  subject_id: number;
-  tutor_id: number;
-  weekday: string;
-  start_time: string;
-  end_time: string;
-  readable_date_time: string;
-}
-
-interface ResponseDataType {
-  [key: string]: {
-    [key: string]: TimeslotType[];
-=======
 interface ResponseDataType {
   [key: string]: {
     [key: string]: {
@@ -42,7 +26,6 @@ interface ResponseDataType {
       duration: number;
       readable_date_time: string;
     }[];
->>>>>>> main
   };
 }
 
@@ -403,17 +386,10 @@ export const action: ActionFunction = async ({ request }) => {
 
   const payload = {
     token,
-<<<<<<< HEAD
-    subject_id: meetingInfo.subject_id,
-    tutor_id: meetingInfo.tutor_id,
-    start_time: meetingInfo.start_time,
-    end_time: meetingInfo.end_time,
-=======
     subject_id: timeslot.subject_id,
     tutor_id: timeslot.tutor_id,
     date_time: timeslot.date_time,
     duration: timeslot.duration,
->>>>>>> main
     meeting_title: userInfo.meeting_title,
     meeting_desc: userInfo.meeting_desc,
   };

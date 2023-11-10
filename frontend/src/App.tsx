@@ -106,17 +106,10 @@ const router = createBrowserRouter(
         path='success'
         element={<FormSuccess />}
       />
-<<<<<<< HEAD
       <Route
         path='search'
         element={<Search />}
       />
-      <Route
-        path='logout'
-        action={logoutAction}
-      />
-=======
->>>>>>> main
     </Route>
   )
 );
