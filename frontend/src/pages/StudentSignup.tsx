@@ -10,7 +10,7 @@ import { ThemeProvider } from '@emotion/react';
 import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
 import { store } from '../redux/store';
-import { setToken, setExpiration } from '../redux/authSlice';
+import { setToken, setExpiration, setUserType } from '../redux/authSlice';
 import axios from 'axios';
 
 const StudentSignup = () => {
@@ -79,7 +79,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  const token = response.data.token
+  const { token, user_type } = response.data;
+  store.dispatch(setUserType(user_type));
+  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
   expiration.setHours(expiration.getHours() + (24 * 7));

@@ -9,7 +9,7 @@ import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
 import { store } from '../redux/store';
-import { setToken, setExpiration } from '../redux/authSlice';
+import { setToken, setExpiration, setUserType } from '../redux/authSlice';
 import axios from 'axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
@@ -106,7 +106,8 @@ export const authAction: ActionFunction = async ({ request }) => {
       status: response.status
     });
   }
-  const token = response.data.token
+  const { token, user_type } = response.data;
+  store.dispatch(setUserType(user_type));
   axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   store.dispatch(setToken(token));
   const expiration = new Date();
