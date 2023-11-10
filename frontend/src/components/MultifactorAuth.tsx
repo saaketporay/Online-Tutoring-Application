@@ -4,7 +4,7 @@ import CardContent from "@mui/material/CardContent";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import { cardTheme, textFieldTheme, squareButtonTheme } from "../theme";
+import { cardTheme, textFieldTheme, squareButtonTheme } from "../utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import { useState } from "react";
 import { createTheme } from "@mui/material";

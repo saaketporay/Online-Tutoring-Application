@@ -1,4 +1,4 @@
-import { roundButtonTheme, textFieldTheme } from '../theme';
+import { roundButtonTheme, textFieldTheme } from '../utils/theme';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -15,8 +15,8 @@ import {
 } from 'react-router-dom';
 import Dashboard from '../components/Dashboard';
 import { createTheme } from '@mui/material';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal } from "../features/modalSlice";
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal } from "../redux/modalSlice";
 import axios from 'axios';
 
 const DUMMY_STUDENT_INFO = {
@@ -24,11 +24,6 @@ const DUMMY_STUDENT_INFO = {
   last_name: "Smith",
   email: "johnsmith@gmail.com",
   total_meeting_time: "32 h",
-  avg_meeting_time_per_course: "1.5 h",
-  avg_meeting_time_per_user: "8 h",
-  monthly_meeting_time: "12 h",
-  avg_monthly_meeting_time: "16 h",
-  avg_weekly_meeting_time: "4h",
   user_type: "student",
   user_id: "qwer",
   appointments: [
@@ -38,7 +33,7 @@ const DUMMY_STUDENT_INFO = {
       course: 'CS 2305',
       day: 'Monday',
       time: '11:15 am - 12:15 pm',
-      id: '1'
+      appointment_id: '1',
     },
     {
       student_name: "John Smith",
@@ -46,9 +41,47 @@ const DUMMY_STUDENT_INFO = {
       course: 'CS 2336',
       day: 'Thursday',
       time: '3 pm - 4 pm',
-      id: '2'
-    }
-  ]
+      appointment_id: '2',
+    },
+  ],
+  favorite_tutors: [
+    {
+      tutor_name: "James Smith",
+      tutor_id: '1',
+    },
+    {
+      tutor_name: "Maria Garcia",
+      tutor_id: '2',
+    },
+    {
+      tutor_name: "Anurag Nagar",
+      tutor_id: '3',
+    },
+    {
+      tutor_name: "John Cole",
+      tutor_id: '4',
+    },
+    {
+      tutor_name: "Deepak Kumar",
+      tutor_id: '5',
+    },
+    {
+      tutor_name: "James Wilson",
+      tutor_id: '6',
+    },
+    {
+      tutor_name: "James Franco",
+      tutor_id: '7',
+    },
+    {
+      tutor_name: "Vince Gilligan",
+      tutor_id: '8',
+    },
+    {
+      tutor_name: "Johnathan Carpenter",
+      tutor_id: '9',
+    },
+  ],
 };
 
 const DUMMY_TUTOR_INFO = {
@@ -56,11 +89,6 @@ const DUMMY_TUTOR_INFO = {
   last_name: "Smith",
   email: "jamesmith@outlook.com",
   total_meeting_time: "16 h",
-  avg_meeting_time_per_course: "1 h",
-  avg_meeting_time_per_user: "2 h",
-  monthly_meeting_time: "9 h",
-  avg_monthly_meeting_time: "8 h",
-  avg_weekly_meeting_time: "2h",
   user_type: "tutor",
   user_id: "asdf",
   appointments: [
@@ -72,7 +100,7 @@ const DUMMY_TUTOR_INFO = {
       time: '11:15 am - 12:15 pm',
       id: '1'
     },
-  ]
+  ],
 };
 
 const theme = createTheme(roundButtonTheme, textFieldTheme, {

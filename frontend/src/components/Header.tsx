@@ -5,18 +5,19 @@ import Logo from '../assets/icons/Logo.svg';
 import SvgIcon from '@mui/material/SvgIcon';
 import {
   Link as RouterLink,
-  useRouteLoaderData,
   NavLink,
   NavLinkProps,
-  useSubmit,
+  useNavigate,
 } from 'react-router-dom';
 import Link from '@mui/material/Link';
 import { Button, Stack } from '@mui/material';
+import { useAppSelector, useAppDispatch } from '../redux/hooks';
+import { logout } from '../redux/authSlice';
 
 function Header() {
-  const token = useRouteLoaderData('root');
-  const signedIn = token != 'EXPIRED' && token != null;
-  const submit = useSubmit();
+  const token = useAppSelector((state) => state.auth.token);
+  const dispatch = useAppDispatch();
+  const navigate = useNavigate();
 
   return (
     <>
@@ -54,7 +55,7 @@ function Header() {
               }>
               Search
             </NavLink>
-            {!signedIn ? (
+            {!token ? (
               <NavLink
                 to='/signin'
                 className={({ isActive }) =>
@@ -67,7 +68,8 @@ function Header() {
             ) : (
               <Button
                 onClick={() => {
-                  submit(null, { action: '/logout', method: 'post' });
+                  dispatch(logout());
+                  navigate('/');
                 }}
                 sx={{
                   textTransform: 'none',

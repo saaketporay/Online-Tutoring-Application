@@ -26,13 +26,14 @@ import StudentEditProfileModal, {
 import DeleteAppointmentModal, {
   deleteAppointmentAction,
 } from './components/DeleteAppointmentModal';
-import { logoutAction } from './utils/logout';
-import { tokenLoader } from './utils/auth';
 import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
 } from './pages/EditTutorProfile';
 import Search from './pages/Search';
+import FavoriteTutorModal, {
+  favoriteTutorAction,
+} from './components/FavoriteTutorModal';
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -40,8 +41,7 @@ const router = createBrowserRouter(
       path='/'
       element={<AppLayout />}
       errorElement={<ErrorPage />}
-      id='root'
-      loader={tokenLoader}>
+      id='root'>
       <Route
         index={true}
         element={<Home />}
@@ -52,7 +52,7 @@ const router = createBrowserRouter(
         action={authAction}
       />
       <Route
-        path='signin-email/:tokenId'
+        path='signin/:tokenId'
         id='mfa-auth'
         element={<MultifactorAuth />}
       />
@@ -86,6 +86,11 @@ const router = createBrowserRouter(
           action={studentEditProfileAction}
         />
         <Route
+          path='favorite/:tutorId'
+          element={<FavoriteTutorModal />}
+          action={favoriteTutorAction}
+        />
+        <Route
           path='delete-appt/:apptId'
           element={<DeleteAppointmentModal />}
           action={deleteAppointmentAction}
@@ -101,6 +106,7 @@ const router = createBrowserRouter(
         path='success'
         element={<FormSuccess />}
       />
+<<<<<<< HEAD
       <Route
         path='search'
         element={<Search />}
@@ -109,6 +115,8 @@ const router = createBrowserRouter(
         path='logout'
         action={logoutAction}
       />
+=======
+>>>>>>> main
     </Route>
   )
 );

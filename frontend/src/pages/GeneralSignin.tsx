@@ -10,7 +10,7 @@ import FacebookIcon from '../assets/icons/Facebook-Icon.svg';
 import AppleIcon from '../assets/icons/Apple-Icon.svg';
 import EllipseIcon from '../assets/icons/Ellipse-Icon.svg'
 import { Link } from 'react-router-dom'
-import { roundButtonTheme } from '../theme';
+import { roundButtonTheme } from '../utils/theme';
 
 function GeneralSignin() {
   return (

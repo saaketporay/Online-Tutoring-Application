@@ -12,21 +12,10 @@ import {
   ActionFunction,
   useSubmit
 } from 'react-router-dom';
-import { useAppDispatch, useAppSelector } from '../hooks';
-import { toggleModal, clearAppointmentId } from "../features/modalSlice";
+import { modalStyle } from '../utils/theme';
+import { useAppDispatch, useAppSelector } from '../redux/hooks';
+import { toggleModal, clearAppointmentId } from "../redux/modalSlice";
 import axios from 'axios';
-
-const modalStyle = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 400,
-  bgcolor: '#404040',
-  border: '2px solid #000',
-  boxShadow: 24,
-  p: 4,
-};
 
 const DeleteAppointmentModal = () => {
   const handleModalClose = useOutletContext() as VoidFunction;
@@ -38,8 +27,9 @@ const DeleteAppointmentModal = () => {
         open={showModal}
         onClose={handleModalClose}
         aria-label="delete-appt-title"
-        aria-describedby="delete-appt-description">
-        <Box sx={modalStyle} className='flex'>
+        aria-describedby="delete-appt-description"
+      >
+        <Box sx={modalStyle}>
           <Form method="delete">
             <Stack direction={'column'} spacing={2}>
               <Typography id="delete-appt-title" variant="h5">
@@ -51,7 +41,8 @@ const DeleteAppointmentModal = () => {
               <Button
                 type='submit'
                 variant='contained'
-                color='error'>
+                color='error'
+              >
                 Cancel appointment
               </Button>
             </Stack>

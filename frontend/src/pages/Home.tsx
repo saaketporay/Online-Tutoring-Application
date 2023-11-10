@@ -2,7 +2,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Stack from '@mui/material/Stack';
-import { roundButtonTheme } from '../theme';
+import { roundButtonTheme } from '../utils/theme';
 import { ThemeProvider } from '@emotion/react';
 import { Link } from 'react-router-dom';
 
