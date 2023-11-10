@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router-dom";
 
-function PrivateRoute({
+function ProtectedRoute({
   isAllowed,
   redirectTo = "/",
   children,
@@ -24,4 +24,4 @@ function PrivateRoute({
   );
 }
 
-export default PrivateRoute;
+export default ProtectedRoute;
