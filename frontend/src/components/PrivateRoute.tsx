@@ -1,21 +1,25 @@
-import { Route, RouteProps, Outlet, useNavigate, useNavigation } from "react-router-dom";
-import { checkPermissions } from "../utils/permissions";
+import { Navigate, Outlet } from "react-router-dom";
 
-function PrivateRoute({ permission, ...props }: {props: RouteProps, permission: string}) {
-  const user_permissions = checkPermissions();
-  const navigate = useNavigate();
+function PrivateRoute({
+  isAllowed,
+  redirectTo = "/",
+  children,
+}: {
+  isAllowed: boolean;
+  redirectTo: string;
+  children: React.JSX.Element;
+}) {
+  if (!isAllowed) {
+    return (
+      <>
+        <Navigate to={redirectTo} />
+      </>
+    );
+  }
 
   return (
     <>
-      {permission == user_permissions ? (
-        <>
-          <Route {...props} />
-        </>
-      ) : (
-        <>
-          
-        </>
-      )}
+      {children ? children : <Outlet />}
     </>
   );
 }
