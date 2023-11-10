@@ -32,8 +32,6 @@ const theme = createTheme(autocompleteTheme, {
   },
 });
 
-const DUMMY_COURSES = [{ label: 'CS 1336' }, { label: 'CS 1337' }];
-
 const getLastSunday = () => {
   const t = new Date();
   t.setDate(t.getDate() - t.getDay());
@@ -57,10 +55,13 @@ interface TutorSignupInfoProps {
 const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
   const availableCourses = subjects.map((course) => ({
     label: course.subject_name,
-  })) as { label: string }[];
+    subject_id: course.subject_id,
+  })) as { label: string; subject_id: number }[];
 
   const [aboutMe, setAboutMe] = useState<string>('');
-  const [courses, setCourses] = useState<{ label: string }[]>([]);
+  const [courses, setCourses] = useState<
+    { label: string; subject_id: number }[]
+  >([]);
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
@@ -157,6 +158,7 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
             <Typography>Hourly chunks</Typography>
             <Slider
               aria-label='Hourly chunks'
+              name='hourly_chunks'
               getAriaValueText={(value: number) => value.toString()}
               value={hrChunks}
               onChange={(e, v) => {

@@ -1,7 +1,6 @@
 // user auth controller
 
-const { getUserByEmail, createUser } = require('../models/User');
-const { createTutor } = require('../models/Availability'); // Import createTutor function
+const { getUserByEmail, createUser, createTutor } = require('../models/User');
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
 const { decodeToken, generateToken } = require('../utils/jwtUtil');
 const jwt = require('jsonwebtoken');
@@ -41,6 +40,9 @@ const register = async (req, res) => {
     about_me,
     profile_picture,
     is_criminal,
+    courses,
+    schedule,
+    hourly_chunks,
   } = req.body;
 
   try {
@@ -53,7 +55,11 @@ const register = async (req, res) => {
       user_type,
       phone_number
     );
-    console.log(`New User ID: ${user_id}`);
+
+    if (!user_id) {
+      throw new Error('User already exists.');
+    }
+
     console.log('Hashed Password:', hashedPassword);
     // If user is a tutor, create a corresponding entry in the Tutors table
     if (user_type === 'tutor') {
@@ -61,9 +67,11 @@ const register = async (req, res) => {
         user_id,
         about_me,
         profile_picture,
-        is_criminal
+        is_criminal,
+        courses,
+        schedule,
+        hourly_chunks
       );
-      console.log(`New Tutor created with ID: ${tutorId}`);
     }
     const user = await getUserByEmail(email);
     const token = generateToken(user);
