@@ -26,7 +26,7 @@ const rootReducer = combineReducers({
   modal: modalReducer,
 });
 
-type RootReducer = ReturnType<typeof rootReducer>;
+type RootReducer = ReturnType<typeof rootReducer>
 
 const persistedReducer = persistReducer<RootReducer>(persistConfig, rootReducer);
 

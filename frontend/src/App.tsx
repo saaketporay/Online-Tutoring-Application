@@ -4,13 +4,6 @@ import {
   RouterProvider,
   Route,
 } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
-import { ThemeProvider } from "@emotion/react";
-import { globalTheme } from "./utils/theme";
-import { Provider } from "react-redux";
-import { store, persistor } from "./redux/store";
-import { PersistGate } from "redux-persist/integration/react";
-import axios from "axios";
 import AppLayout from "./components/AppLayout";
 import Home from "./pages/Home";
 import ErrorPage from "./pages/ErrorPage";
@@ -40,9 +33,6 @@ import EditTutorProfile, {
 import FavoriteTutorModal, { 
   favoriteTutorAction,
 } from "./components/FavoriteTutorModal";
-
-axios.defaults.baseURL = import.meta.env.VITE_BACKEND_URL;
-axios.defaults.headers.common["Content-Type"] = "application/json";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
@@ -126,14 +116,7 @@ const router = createBrowserRouter(
 const App = () => {
   return (
     <>
-      <Provider store={store}>
-        <PersistGate loading={null} persistor={persistor}>
-          <ThemeProvider theme={globalTheme}>
-            <CssBaseline />
-            <RouterProvider router={router} />
-          </ThemeProvider>
-        </PersistGate>
-      </Provider>
+      <RouterProvider router={router} />
     </>
   );
 };
