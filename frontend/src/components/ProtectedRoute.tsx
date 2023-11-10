@@ -7,7 +7,7 @@ function ProtectedRoute({
 }: {
   isAllowed: boolean;
   redirectTo: string;
-  children: React.JSX.Element;
+  children: React.JSX.Element | null;
 }) {
   if (!isAllowed) {
     return (
