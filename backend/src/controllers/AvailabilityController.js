@@ -57,42 +57,26 @@ const AvailabilityController = {
   },
   getAllAvailabilityInfo: async (req, res) => {
     try {
-      const responseData = await Availability.getAllAvailabilityInfo();
+      const data = await Availability.getAllAvailabilityInfo();
+
+      const responseData = {};
 
       // Build responseData object
-      // const responseData = {};
-      // const subjects = (await Availability.getAllSubjects()).map(
-      //   (data) => data.dataValues
-      // );
-
-      // console.log('subjects:', subjects);
-      // for (subject of subjects) {
-      //   console.log('subject:', subject);
-      //   const tutors = await Availability.getAllTutorsBySubjectId(
-      //     subject.subject_id
-      //   );
-      //   responseData[subject.subject_name] = {};
-
-      //   console.log('tutors:', tutors);
-      //   if (tutors.length === 0) {
-      //     continue;
-      //   }
-      //   for (tutor of tutors) {
-      //     console.log('tutor:', tutor);
-      //     const tutorInfo = await Availability.getTutorNameByTutorId(
-      //       tutor.tutor_id
-      //     );
-      //     const tutorTimes = await Availability.getAllTimesByTutorId(
-      //       tutor.tutor_id
-      //     );
-      //     responseData[subject.subject_name][
-      //       `${tutorInfo.first_name} ${tutorInfo.last_name}`
-      //     ] = {
-      //       tutor_id: tutor_id,
-      //       timeslots: tutorTimes.length === 0 ? [] : tutorTimes,
-      //     };
-      //   }
-      // }
+      for (subject of data) {
+        responseData[subject.subject_name] = {};
+        for (tutor of subject.Tutors) {
+          responseData[subject.subject_name][
+            `${tutor.User.first_name} ${tutor.User.last_name}`
+          ] = tutor.Tutor_Availabilities.map(
+            ({ tutor_id, date_time, duration }) => ({
+              tutor_id,
+              date_time,
+              duration,
+              subject_id: subject.subject_id,
+            })
+          );
+        }
+      }
 
       console.log(responseData);
       return res.status(200).json(responseData);
