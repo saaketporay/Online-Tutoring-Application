@@ -14,22 +14,18 @@ import {
 import { useAppSelector } from "../redux/hooks";
 
 const FavoriteTutorModal = () => {
-  const handleModalClose = useOutletContext() as VoidFunction;
+  const handleCloseModal = useOutletContext() as VoidFunction;
   const showModal = useAppSelector((state) => state.modal.showModal);
 
   return (
     <>
       <Modal
         open={showModal}
-        onClose={handleModalClose}
+        onClose={handleCloseModal}
         aria-label="favorite-tutor-modal"
         aria-describedby="favorite-tutor-description"
       >
-        <Box
-          sx={{
-            ...modalStyle
-          }}
-        >
+        <Box sx={modalStyle}>
           <Form method="delete">
             <Stack direction={'column'}>
               <Button

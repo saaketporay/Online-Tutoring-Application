@@ -11,7 +11,7 @@ import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { createTheme } from '@mui/material';
 import { useActionData, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { toggleModal, setAppointmentId } from "../redux/modalSlice";
+import { setShowModal, setAppointmentId } from "../redux/modalSlice";
 
 type userProps = {
   first_name: string,
@@ -102,7 +102,7 @@ const Dashboard = ({
                       className="mt-6 px-16"
                       component={NavLink}
                       to="edit-profile"
-                      onClick={() => dispatch(toggleModal())}
+                      onClick={() => dispatch(setShowModal(true))}
                       sx={{
                         backgroundColor: '#16653480',
                         textTransform: 'none',
@@ -145,7 +145,7 @@ const Dashboard = ({
                       >
                         <NavLink
                           to={`favorite/${tutor.tutor_id}`}
-                          onClick={() => dispatch(toggleModal())}
+                          onClick={() => dispatch(setShowModal(true))}
                           className='no-underline text-white'
                         >
                           <CardContent className='break-normal'>
@@ -182,7 +182,7 @@ const Dashboard = ({
                           to={`delete-appt/${appt.appointment_id}`}
                           onClick={() => {
                             dispatch(setAppointmentId(appt.appointment_id));
-                            dispatch(toggleModal());
+                            dispatch(setShowModal(true));
                           }}
                           sx={{
                             "&:hover": {
