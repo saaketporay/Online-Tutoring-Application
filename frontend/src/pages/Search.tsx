@@ -109,15 +109,13 @@ const Search = () => {
                   <Stack
                     direction='row'
                     spacing={2}
-                    className='flex items-center'>
+                    className='flex items-center justify-evenly'>
                     <img
                       className='max-w-[100px] h-auto rounded-full mx-3'
                       src={val.profile_picture}
                       alt={`${key}'s profile picture`}
                     />
-                    <Stack
-                      spacing={2}
-                      className='w-full flex justify-center'>
+                    <Stack spacing={2}>
                       <Typography>{val.about_me}</Typography>
                       <Typography>{`${val.total_tutoring_hours} total tutoring hours`}</Typography>
                       <Typography>{val.email}</Typography>
@@ -128,18 +126,17 @@ const Search = () => {
             </Accordion>
           ))
         ) : (
-          <Box className='bg-[#2d2d2d] text-[#f5f5f5]'>
+          <Box className='bg-[#2d2d2d] text-[#f5f5f5] p-5 rounded-md'>
             <Stack
               direction='row'
-              spacing={2}>
+              spacing={2}
+              className='flex items-center justify-evenly'>
               <img
                 className='max-w-[100px] h-auto rounded-full'
                 src={tutorInfo.profile_picture}
                 alt={`${selectedTutor}'s profile picture`}
               />
-              <Stack
-                spacing={2}
-                className='items-center'>
+              <Stack spacing={2}>
                 <Typography>{tutorInfo.about_me}</Typography>
                 <Typography>{`Total tutoring hours: ${tutorInfo.total_tutoring_hours}`}</Typography>
                 <Typography>{tutorInfo.email}</Typography>
