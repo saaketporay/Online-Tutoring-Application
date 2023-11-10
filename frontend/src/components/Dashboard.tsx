@@ -9,7 +9,7 @@ import CardContent from '@mui/material/CardContent';
 import Avatar from '@mui/material/Avatar';
 import DeleteAppointmentIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { createTheme } from '@mui/material';
-import { useActionData, Link } from 'react-router-dom';
+import { useActionData, NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { toggleModal, setAppointmentId } from "../redux/modalSlice";
 
@@ -25,11 +25,12 @@ type userProps = {
     course: string,
     day: string,
     time: string,
-    id: string
+    appointment_id: string,
   }[],
   favorite_tutors: {
     tutor_name: string,
-  }[],
+    tutor_id: string,
+  }[] | undefined,
 };
 
 const dashboardTheme = createTheme(cardTheme, textFieldTheme, {
@@ -59,7 +60,6 @@ const Dashboard = ({
   appointments,
   favorite_tutors,
 }: userProps) => {
-  const showModal = useAppSelector((state) => state.modal.showModal);
   const dispatch = useAppDispatch();
 
   const actionData = useActionData() as modalResponse;
@@ -100,7 +100,7 @@ const Dashboard = ({
                   <>
                     <Button
                       className="mt-6 px-16"
-                      component={Link}
+                      component={NavLink}
                       to="edit-profile"
                       onClick={() => dispatch(toggleModal())}
                       sx={{
@@ -143,9 +143,15 @@ const Dashboard = ({
                         key={i}
                         className='shadow-lg bg-neutral-700'
                       >
-                        <CardContent className='break-normal'>
-                          {tutor.tutor_name}
-                        </CardContent>
+                        <NavLink
+                          to={`favorite/${tutor.tutor_id}`}
+                          onClick={() => dispatch(toggleModal())}
+                          className='no-underline text-white'
+                        >
+                          <CardContent className='break-normal'>
+                            {tutor.tutor_name}
+                          </CardContent>
+                        </NavLink>
                       </Card>
                     )
                   })}
@@ -172,10 +178,10 @@ const Dashboard = ({
                           {appt.course} {user_type == "student" ? appt.tutor_name : appt.student_name} {appt.day} {appt.time}
                         </Typography>
                         <Button
-                          component={Link}
-                          to={`delete-appt/${appt.id}`}
+                          component={NavLink}
+                          to={`delete-appt/${appt.appointment_id}`}
                           onClick={() => {
-                            dispatch(setAppointmentId(appt.id));
+                            dispatch(setAppointmentId(appt.appointment_id));
                             dispatch(toggleModal());
                           }}
                           sx={{

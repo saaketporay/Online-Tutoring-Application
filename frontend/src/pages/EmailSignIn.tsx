@@ -8,7 +8,7 @@ import type { ActionFunction } from "react-router";
 import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, checkboxTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
-import store from '../redux/store';
+import { store } from '../redux/store';
 import { setToken, setExpiration } from '../redux/authSlice';
 import axios from 'axios';
 
