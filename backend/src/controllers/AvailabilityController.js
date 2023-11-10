@@ -31,8 +31,20 @@ const AvailabilityController = {
   getAllTutors: async (req, res) => {
     try {
       const tutors = await Availability.getAllTutors();
-      console.log(tutors);
-      return res.status(200).json(tutors);
+
+      const responseData = {};
+
+      for (tutor of tutors) {
+        responseData[`${tutor.User.first_name} ${tutor.User.last_name}`] = {
+          email: tutor.User.email,
+          about_me: tutor.about_me,
+          profile_picture: tutor.profile_picture,
+          total_tutoring_hours: tutor.User.total_tutoring_hours,
+        };
+      }
+
+      console.log(responseData);
+      return res.status(200).json(responseData);
     } catch (error) {
       console.error(error);
       return res

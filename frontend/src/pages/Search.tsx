@@ -8,8 +8,10 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
+import axios from 'axios';
+import { json, useLoaderData, LoaderFunction } from 'react-router-dom';
 
-import { autocompleteTheme } from '../theme';
+import { autocompleteTheme } from '../utils/theme';
 
 const theme = createTheme(autocompleteTheme, {
   components: {
@@ -33,7 +35,7 @@ const theme = createTheme(autocompleteTheme, {
   },
 });
 
-interface DUMMY_DATA_TYPE {
+interface RESPONSE_DATA_TYPE {
   [key: string]: {
     email: string;
     about_me: string;
@@ -42,41 +44,19 @@ interface DUMMY_DATA_TYPE {
   };
 }
 
-const DUMMY_DATA: DUMMY_DATA_TYPE = {
-  'John Doe': {
-    email: 'john.doe@test.com',
-    about_me: 'I love teaching math!',
-    profile_picture:
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-    total_tutoring_hours: 30,
-  },
-  'Jane Doe': {
-    email: 'jane.doe@test.com',
-    about_me: 'I love teaching science!',
-    profile_picture:
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-    total_tutoring_hours: 45,
-  },
-  'John Smith': {
-    email: 'john.smith@test.com',
-    about_me: 'I love teaching history!',
-    profile_picture:
-      'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png',
-    total_tutoring_hours: 20,
-  },
-};
-
-const DUMMY_TUTORS = Object.keys(DUMMY_DATA).map((key) => ({
-  label: key,
-}));
-
 const getOptionEquality = (
   option: { label: string },
   value: { label: string }
 ) => option.label === value.label;
 
 const Search = () => {
+  const tutorData = useLoaderData() as RESPONSE_DATA_TYPE;
+
   const [selectedTutor, setSelectedTutor] = useState<string>('');
+
+  const tutorList = Object.keys(tutorData).map((key) => ({
+    label: key,
+  }));
 
   const tutorSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
@@ -90,7 +70,7 @@ const Search = () => {
     setSelectedTutor(value);
   };
 
-  const tutorInfo = DUMMY_DATA[selectedTutor];
+  const tutorInfo = tutorData[selectedTutor];
 
   return (
     <ThemeProvider theme={theme}>
@@ -105,7 +85,7 @@ const Search = () => {
           autoSelect
           id='instructor-search'
           className='w-[500px] mb-20'
-          options={DUMMY_TUTORS}
+          options={tutorList}
           value={selectedTutor ? { label: selectedTutor } : null}
           disablePortal
           onInputChange={tutorSelectChangeHandler}
@@ -118,8 +98,8 @@ const Search = () => {
             />
           )}
         />
-        {selectedTutor === '' || !(selectedTutor in DUMMY_DATA) ? (
-          Object.entries(DUMMY_DATA).map(([key, val]) => (
+        {selectedTutor === '' || !(selectedTutor in tutorData) ? (
+          Object.entries(tutorData).map(([key, val]) => (
             <Accordion>
               <AccordionSummary>
                 <Typography>{key}</Typography>
@@ -148,7 +128,7 @@ const Search = () => {
             </Accordion>
           ))
         ) : (
-          <Box>
+          <Box className='bg-[#2d2d2d] text-[#f5f5f5]'>
             <Stack
               direction='row'
               spacing={2}>
@@ -170,6 +150,18 @@ const Search = () => {
       </Box>
     </ThemeProvider>
   );
+};
+
+export const loader: LoaderFunction = async () => {
+  const response = await axios.get('availability/tutors');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  console.log(response.data);
+  return response.data as RESPONSE_DATA_TYPE;
 };
 
 export default Search;

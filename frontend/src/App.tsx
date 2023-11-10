@@ -30,7 +30,7 @@ import EditTutorProfile, {
   loader as editTutorProfileLoader,
   action as editTutorProfileAction,
 } from './pages/EditTutorProfile';
-import Search from './pages/Search';
+import Search, { loader as searchLoader } from './pages/Search';
 import FavoriteTutorModal, {
   favoriteTutorAction,
 } from './components/FavoriteTutorModal';
@@ -109,6 +109,7 @@ const router = createBrowserRouter(
       <Route
         path='search'
         element={<Search />}
+        loader={searchLoader}
       />
     </Route>
   )
