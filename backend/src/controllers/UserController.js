@@ -1,6 +1,8 @@
 // user auth controller
 
 const { getUserByEmail, createUser, createTutor } = require('../models/User');
+const Appointment = require('../models/Appointment');
+
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
 const { decodeToken, generateToken } = require('../utils/jwtUtil');
 const jwt = require('jsonwebtoken');
@@ -12,13 +14,15 @@ const getUserInfo = async(req, res) => {
   try
   {
     const user_email = decodedToken.email;
+    const student_Id = decodedToken.id;
     const user = await getUserByEmail(user_email);
+    const appointments = await Appointment.getByStudentId(student_Id);
     console.log(user);
     if (!user)
     {
       return res.status(404).send("User not found");
     }
-    return res.status(200).json({user});
+    return res.status(200).json({user, appointments});
   }
   catch (err)
   {
