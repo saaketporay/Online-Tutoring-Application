@@ -6,6 +6,28 @@ const { decodeToken, generateToken } = require('../utils/jwtUtil');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
+const getUserInfo = async(req, res) => {
+  const token = req.headers.authorization;
+  const decodedToken = decodeToken(token);
+  try
+  {
+    const user_email = decodedToken.email;
+    const user = await getUserByEmail(user_email);
+    console.log(user);
+    if (!user)
+    {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).json({user});
+  }
+  catch (err)
+  {
+    console.log(err)
+    res.status(500).send("Internal Server Error");
+  }
+}
+
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -88,4 +110,5 @@ const register = async (req, res) => {
 module.exports = {
   login,
   register,
+  getUserInfo
 };
