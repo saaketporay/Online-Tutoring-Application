@@ -14,9 +14,9 @@ const getUserByEmail = async (email) => {
   }
 };
 
-const createUser = async (firstname, lastname, email, password, user_type) => {
+const createUser = async (firstname, lastname, email, password, user_type,total_tutoring_hours, totp_secret) => {
+  console.log("Received TOTP Secret in createUser:", totp_secret);
   try {
-    console.log(firstname, lastname, email, password, user_type);
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
@@ -30,6 +30,8 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
       email: email,
       hashed_password: password,
       user_type: user_type,
+      total_tutoring_hours: total_tutoring_hours,
+      totp_secret: totp_secret, 
     });
 
     console.log(`New user created with ID: ${newUser.user_id}`);
@@ -47,11 +49,9 @@ const createTutor = async (
   is_criminal,
   courses,
   schedule,
-  hourly_chunks
+  hourly_chunks,
 ) => {
   try {
-    console.log(user_id, about_me, profile_picture, is_criminal);
-
     const newTutor = await Tutor.create({
       user_id,
       about_me,

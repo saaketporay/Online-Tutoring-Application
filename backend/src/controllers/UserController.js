@@ -1,5 +1,5 @@
 // user auth controller
-require('dotenv').config({ path: __dirname + '/../../.env' });
+require("dotenv").config({ path: __dirname + "/../../.env" });
 const { getUserByEmail, createUser, createTutor } = require("../models/User");
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
@@ -13,7 +13,6 @@ const login = async (req, res) => {
 
   try {
     const user = await getUserByEmail(email);
-    console.log(user);
     if (!user || !(await comparePasswords(password, user.hashed_password))) {
       return res.status(400).send("Failed to login. Wrong credentials");
     }
@@ -25,20 +24,17 @@ const login = async (req, res) => {
       user_type: user_type,
     });
   } catch (err) {
-    console.error(err);
     res.status(500).send("Internal Server Error");
   }
 };
 
 const register = async (req, res) => {
-  console.log(req.body);
   const {
     first_name,
     last_name,
     email,
     password,
     user_type,
-    phone_number,
     about_me,
     profile_picture,
     is_criminal,
@@ -47,6 +43,12 @@ const register = async (req, res) => {
     hourly_chunks,
   } = req.body;
 
+  //generate new totp secret
+  const secret = speakeasy.generateSecret();
+  const userSecret = secret.base32;
+  console.log(userSecret)
+
+ 
   try {
     const hashedPassword = await hashPassword(password);
     const user_id = await createUser(
@@ -55,14 +57,13 @@ const register = async (req, res) => {
       email,
       hashedPassword,
       user_type,
-      phone_number
+      userSecret,
     );
 
     if (!user_id) {
       throw new Error("User already exists.");
     }
 
-    console.log("Hashed Password:", hashedPassword);
     // If user is a tutor, create a corresponding entry in the Tutors table
     if (user_type === "tutor") {
       const tutorId = await createTutor(
@@ -94,9 +95,6 @@ const sendTOTP = async (req, res) => {
     return res.status(400).send("Email is required");
   }
 
-  const secret = speakeasy.generateSecret();
-  const userSecret = secret.base32;
-
   // Generate TOTP
   const token = speakeasy.totp({
     secret: process.env.SECRET_KEY,
@@ -122,7 +120,7 @@ const verifyTOTP = async (req, res) => {
     secret: process.env.SECRET_KEY,
     encoding: "base32",
     token: totp,
-    step: 120, 
+    step: 120,
     window: 1, // Allowing a bit of flexibility in timing
   });
 
