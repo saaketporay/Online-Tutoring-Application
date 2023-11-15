@@ -1,9 +1,9 @@
 // user auth controller
-
+require('dotenv').config({ path: __dirname + '/../../.env' });
 const { getUserByEmail, createUser, createTutor } = require("../models/User");
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
-const { sendEmail } = require("../utils/mailer.js")
+const { sendEmail } = require("../utils/mailer.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const speakeasy = require("speakeasy");
@@ -94,10 +94,14 @@ const sendTOTP = async (req, res) => {
     return res.status(400).send("Email is required");
   }
 
+  const secret = speakeasy.generateSecret();
+  const userSecret = secret.base32;
+
   // Generate TOTP
   const token = speakeasy.totp({
-    secret: "Your static or dynamic secret",
+    secret: process.env.SECRET_KEY,
     encoding: "base32",
+    step: 120,
   });
 
   // Send email with the TOTP
@@ -110,8 +114,30 @@ const sendTOTP = async (req, res) => {
   }
 };
 
+const verifyTOTP = async (req, res) => {
+  const { totp } = req.body;
+
+  // Assuming the user's TOTP secret is stored in user.totp_secret
+  const verified = speakeasy.totp.verify({
+    secret: process.env.SECRET_KEY,
+    encoding: "base32",
+    token: totp,
+    step: 120, 
+    window: 1, // Allowing a bit of flexibility in timing
+  });
+
+  if (verified) {
+    // TOTP is correct
+    return res.status(200).send("TOTP verified successfully");
+  } else {
+    // TOTP is incorrect
+    return res.status(400).send(`Invalid TOTP: ${totp}`);
+  }
+};
+
 module.exports = {
   login,
   register,
-  sendTOTP, 
+  sendTOTP,
+  verifyTOTP,
 };

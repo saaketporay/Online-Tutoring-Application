@@ -9,7 +9,7 @@ const router = express.Router();
 router.post('/login', userController.login);
 router.post('/register', userController.register);
 router.post('/send-totp', userController.sendTOTP);
-//router.post('/verify-totp', userController.verifyTOTP);
+router.post('/verify-totp', userController.verifyTOTP);
 
 
 module.exports = router;

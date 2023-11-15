@@ -1,22 +1,30 @@
-require('dotenv').config({ path: __dirname + '/../../.env' });
-const nodemailer = require('nodemailer');
+require("dotenv").config({ path: __dirname + "/../../.env" });
+const nodemailer = require("nodemailer");
 
 const sendEmail = async (email, subject, text) => {
   // Set up nodemailer transport (using a service like Gmail, Outlook, etc.)
   let transporter = nodemailer.createTransport({
     // Example with Gmail; replace with your email service details
-    service: 'gmail',
+    service: "gmail",
     auth: {
-      user:  process.env.MFA_EMAIL,
-      pass:  process.env.MFA_PASSWORD,
+      user: process.env.MFA_EMAIL,
+      pass: process.env.MFA_PASSWORD,
     },
   });
 
   // Email options
+
+  let now = new Date();
+  let formattedDateTime = now.toLocaleString("en-US", {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  });
+
   let mailOptions = {
-    from: 'userauth909@gmail.com',
+    from: process.env.MFA_EMAIL,
     to: email,
-    subject: subject,
+    subject: `${subject} - ${formattedDateTime}`,
     text: text,
   };
 
