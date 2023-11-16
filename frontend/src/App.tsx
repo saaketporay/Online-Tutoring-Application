@@ -182,8 +182,8 @@ const App = () => {
         path='search'
         element={<Search />}
         loader={searchLoader}
-      />
-    </Route>
+        />
+      </Route>
     )
   );
 
