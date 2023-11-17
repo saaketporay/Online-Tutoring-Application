@@ -1,4 +1,4 @@
-const { User, Tutor, Tutor_Subject, Tutor_Availability } = require('./index'); // Import the User model
+const { User, Tutor, Tutor_Subject, Tutor_Availability } = require("./index"); // Import the User model
 
 const getUserByEmail = async (email) => {
   try {
@@ -9,18 +9,25 @@ const getUserByEmail = async (email) => {
     });
     return user;
   } catch (err) {
-    console.error('Error in getUserByEmail:', err);
+    console.error("Error in getUserByEmail:", err);
     return null;
   }
 };
 
-const createUser = async (firstname, lastname, email, password, user_type, totp_secret) => {
+const createUser = async (
+  firstname,
+  lastname,
+  email,
+  password,
+  user_type,
+  totp_secret
+) => {
   console.log("Received TOTP Secret in createUser:", totp_secret);
   try {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      console.log('User already exists!');
+      console.log("User already exists!");
       return false;
     }
 
@@ -30,13 +37,13 @@ const createUser = async (firstname, lastname, email, password, user_type, totp_
       email: email,
       hashed_password: password,
       user_type: user_type,
-      totp_secret: totp_secret, 
+      totp_secret: totp_secret,
     });
 
     console.log(`New user created with ID: ${newUser.user_id}`);
     return newUser.user_id;
   } catch (err) {
-    console.error('Error in createUser:', err);
+    console.error("Error in createUser:", err);
     return null;
   }
 };
@@ -48,7 +55,7 @@ const createTutor = async (
   is_criminal,
   courses,
   schedule,
-  hourly_chunks,
+  hourly_chunks
 ) => {
   try {
     const newTutor = await Tutor.create({
@@ -76,7 +83,20 @@ const createTutor = async (
       });
     }
   } catch (err) {
-    console.error('Error in createTutor:', err);
+    console.error("Error in createTutor:", err);
+    return null;
+  }
+};
+
+const getUserSecret = async (email) => {
+  try {
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: ["totp_secret"], // Fetch only the 'totp_secret' field
+    });
+    return user ? user.totp_secret : null;
+  } catch (err) {
+    console.error("Error in getUserSecret:", err);
     return null;
   }
 };
@@ -85,4 +105,5 @@ module.exports = {
   getUserByEmail,
   createUser,
   createTutor,
+  getUserSecret, 
 };

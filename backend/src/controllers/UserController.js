@@ -1,6 +1,10 @@
 // user auth controller
-require("dotenv").config({ path: __dirname + "/../../.env" });
-const { getUserByEmail, createUser, createTutor } = require("../models/User");
+const {
+  getUserByEmail,
+  createUser,
+  createTutor,
+  getUserSecret,
+} = require("../models/User");
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
 const { sendEmail } = require("../utils/mailer.js");
@@ -17,14 +21,20 @@ const login = async (req, res) => {
       return res.status(400).send("Failed to login. Wrong credentials");
     }
 
-    const token = generateToken(user);
-    const { user_type } = user;
-    return res.status(200).json({
-      token: token,
-      user_type: user_type,
-    });
+    try {
+      // Send TOTP to the user's email
+      await sendTOTP(user.email);
+      // Indicate that further verification is needed
+      return res
+        .status(200)
+        .send("TOTP sent to email. Please verify to complete login.");
+    } catch (error) {
+      console.error(error);
+      return res.status(500).send("Error sending TOTP: " + error.message);
+    }
   } catch (err) {
-    res.status(500).send("Internal Server Error");
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
   }
 };
 
@@ -46,9 +56,8 @@ const register = async (req, res) => {
   //generate new totp secret
   const secret = speakeasy.generateSecret();
   const userSecret = secret.base32;
-  console.log(userSecret)
+  console.log(userSecret);
 
- 
   try {
     const hashedPassword = await hashPassword(password);
     const user_id = await createUser(
@@ -57,7 +66,7 @@ const register = async (req, res) => {
       email,
       hashedPassword,
       user_type,
-      userSecret,
+      userSecret
     );
 
     if (!user_id) {
@@ -88,48 +97,76 @@ const register = async (req, res) => {
   }
 };
 
-const sendTOTP = async (req, res) => {
-  const { email } = req.body; // Assuming the request body has an 'email' field
-
+const sendTOTP = async (email) => {
   if (!email) {
-    return res.status(400).send("Email is required");
+    throw new Error("Email is required");
+  }
+
+  // Retrieve the user's TOTP secret from the database
+  const userSecret = await getUserSecret(email);
+  if (!userSecret) {
+    throw new Error("TOTP secret not found for the user");
   }
 
   // Generate TOTP
   const token = speakeasy.totp({
-    secret: process.env.SECRET_KEY,
+    secret: userSecret,
     encoding: "base32",
     step: 120,
   });
 
+  console.log(token);
   // Send email with the TOTP
   try {
     await sendEmail(email, "Your TOTP", `Your one-time password is: ${token}`);
-    res.status(200).send("TOTP sent to email");
   } catch (error) {
     console.error(error);
-    res.status(500).send("Error sending TOTP");
+    throw new Error("Error sending TOTP");
   }
 };
 
 const verifyTOTP = async (req, res) => {
-  const { totp } = req.body;
+  const { email, totp } = req.body;
 
-  // Assuming the user's TOTP secret is stored in user.totp_secret
-  const verified = speakeasy.totp.verify({
-    secret: process.env.SECRET_KEY,
-    encoding: "base32",
-    token: totp,
-    step: 120,
-    window: 1, // Allowing a bit of flexibility in timing
-  });
+  try {
+    // Retrieve the user's TOTP secret from the database
+    const userSecret = await getUserSecret(email);
+    if (!userSecret) {
+      return res.status(404).send("User not found or no TOTP secret available");
+    }
 
-  if (verified) {
-    // TOTP is correct
-    return res.status(200).send("TOTP verified successfully");
-  } else {
-    // TOTP is incorrect
-    return res.status(400).send(`Invalid TOTP: ${totp}`);
+    // Verify the TOTP token
+    const verified = speakeasy.totp.verify({
+      secret: userSecret,
+      encoding: "base32",
+      token: totp,
+      step: 120,
+      window: 1, // Allowing a bit of flexibility in timing
+    });
+
+    if (verified) {
+      // TOTP is correct
+      // Retrieve user details for token generation
+      const user = await getUserByEmail(email);
+      if (!user) {
+        return res.status(404).send("User not found");
+      }
+
+      // Generate JWT token
+      const token = generateToken(user);
+
+      return res.status(200).json({
+        message: "TOTP verified successfully",
+        token: token,
+        user_type: user.user_type,
+      });
+    } else {
+      // TOTP is incorrect
+      return res.status(400).send("Invalid TOTP");
+    }
+  } catch (err) {
+    console.error(err);
+    return res.status(500).send("Internal Server Error");
   }
 };
 
