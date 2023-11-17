@@ -7,7 +7,7 @@ const {
 } = require("../models/User");
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
-const { sendEmail } = require("../utils/mailer.js");
+const { sendTOTP } = require("../utils/totp");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const speakeasy = require("speakeasy");
@@ -94,34 +94,6 @@ const register = async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Internal Server Error");
-  }
-};
-
-const sendTOTP = async (email) => {
-  if (!email) {
-    throw new Error("Email is required");
-  }
-
-  // Retrieve the user's TOTP secret from the database
-  const userSecret = await getUserSecret(email);
-  if (!userSecret) {
-    throw new Error("TOTP secret not found for the user");
-  }
-
-  // Generate TOTP
-  const token = speakeasy.totp({
-    secret: userSecret,
-    encoding: "base32",
-    step: 120,
-  });
-
-  console.log(token);
-  // Send email with the TOTP
-  try {
-    await sendEmail(email, "Your TOTP", `Your one-time password is: ${token}`);
-  } catch (error) {
-    console.error(error);
-    throw new Error("Error sending TOTP");
   }
 };
 
