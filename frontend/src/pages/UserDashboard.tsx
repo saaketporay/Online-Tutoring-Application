@@ -18,7 +18,7 @@ import {
 import { createTheme } from '@mui/material';
 import FavoriteTutorList from '../components/FavoriteTutorList';
 import AppointmentList from '../components/AppointmentList';
-import UserInfo from '../components/UserInfo';
+import UserInfo from '../components/UserCardContent';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
 import axios from 'axios';
@@ -144,8 +144,6 @@ type userProps = {
 
 const UserDashboard = () => {
   const userInfo = useLoaderData() as userProps;
-  const [searchParams] = useSearchParams();
-
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
   const navigate = useNavigate();
@@ -241,13 +239,12 @@ const UserDashboard = () => {
 export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
-  return null;
-  // const response = await axios.get('/user/info')
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.data
-  //   });
-  // }
-  // return response.data;
+  const appointmentsResponse = await axios.get('/appointments/get')
+  if (appointmentsResponse.status != 200) {
+    throw json({
+      ...appointmentsResponse.data,
+      status: appointmentsResponse.data,
+    });
+  }
+  return appointmentsResponse.data;
 };
