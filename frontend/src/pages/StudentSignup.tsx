@@ -11,7 +11,7 @@ import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
 import { store } from '../redux/store';
 import { setToken, setExpiration, setUserType } from '../redux/authSlice';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const StudentSignup = () => {
   return (
@@ -67,7 +67,8 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
   console.log(studentInfo);
-  const response = await axios.post('http://localhost:3000/user/register', {
+  const instance = axiosInstance();
+  const response = await instance.post('http://localhost:3000/user/register', {
     ...studentInfo,
     user_type: 'student',
   });
@@ -80,10 +81,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

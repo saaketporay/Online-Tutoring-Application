@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import { setExpiration, setToken, setUserType } from '../redux/authSlice';
 import GeneralSignupInfo, {
   signupError,
@@ -57,7 +57,8 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const response = await axios.get('availability/subjects');
+  const instance = axiosInstance();
+  const response = await instance.get('availability/subjects');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -114,8 +115,8 @@ export const action: ActionFunction = async ({ request }) => {
     hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
-
-  const response = await axios.post('user/register', modifiedTutorInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -125,10 +126,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

@@ -20,7 +20,7 @@ import AppointmentList from '../components/AppointmentList';
 import UserInfo from '../components/UserCardContent';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const DUMMY_STUDENT_INFO = {
   first_name: "John",
@@ -240,7 +240,8 @@ export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
   const userInfo: Record<string, any> = {};
-  // const userResponse = await axios.get('user/get');
+  const instance = axiosInstance();
+  // const userResponse = await instance.get('user/get');
   // if (userResponse.status != 200) {
   //   throw json({
   //     ...userResponse.data,
@@ -248,7 +249,7 @@ export const dashboardLoader: LoaderFunction = async () => {
   //   });
   // }
   // userInfo.userInfo = userResponse.data;
-  const appointmentsResponse = await axios.get('appointments/get');
+  const appointmentsResponse = await instance.get('appointments/get');
   if (appointmentsResponse.status != 200) {
     throw json({
       ...appointmentsResponse.data,
@@ -256,7 +257,7 @@ export const dashboardLoader: LoaderFunction = async () => {
     });
   }
   userInfo.appointments = appointmentsResponse.data;
-  const favoritesResponse = await axios.get('favorite/get');
+  const favoritesResponse = await instance.get('favorite/get');
   if (favoritesResponse.status != 200) {
     throw json({
       ...favoritesResponse.data,
