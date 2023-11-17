@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
@@ -39,7 +39,8 @@ export const loader: LoaderFunction = async () => {
   // TODO: extract user_id to use in req url
   // TODO: extract JWT from logged in user and send with request
 
-  // const response = await axios.get('/user/:user_id');
+  // const instance = axiosInstance();
+  // const response = await instance.get('/user/:user_id');
   // if (response.status !== 200) {
   //   throw json({
   //     ...response.data,
@@ -61,7 +62,8 @@ export const action: ActionFunction = async ({ request }) => {
   // TODO: extract JWT from logged in user and send with request
   // TODO: extract user_id to use in req url
 
-  // const response = await axios.post('/user/edit?tutor=true', userInfo);
+  // const instance = axiosInstance();
+  // const response = await instance.post('/user/edit?tutor=true', userInfo);
   // console.log(response);
   // if (response.status != 200) {
   //   throw json({

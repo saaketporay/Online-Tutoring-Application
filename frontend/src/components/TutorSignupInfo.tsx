@@ -9,7 +9,7 @@ import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const theme = createTheme(autocompleteTheme, {
   components: {
@@ -52,7 +52,7 @@ interface TutorSignupInfoProps {
   subjects: AvailableCourseType[];
 }
 
-const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
+const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
   const availableCourses = subjects.map((course) => ({
     label: course.subject_name,
     subject_id: course.subject_id,
@@ -142,7 +142,7 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
             </Typography>
             <Typography gutterBottom>Time range</Typography>
             <Slider
-              aria-label='Time range'
+              getAriaLabel={() => 'Time range'}
               getAriaValueText={(value: number) => value.toString()}
               value={timeRange}
               onChange={timeRangeSliderChangeHandler}
@@ -185,11 +185,13 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
         <input
           hidden
           name='courses'
-          value={JSON.stringify(courses)}></input>
+          value={JSON.stringify(courses)}
+        />
         <input
           hidden
           name='schedule'
-          value={JSON.stringify(schedule)}></input>
+          value={JSON.stringify(schedule)}
+        />
         <Button
           variant='contained'
           color='success'
