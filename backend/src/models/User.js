@@ -14,7 +14,7 @@ const getUserByEmail = async (email) => {
   }
 };
 
-const createUser = async (firstname, lastname, email, password, user_type,total_tutoring_hours, totp_secret) => {
+const createUser = async (firstname, lastname, email, password, user_type, totp_secret) => {
   console.log("Received TOTP Secret in createUser:", totp_secret);
   try {
     const existingUser = await getUserByEmail(email);
@@ -30,7 +30,6 @@ const createUser = async (firstname, lastname, email, password, user_type,total_
       email: email,
       hashed_password: password,
       user_type: user_type,
-      total_tutoring_hours: total_tutoring_hours,
       totp_secret: totp_secret, 
     });
 
