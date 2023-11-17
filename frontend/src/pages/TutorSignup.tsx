@@ -19,7 +19,7 @@ import { AvailableCourseType } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
 
 const TutorSignup = () => {
-  const subjects = useLoaderData();
+  const subjects = useLoaderData() as AvailableCourseType[];
   const data = useActionData() as signupError;
 
   return (
@@ -76,12 +76,9 @@ export const action: ActionFunction = async ({ request }) => {
   console.log(tutorInfo);
 
   const errors = [];
-  const { email, phone_number, password } = tutorInfo;
+  const { email, password } = tutorInfo;
   if (!email.toString().includes('@')) {
     errors.push('Email address is invalid.');
-  }
-  if (isNaN(parseInt(phone_number.toString()))) {
-    errors.push('Phone number can only contain numbers.');
   }
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');

@@ -174,7 +174,8 @@ const UserDashboard = () => {
                 "&:hover": {
                   backgroundColor: '#B45309'
                 }
-              }}>
+              }}
+            >
               <Typography className="font-bold">
                 Schedule appointment
               </Typography>
@@ -208,7 +209,8 @@ const UserDashboard = () => {
               sx={{
                 width: 250,
                 height: 600
-              }}>
+              }}
+            >
               <UserInfo
                 first_name={first_name}
                 last_name={last_name}
@@ -238,6 +240,14 @@ export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
   const userInfo: Record<string, any> = {};
+  // const userResponse = await axios.get('user/get');
+  // if (userResponse.status != 200) {
+  //   throw json({
+  //     ...userResponse.data,
+  //     status: userResponse.data,
+  //   });
+  // }
+  // userInfo.userInfo = userResponse.data;
   const appointmentsResponse = await axios.get('appointments/get');
   if (appointmentsResponse.status != 200) {
     throw json({
@@ -245,7 +255,7 @@ export const dashboardLoader: LoaderFunction = async () => {
       status: appointmentsResponse.data,
     });
   }
-  userInfo.appointments = appointmentsResponse.data
+  userInfo.appointments = appointmentsResponse.data;
   const favoritesResponse = await axios.get('favorite/get');
   if (favoritesResponse.status != 200) {
     throw json({
@@ -253,6 +263,6 @@ export const dashboardLoader: LoaderFunction = async () => {
       status: favoritesResponse.data,
     });
   }
-  userInfo.favorite_tutors = favoritesResponse.data
+  userInfo.favorite_tutors = favoritesResponse.data;
   return appointmentsResponse.data;
 };
