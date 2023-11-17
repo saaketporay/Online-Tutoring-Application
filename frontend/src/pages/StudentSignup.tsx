@@ -51,12 +51,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const studentInfo = Object.fromEntries(data);
   let errors = [];
-  const { email, phone_number, password } = studentInfo;
+  const { email, password } = studentInfo;
   if (!email.toString().includes('@')) {
     errors.push('Email address is invalid.');
-  }
-  if (isNaN(parseInt(phone_number.toString()))) {
-    errors.push('Phone number can only contain numbers.');
   }
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');

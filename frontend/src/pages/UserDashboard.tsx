@@ -11,7 +11,6 @@ import {
   LoaderFunction,
   Outlet,
   useLoaderData,
-  useSearchParams,
   useNavigate,
   json,
 } from 'react-router-dom';
@@ -127,7 +126,6 @@ type userProps = {
   last_name: string,
   total_meeting_time: string,
   user_type: string,
-  user_id: string,
   appointments: {
     student_name: string,
     tutor_name: string,
@@ -239,12 +237,22 @@ const UserDashboard = () => {
 export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
-  const appointmentsResponse = await axios.get('/appointments/get')
+  const userInfo: Record<string, any> = {};
+  const appointmentsResponse = await axios.get('appointments/get');
   if (appointmentsResponse.status != 200) {
     throw json({
       ...appointmentsResponse.data,
       status: appointmentsResponse.data,
     });
   }
+  userInfo.appointments = appointmentsResponse.data
+  const favoritesResponse = await axios.get('favorite/get');
+  if (favoritesResponse.status != 200) {
+    throw json({
+      ...favoritesResponse.data,
+      status: favoritesResponse.data,
+    });
+  }
+  userInfo.favorite_tutors = favoritesResponse.data
   return appointmentsResponse.data;
 };
