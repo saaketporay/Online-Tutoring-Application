@@ -19,7 +19,7 @@ jobs:
 
     steps:
       - name: Build and test
-        run: docker-compose -d up
+        run: docker-compose up -d
 
       # - name: Deploy Docker to AWS (EC2)
       #   uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.0
