@@ -32,4 +32,4 @@ jobs:
       - name: print
         run: printf '%s\n' "$BACKEND_BASE_URL"
       - name: Build and test
-        run: docker-compose -f compose.yaml up -d --force-recreate
+        run: docker-compose -f compose.yaml up -d
