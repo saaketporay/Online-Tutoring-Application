@@ -14,8 +14,6 @@ jobs:
       - name: Retrive IP Address
         id: getip
         run: echo "ip=$(curl ifconfig.me)" >> "$GITHUB_OUTPUT"
-      - name: Test
-        run: printf '%s\n' "$GITHUB_OUTPUT"
 
   deploy:
     name: Deploy

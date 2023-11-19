@@ -11,7 +11,6 @@ export const axiosInstance = () => {
       'Authorization': `Bearer ${token}`,
     }
   })
-  console.log(import.meta.env.BACKEND_BASE_URL)
   return instance;
 }
 
