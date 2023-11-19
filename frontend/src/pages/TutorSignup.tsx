@@ -9,7 +9,7 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import { setExpiration, setToken, setUserType } from '../redux/authSlice';
 import GeneralSignupInfo, {
   signupError,
@@ -19,7 +19,7 @@ import { AvailableCourseType } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
 
 const TutorSignup = () => {
-  const subjects = useLoaderData();
+  const subjects = useLoaderData() as AvailableCourseType[];
   const data = useActionData() as signupError;
 
   return (
@@ -57,7 +57,8 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const response = await axios.get('availability/subjects');
+  const instance = axiosInstance();
+  const response = await instance.get('availability/subjects');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -76,12 +77,9 @@ export const action: ActionFunction = async ({ request }) => {
   console.log(tutorInfo);
 
   const errors = [];
-  const { email, phone_number, password } = tutorInfo;
+  const { email, password } = tutorInfo;
   if (!email.toString().includes('@')) {
     errors.push('Email address is invalid.');
-  }
-  if (isNaN(parseInt(phone_number.toString()))) {
-    errors.push('Phone number can only contain numbers.');
   }
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
@@ -117,8 +115,8 @@ export const action: ActionFunction = async ({ request }) => {
     hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
-
-  const response = await axios.post('user/register', modifiedTutorInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -128,10 +126,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

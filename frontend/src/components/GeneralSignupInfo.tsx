@@ -59,15 +59,6 @@ const GeneralSignupInfo = () => {
         />
         <TextField
           required
-          id='phone_number'
-          name='phone_number'
-          label='Required'
-          placeholder='Phone Number'
-          type='tel'
-          className='w-[410px] mb-10 justify-self-center'
-        />
-        <TextField
-          required
           id='password'
           name='password'
           label='Required'

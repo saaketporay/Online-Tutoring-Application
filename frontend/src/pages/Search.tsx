@@ -8,7 +8,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import { json, useLoaderData, LoaderFunction } from 'react-router-dom';
 
 import { autocompleteTheme } from '../utils/theme';
@@ -150,7 +150,8 @@ const Search = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const response = await axios.get('availability/tutors');
+  const instance = axiosInstance();
+  const response = await instance.get('availability/tutors');
   if (response.status !== 200) {
     throw json({
       ...response.data,

@@ -15,7 +15,7 @@ import {
 import { modalStyle } from '../utils/theme';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { clearAppointmentId } from "../redux/modalSlice";
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const DeleteAppointmentModal = () => {
   const handleCloseModal = useOutletContext() as VoidFunction;
@@ -65,7 +65,8 @@ export const deleteAppointmentAction: ActionFunction = async ({ request, params 
   console.log(appointmentInfo);
   console.log(params.apptId);
   return redirect("/dashboard");
-  // const response = await axios.delete(`/appointment/:${appointmentId}`, appointmentInfo);
+  // const instance = axiosInstance();
+  // const response = await instance.delete(`/appointment/:${appointmentId}`, appointmentInfo);
   // if (response.status != 200) {
   //   throw json({
   //     ...response.data,
