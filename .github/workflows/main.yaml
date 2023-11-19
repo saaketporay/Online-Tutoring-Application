@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Build and test
-        run: docker compose -f compose.yaml up
+        run: docker compose build
 
       # - name: Deploy Docker to AWS (EC2)
       #   uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.0
