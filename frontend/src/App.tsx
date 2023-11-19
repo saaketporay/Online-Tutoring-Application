@@ -36,7 +36,7 @@ import FavoriteTutorModal, {
 } from './components/FavoriteTutorModal';
 import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
-
+ 
 const App = () => {
 
   const response = async () => {
