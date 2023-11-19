@@ -11,6 +11,7 @@ export const axiosInstance = () => {
       'Authorization': `Bearer ${token}`,
     }
   })
+  console.log(instance)
   return instance;
 }
 

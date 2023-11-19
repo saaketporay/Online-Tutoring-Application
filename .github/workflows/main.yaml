@@ -11,15 +11,18 @@ jobs:
     outputs:
       ip: ${{ steps.getip.outputs.IP }}
     steps:
-      - id: getip
+      - name: Retrive IP Address
+        id: getip
         run: IP=$(curl ifconfig.me)
+      - name: Test
+        run: echo $IP
 
   deploy:
     name: Deploy
     runs-on: self-hosted
     needs: get-ip
     env:
-      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}:3000
+      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASS: ${{ secrets.DB_PASS }}
