@@ -19,7 +19,7 @@ jobs:
     runs-on: self-hosted
     needs: get-ip
     env:
-      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}
+      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}:3000
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASS: ${{ secrets.DB_PASS }}
