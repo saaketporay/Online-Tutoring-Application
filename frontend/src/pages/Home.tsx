@@ -13,7 +13,7 @@ const Home = () => {
         <Typography
           variant='h4'
           className='mt-36 mb-5'>
-          Welcome to your tutoring hotspot!
+          Welcome to Online Tutoring Scheduler!
         </Typography>
         <Typography
           variant='h6'
