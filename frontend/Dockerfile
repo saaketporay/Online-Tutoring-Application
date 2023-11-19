@@ -4,5 +4,5 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci
 COPY . .
-RUN echo "BACKEND_BASE_URL: $BACKEND_BASE_URL"
+RUN echo "BACKEND_BASE_URL = $BACKEND_BASE_URL"
 CMD ["npm", "run", "dev"]
