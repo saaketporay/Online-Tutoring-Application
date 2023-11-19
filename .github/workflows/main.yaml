@@ -7,7 +7,7 @@ on:
 jobs:
   deploy:
     name: Deploy
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     env:
       BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
@@ -16,13 +16,13 @@ jobs:
       DB_PASS: ${{ secrets.DB_PASS }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_PORT: ${{ secrets.DB_PORT }}
-    
+
     steps:
       - name: Checkout main
         uses: actions/checkout@v4
 
       - name: Build and test
-        run: docker compose build
+        run: docker compose up
 
       # - name: Deploy Docker to AWS (EC2)
       #   uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.0
