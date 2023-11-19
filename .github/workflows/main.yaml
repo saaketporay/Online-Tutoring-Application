@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Retrive IP Address
         id: getip
-        run: echo "ip=$(curl ifconfig.me)" >> "$GITHUB_OUTPUT"
+        run: echo "ip=$(curl ifconfig.me)" >> "$RUNNER_OUTPUT"
 
   deploy:
     name: Deploy
