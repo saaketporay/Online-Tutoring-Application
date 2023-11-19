@@ -40,7 +40,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 const App = () => {
 
   const response = async () => {
-    const res = await fetch('3.81.174.136/availability/subjects')
+    const res = await fetch('3.81.174.136:3000/availability/subjects')
     console.log(res)
   } 
   response();
