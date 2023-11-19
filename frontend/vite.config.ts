@@ -4,6 +4,11 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: true,
+    strictPort: true,
+    port: 8080
+  },
   plugins: [react(),
     svgr({
       exportAsDefault: true, // 'import { ReactComponent as Logo }...' can now be turned to 'import Logo...'

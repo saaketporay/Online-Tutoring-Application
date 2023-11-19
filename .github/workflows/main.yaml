@@ -1,0 +1,28 @@
+name: Deploy to AWS EC2
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-latest
+
+    env:
+      BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
+      DB_HOST: ${{ secrets.DB_HOST }}
+      DB_USER: ${{ secrets.DB_USER }}
+      DB_PASS: ${{ secrets.DB_PASS }}
+      DB_NAME: ${{ secrets.DB_NAME }}
+      DB_PORT: ${{ secrets.DB_PORT }}
+    
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+
+      - name: Build and test
+        run: docker compose -f compose.yaml up
+
+      # - name: Deploy Docker to AWS (EC2)
+      #   uses: bitovi/github-actions-deploy-docker-to-ec2@v1.0.0
