@@ -3,7 +3,7 @@ import { store } from "../redux/store";
 
 export const axiosInstance = () => {
   const token = store.getState().auth.token;
-  // console.log(token)
+  console.log(token)
   const instance = axios.create({
     baseURL: import.meta.env.VITE_BACKEND_BASE_URL,
     headers: {
@@ -11,7 +11,6 @@ export const axiosInstance = () => {
       'Authorization': `Bearer ${token}`,
     }
   })
-  console.log(import.meta.env.VITE_BACKEND_BASE_URL)
   return instance;
 }
 
