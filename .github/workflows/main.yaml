@@ -31,11 +31,11 @@ jobs:
         run: echo "BACKEND_BASE_URL=$BACKEND_BASE_URL" >> .env
       - name: Test
         run: cat .env
-      - name: ls
-        run: ls
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
         run: docker-compose build
+      - name: Print config
+        run: docker-compose config
       - name: Run
         run: docker-compose -f compose.yaml --env-file .env up -d
