@@ -11,7 +11,7 @@ export const axiosInstance = () => {
       'Authorization': `Bearer ${token}`,
     }
   })
-  console.log(instance)
+  console.log(import.meta.env.VITE_BACKEND_BASE_URL)
   return instance;
 }
 
