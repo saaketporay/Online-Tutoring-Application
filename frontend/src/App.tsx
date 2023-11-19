@@ -40,7 +40,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 const App = () => {
 
   const response = async () => {
-    const res = await fetch('54.163.110.159:3000/availability/subjects')
+    const res = await fetch(`${import.meta.env.BACKEND_BASE_URL}:3000/availability/subjects`)
     console.log(res)
   } 
   response();
