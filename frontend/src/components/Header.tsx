@@ -41,7 +41,7 @@ function Header() {
               <Typography
                 variant='h6'
                 className='ml-2'>
-                Tutoring Scheduler
+                Tutoring
               </Typography>
             </Stack>
           </Link>
