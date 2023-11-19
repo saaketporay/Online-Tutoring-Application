@@ -36,4 +36,4 @@ jobs:
       - name: Build
         run: docker-compose build
       - name: Run
-        run: docker-compose -f compose.yaml up -d
+        run: docker-compose -f compose.yaml --env-file .env up -d
