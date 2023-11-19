@@ -13,9 +13,9 @@ jobs:
     steps:
       - name: Retrive IP Address
         id: getip
-        run: IP=$(curl ifconfig.me)
+        run: echo "ip=${curl ifconfig.me}" >> "$GITHUB_OUTPUT"
       - name: Test
-        run: echo $IP
+        run: echo $ip
 
   deploy:
     name: Deploy
