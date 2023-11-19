@@ -5,18 +5,26 @@ on:
     branches: ["main"]
 
 jobs:
+  get-ip:
+    name: Get IP
+    runs-on: self-hosted
+    outputs:
+      ip: ${{ steps.getip.outputs.IP }}
+    steps:
+      - id: getip
+        run: IP=$(curl ifconfig.me)
+
   deploy:
     name: Deploy
     runs-on: self-hosted
-
+    needs: get-ip
     env:
-      BACKEND_BASE_URL: ${{ secrets.BACKEND_BASE_URL }}
+      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASS: ${{ secrets.DB_PASS }}
       DB_NAME: ${{ secrets.DB_NAME }}
       DB_PORT: ${{ secrets.DB_PORT }}
-
     steps:
       - name: Build and test
         run: docker-compose up -d
