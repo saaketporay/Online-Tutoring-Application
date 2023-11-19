@@ -18,9 +18,6 @@ jobs:
       DB_PORT: ${{ secrets.DB_PORT }}
 
     steps:
-      - name: Checkout main
-        uses: actions/checkout@v4
-
       - name: Build and test
         run: docker-compose up
 
