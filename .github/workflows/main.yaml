@@ -13,7 +13,7 @@ jobs:
     steps:
       - name: Retrive IP Address
         id: getip
-        run: ip=$(curl ifconfig.me)
+        run: echo "ip=$(curl ifconfig.me)" >> "$RUNNER_OUTPUT"
       - name: Test
         run: printf '%s\n' "$ip"
 
