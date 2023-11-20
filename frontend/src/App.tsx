@@ -38,12 +38,6 @@ import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-
-  const response = async () => {
-    const res = await fetch(`${import.meta.env.BACKEND_BASE_URL}:3000/availability/subjects`)
-    console.log(res)
-  } 
-  response();
   const user_type = useAppSelector((state) => state.auth.user_type)
 
   const router = createBrowserRouter(

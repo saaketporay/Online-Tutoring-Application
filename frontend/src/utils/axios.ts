@@ -5,7 +5,7 @@ export const axiosInstance = () => {
   const token = store.getState().auth.token;
   // console.log(token)
   const instance = axios.create({
-    baseURL: '54.163.110.159',
+    baseURL: 'http://54.163.110.159',
     headers: {
       'Content-Type': 'application/json',
       'Authorization': `Bearer ${token}`,
