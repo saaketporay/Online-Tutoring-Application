@@ -4,5 +4,5 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci
 COPY . .
-RUN echo "VITE_BACKEND_BASE_URL= ${VITE_BACKEND_BASE_URL}"
+RUN env | grep URL
 CMD ["npm", "run", "dev"]
