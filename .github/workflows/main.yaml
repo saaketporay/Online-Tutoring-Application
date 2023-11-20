@@ -34,4 +34,4 @@ jobs:
       - name: Print config
         run: docker-compose config
       - name: Run
-        run: docker-compose -f compose.yaml --env-file .env up -d
+        run: VITE_BACKEND_BASE_URL=${BACKEND_BASE_URL} docker-compose -f compose.yaml --env-file .env up -d
