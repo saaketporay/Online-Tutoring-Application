@@ -31,6 +31,8 @@ jobs:
         run: echo "BACKEND_BASE_URL=$BACKEND_BASE_URL" >> .env
       - name: Test
         run: cat .env
+      - name: Source .env
+        run: source .env
       - name: Checkout
         uses: actions/checkout@v4
       - name: Build
