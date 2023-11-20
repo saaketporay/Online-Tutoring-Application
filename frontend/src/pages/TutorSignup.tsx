@@ -116,7 +116,7 @@ export const action: ActionFunction = async ({ request }) => {
   };
   console.log(modifiedTutorInfo);
   const instance = axiosInstance();
-  const response = await instance.post('user/register', modifiedTutorInfo);
+  const response = await instance.post('/user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
