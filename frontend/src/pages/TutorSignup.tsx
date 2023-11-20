@@ -58,7 +58,7 @@ const TutorSignup = () => {
 
 export const loader: LoaderFunction = async () => {
   const instance = axiosInstance();
-  const response = await instance.get('availability/subjects');
+  const response = await instance.get('/availability/subjects');
   if (response.status !== 200) {
     throw json({
       ...response.data,
