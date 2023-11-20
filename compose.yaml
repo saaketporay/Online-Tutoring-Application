@@ -26,7 +26,7 @@ services:
     networks:
       - public
       - private
-
+ 
 networks:
   public:
   private:
