@@ -5,22 +5,10 @@ on:
     branches: ["main"]
 
 jobs:
-  get-ip:
-    name: Get IP
-    runs-on: self-hosted
-    outputs:
-      ip: ${{ steps.getip.outputs.IP }}
-    steps:
-      - name: Retrive IP Address
-        id: getip
-        run: echo "ip=$(curl ifconfig.me)" >> "$GITHUB_OUTPUT"
-
   deploy:
     name: Deploy
     runs-on: self-hosted
-    needs: get-ip
     env:
-      BACKEND_BASE_URL: ${{ needs.get-ip.outputs.ip }}
       DB_HOST: ${{ secrets.DB_HOST }}
       DB_USER: ${{ secrets.DB_USER }}
       DB_PASS: ${{ secrets.DB_PASS }}
@@ -29,7 +17,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Retrive IP Address
+        id: getip
+        run: echo "ip=$(curl ifconfig.me)" >> "$GITHUB_OUTPUT"
       - name: Build
+        env:
+          BACKEND_BASE_URL: ${{ steps.getip.outputs.ip }}
         run: docker-compose build
       - name: Print config
         run: docker-compose config
