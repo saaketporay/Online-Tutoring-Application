@@ -4,5 +4,5 @@ COPY package.json .
 COPY package-lock.json .
 RUN npm ci
 COPY . .
-RUN env | grep URL
+RUN env
 CMD ["npm", "run", "dev"]
