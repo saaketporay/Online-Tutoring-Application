@@ -1,6 +1,6 @@
 import axios from "axios";
 import { store } from "../redux/store";
- 
+
 export const axiosInstance = () => {
   const token = store.getState().auth.token;
   // console.log(token)
