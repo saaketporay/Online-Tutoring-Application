@@ -19,11 +19,20 @@ const criminal_data = {
     ]
   };
 // function to check if given user is in the criminal database (json above)
-const checkCriminalDB = async (first_name, last_name) => {
-    const criminalExists = criminal_data.criminals.some(criminal => criminal.firstName.toLowerCase() === first_name.toLowerCase() 
-    && criminal.lastName.toLowerCase() === last_name.toLowerCase());
 
-    return criminalExists;
-  };
+const checkCriminalDB = async (first_name, last_name) => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      const foundCriminal = criminal_data.criminals.some(criminal => 
+        criminal.firstName.toLowerCase() === first_name.toLowerCase() && 
+        criminal.lastName.toLowerCase() === last_name.toLowerCase()
+      );
+        console.log(foundCriminal);
+      resolve(foundCriminal);
+    }, 1000); // Simulating an asynchronous operation (e.g., API call)
+  });
+};
   
-  
+  module.exports = {
+    checkCriminalDB
+  }
