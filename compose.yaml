@@ -3,7 +3,7 @@ services:
     build:
       context: frontend
     environment:
-      - VITE_BACKEND_BASE_URL=${VITE_BACKEND_BASE_URL}
+      - VITE_BACKEND_BASE_URL=${BACKEND_BASE_URL}
     ports:
       - 8080:8080
     networks:
