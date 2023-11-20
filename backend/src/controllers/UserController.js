@@ -99,4 +99,5 @@ const register = async (req, res) => {
 module.exports = {
   login,
   register,
+  getAllUserInfo
 };
