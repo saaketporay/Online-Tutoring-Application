@@ -68,7 +68,7 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   }
   console.log(studentInfo);
   const instance = axiosInstance();
-  const response = await instance.post('http://localhost:3000/user/register', {
+  const response = await instance.post('/user/register', {
     ...studentInfo,
     user_type: 'student',
   });

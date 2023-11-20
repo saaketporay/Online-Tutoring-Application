@@ -105,7 +105,7 @@ export const authAction: ActionFunction = async ({ request }) => {
     return json({ error: "Email address must have the '@' symbol." });
   }
   const instance = axiosInstance();
-  const response = await instance.post('user/login', userInfo);
+  const response = await instance.post('/user/login', userInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({

@@ -342,7 +342,7 @@ export const loader: LoaderFunction = async () => {
     return redirect('/signin');
   }
   const instance = axiosInstance();
-  const response = await instance.get('availability/all');
+  const response = await instance.get('/availability/all');
   if (response.status !== 200) {
     throw json({
       ...response.data,

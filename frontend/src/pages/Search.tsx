@@ -151,7 +151,7 @@ const Search = () => {
 
 export const loader: LoaderFunction = async () => {
   const instance = axiosInstance();
-  const response = await instance.get('availability/tutors');
+  const response = await instance.get('/availability/tutors');
   if (response.status !== 200) {
     throw json({
       ...response.data,

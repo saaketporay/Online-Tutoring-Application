@@ -13,4 +13,3 @@ export const axiosInstance = () => {
   })
   return instance;
 }
-
