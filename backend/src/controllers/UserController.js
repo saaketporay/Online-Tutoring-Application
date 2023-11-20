@@ -3,6 +3,7 @@
 const { getUserByEmail, createUser, createTutor } = require('../models/User');
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
 const { decodeToken, generateToken } = require('../utils/jwtUtil');
+const {checkCriminalDB} = require('../utils/isCriminal');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -44,6 +45,13 @@ const register = async (req, res) => {
     schedule,
     hourly_chunks,
   } = req.body;
+  const criminal = await checkCriminalDB(first_name, last_name);
+  if (criminal && user_type === 'tutor')
+  {
+    return res.status(403).send("User is criminal");
+  }
+  else
+  {
 
   try {
     const hashedPassword = await hashPassword(password);
@@ -67,7 +75,7 @@ const register = async (req, res) => {
         user_id,
         about_me,
         profile_picture,
-        is_criminal,
+        false,
         courses,
         schedule,
         hourly_chunks
@@ -83,7 +91,10 @@ const register = async (req, res) => {
     console.error(err);
     res.status(500).send('Internal Server Error');
   }
+}
 };
+
+
 
 module.exports = {
   login,
