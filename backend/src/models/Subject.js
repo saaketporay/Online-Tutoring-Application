@@ -1,15 +1,14 @@
 // functions to intereact with the subjects table
 
 // config for RDS
-const connection = require('../config/dbConfig')
+const {Subject} = require('./index')
 
 const SubjectModel = 
 {
     getAllSubjects: async () => {
         try
         {
-            const subjectQuery = 'SELECT * FROM Subjects;';
-            const [subjects] = await connection.promise().query(subjectQuery);
+            const subjects = await Subject.findAll();
             return subjects;
         }
         catch (err)

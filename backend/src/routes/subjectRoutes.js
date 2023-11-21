@@ -4,6 +4,6 @@ const subjectController = require('../controllers/SubjectController');
 
 const router = express.Router();
 
-router.get('/subjects', subjectController.getAllSubjects);
+router.get('/all', subjectController.getAllSubjects);
 
 module.exports = router;
