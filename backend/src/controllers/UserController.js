@@ -1,42 +1,42 @@
 // user auth controller
 
-const { getUserByEmail, createUser, createTutor, getUserByID } = require('../models/User');
+const {
+  getUserByEmail,
+  createUser,
+  createTutor,
+  getUserByID,
+} = require('../models/User');
 const { getTutorByID } = require('../models/Tutor');
 const Appointment = require('../models/Appointment');
 
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
 const { decodeToken, generateToken } = require('../utils/jwtUtil');
-const {checkCriminalDB} = require('../utils/isCriminal');
+const { checkCriminalDB } = require('../utils/isCriminal');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const getUserInfo = async(req, res) => {
+const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = decodeToken(token);
-  try
-  {
+  try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
     let appointments;
     if (user.user_type == 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
-    }
-    else if (user.user_type == 'tutor') {
+    } else if (user.user_type == 'tutor') {
       const { tutor_id } = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor_id);
     }
-    if (!user)
-    {
-      return res.status(404).send("User not found");
+    if (!user) {
+      return res.status(404).send('User not found');
     }
-    return res.status(200).json({user, appointments});
+    return res.status(200).json({ user, appointments });
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
   }
-  catch (err)
-  {
-    console.log(err)
-    res.status(500).send("Internal Server Error");
-  }
-}
+};
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -71,17 +71,14 @@ const register = async (req, res) => {
     phone_number,
     about_me,
     profile_picture,
-    courses,
+    subjects,
     schedule,
     hourly_chunks,
   } = req.body;
   const criminal = await checkCriminalDB(first_name, last_name);
-  if (criminal && user_type === 'tutor')
-  {
-    return res.status(403).send("User is criminal");
-  }
-  else
-  {
+  if (criminal && user_type === 'tutor') {
+    return res.status(403).send('User is criminal');
+  } else {
     try {
       const hashedPassword = await hashPassword(password);
       const user = await createUser(
@@ -105,7 +102,7 @@ const register = async (req, res) => {
           about_me,
           profile_picture,
           false,
-          courses,
+          subjects,
           schedule,
           hourly_chunks
         );
@@ -125,5 +122,5 @@ const register = async (req, res) => {
 module.exports = {
   login,
   register,
-  getUserInfo
+  getUserInfo,
 };
