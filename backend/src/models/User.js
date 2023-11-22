@@ -23,7 +23,7 @@ const getUserByID = async (user_id) => {
     });
     return user;
   } catch (err) {
-    console.error('Error in getUserByEmail:', err);
+    console.error('Error in getUserByID:', err);
     return null;
   }
 };

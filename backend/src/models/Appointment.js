@@ -42,6 +42,31 @@ const Appointment = {
       throw error;
     }
   },
+  getByTutorId: async (tutor_id) => {
+    try {
+      const appointments = await AppointmentModel.findAll({
+        where: {
+          tutor_id: tutor_id,
+        },
+        include: [
+          {
+            model: User,
+            attributes: ['first_name', 'last_name'],
+          },
+          {
+            model: Tutor,
+            include: {
+              model: User,
+              attributes: ['first_name', 'last_name'],
+            },
+          },
+        ],
+      });
+      return appointments;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 module.exports = Appointment;

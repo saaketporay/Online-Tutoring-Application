@@ -1,5 +1,7 @@
 const Appointment = require('../models/Appointment');
 const jwtUtil = require('../utils/jwtUtil');
+const { getUserByID } = require('../models/User');
+const { getTutorByID } = require('../models/Tutor');
 
 const appointmentController = {
   createAppointment: async (req, res) => {
@@ -39,11 +41,22 @@ const appointmentController = {
   getByToken: async (req, res) => {
     const token = req.headers.authorization;
     const decodedToken = jwtUtil.decodeToken(token);
-
     try {
-      const appointments = await Appointment.getByStudentId(decodedToken.id);
+      const user = await getUserByID(decodedToken.id);
+      let appointments;
+      if (user.user_type == 'student') {
+        appointments = await Appointment.getByStudentId(user.user_id);
+      }
+      else if (user.user_type == 'tutor') {
+        const { tutor_id } = await getTutorByID(user.user_id);
+        appointments = await Appointment.getByTutorId(tutor_id);
+      }
+      else {
+        throw new Error("Invalid user");
+      }
       console.log(appointments);
       return res.status(200).json(appointments[0]);
+      
     } catch (err) {
       return res.status(500).send(err);
     }

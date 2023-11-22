@@ -1,6 +1,7 @@
 // user auth controller
 
 const { getUserByEmail, createUser, createTutor, getUserByID } = require('../models/User');
+const { getTutorByID } = require('../models/Tutor');
 const Appointment = require('../models/Appointment');
 
 const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
@@ -16,8 +17,14 @@ const getUserInfo = async(req, res) => {
   {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
-    const appointments = await Appointment.getByStudentId(student_Id);
-    console.log(user);
+    let appointments;
+    if (user.user_type == 'student') {
+      appointments = await Appointment.getByStudentId(student_Id);
+    }
+    else if (user.user_type == 'tutor') {
+      const { tutor_id } = await getTutorByID(user.user_id);
+      appointments = await Appointment.getByTutorId(tutor_id);
+    }
     if (!user)
     {
       return res.status(404).send("User not found");

@@ -40,7 +40,7 @@ const AppointmentList = ({ appointments }: appointmentsProps) => {
   return (
     <>
       <CardContent>
-        <Typography variant='h6' align='center' className='mb-3'>
+        <Typography variant='h6' align='center' className='my-3'>
           Upcoming Appointments
         </Typography>
         {appointments ? 

@@ -38,6 +38,39 @@ const theme = createTheme(cardTheme, textFieldTheme, {
   }
 });
 
+type appointment = {
+  User: {
+    first_name: string,
+    last_name: string,
+  },
+  Tutor: {
+    User: {
+      first_name: string,
+      last_name: string,
+    }
+    about_me: string,
+    profile_picture: string,
+    tutor_id: string,
+  },
+  date_time: string,
+  duration: number,
+  meeting_title: string,
+  meeting_desc: string,
+  appointment_id: string,
+}
+
+type favoriteTutor = {
+  Tutor: {
+    User: {
+      first_name: string,
+      last_name: string,
+    }
+    about_me: string,
+    profile_picture: string,
+    tutor_id: string,
+  },
+}
+
 type userProps = {
   user: {
     first_name: string,
@@ -46,37 +79,8 @@ type userProps = {
     total_tutoring_hours: string,
     user_type: string,
   },
-  appointments: {
-    User: {
-      first_name: string,
-      last_name: string,
-    },
-    Tutor: {
-      User: {
-        first_name: string,
-        last_name: string,
-      }
-      about_me: string,
-      profile_picture: string,
-      tutor_id: string,
-    },
-    date_time: string,
-    duration: number,
-    meeting_title: string,
-    meeting_desc: string,
-    appointment_id: string,
-  }[],
-  favorite_tutors: {
-    Tutor: {
-      User: {
-        first_name: string,
-        last_name: string,
-      }
-      about_me: string,
-      profile_picture: string,
-      tutor_id: string,
-    },
-  }[] | undefined,
+  appointments: appointment[],
+  favorite_tutors: favoriteTutor[] | undefined,
 };
 
 const UserDashboard = () => {
