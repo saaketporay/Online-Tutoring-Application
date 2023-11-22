@@ -45,7 +45,7 @@ const AppointmentList = ({ appointments }: appointmentsProps) => {
         </Typography>
         {appointments ? 
           <Stack direction={'column'} spacing={1}>
-            {appointments.map(function (appt, i) {
+            {appointments.sort((a, b) => a.date_time >= b.date_time ? 1 : -1).map(function (appt, i) {
               return (
                 <Card
                   key={i}
@@ -66,12 +66,14 @@ const AppointmentList = ({ appointments }: appointmentsProps) => {
                       "&:hover": {
                         backgroundColor: 'transparent'
                       }
-                    }}>
+                    }}
+                  >
                     <SvgIcon
                       viewBox='0 0 45 45'
                       sx={{
-                        fontSize: 30
-                      }}>
+                        fontSize: 45
+                      }}
+                    >
                       <InfoIcon />
                     </SvgIcon>
                   </Button>
@@ -86,12 +88,14 @@ const AppointmentList = ({ appointments }: appointmentsProps) => {
                       "&:hover": {
                         backgroundColor: 'transparent'
                       }
-                    }}>
+                    }}
+                  >
                     <SvgIcon
                       viewBox='0 0 45 45'
                       sx={{
-                        fontSize: 30
-                      }}>
+                        fontSize: 45
+                      }}
+                    >
                       <DeleteIcon />
                     </SvgIcon>
                   </Button>
