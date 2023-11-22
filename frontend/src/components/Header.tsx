@@ -62,23 +62,24 @@ function Header() {
                   isActive
                     ? 'text-yellow-300 no-underline mr-6 hover:underline'
                     : 'text-slate-100 no-underline mr-6 hover:underline'
-                }>
+                }
+              >
                 Sign in
               </NavLink>
             ) : (
-              <Button
+              <NavLink
                 onClick={() => {
                   dispatch(logout());
-                  navigate('/');
                 }}
-                sx={{
-                  textTransform: 'none',
-                  color: '#F4F4F4',
-                  fontSize: '16px',
-                }}
-                disableRipple>
+                to='/'
+                className={({ isActive }) =>
+                  isActive
+                    ? 'text-yellow-300 no-underline mr-6 hover:underline'
+                    : 'text-slate-100 no-underline mr-6 hover:underline'
+                }
+              >
                 Logout
-              </Button>
+              </NavLink>
             )}
           </div>
         </Toolbar>

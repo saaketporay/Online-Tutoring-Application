@@ -20,7 +20,7 @@ import {
 import { createTheme } from '@mui/material';
 import { store } from '../redux/store';
 import { setToken, setExpiration, setUserType } from '../redux/authSlice';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
@@ -104,7 +104,8 @@ export const authAction: ActionFunction = async ({ request }) => {
   if (!userInfo.email.toString().includes('@')) {
     return json({ error: "Email address must have the '@' symbol." });
   }
-  const response = await axios.post('/user/login', userInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('/user/login', userInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -114,10 +115,9 @@ export const authAction: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

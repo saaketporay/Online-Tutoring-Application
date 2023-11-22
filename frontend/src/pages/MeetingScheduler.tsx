@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { autocompleteTheme } from '../utils/theme';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import {
   Form,
   useLoaderData,
@@ -16,16 +16,27 @@ import {
   redirect,
 } from 'react-router-dom';
 import { store } from '../redux/store';
+import { getReadableDateTime } from '../utils/datetime';
 
-interface ResponseDataType {
+interface Timeslot {
+  subject_id: number;
+  tutor_id: number;
+  date_time: string;
+  duration: number;
+  readable_date_time: string;
+}
+
+const defaultMeetingInfo = {
+  subject_id: 0,
+  tutor_id: 0,
+  date_time: '',
+  duration: 0,
+  readable_date_time: '',
+};
+
+interface Response {
   [key: string]: {
-    [key: string]: {
-      subject_id: number;
-      tutor_id: number;
-      date_time: string;
-      duration: number;
-      readable_date_time: string;
-    }[];
+    [key: string]: Timeslot[];
   };
 }
 
@@ -49,7 +60,7 @@ const getOptionEquality = (
 ) => option.label === value.label;
 
 const MeetingScheduler = () => {
-  const data = useLoaderData() as ResponseDataType;
+  const data = useLoaderData() as Response;
 
   const courses = Object.keys(data).map((name) => ({
     label: name,
@@ -61,15 +72,7 @@ const MeetingScheduler = () => {
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
   const [meetingTitle, setMeetingTitle] = useState<string>('');
   const [meetingDesc, setMeetingDesc] = useState<string>('');
-  const [meetingInfo, setMeetingInfo] = useState<TimeslotType>({
-    tutor_availiability_id: 0,
-    subject_id: 0,
-    tutor_id: 0,
-    weekday: '',
-    start_time: '',
-    end_time: '',
-    readable_date_time: '',
-  });
+  const [meetingInfo, setMeetingInfo] = useState<Timeslot>(defaultMeetingInfo);
 
   const availableTutors = selectedCourse
     ? Object.keys(data[selectedCourse]).map((name) => ({
@@ -128,7 +131,7 @@ const MeetingScheduler = () => {
     setSelectedTimeslot(value);
     setMeetingInfo(
       data[selectedCourse][selectedTutor].find(
-        (timeslot) => timeslot.readable_date_time === selectedTimeslot
+        (timeslot) => timeslot.readable_date_time === value
       )!
     );
   };
@@ -138,6 +141,7 @@ const MeetingScheduler = () => {
       if (!(selectedTutor in data[selectedCourse])) {
         setSelectedTutor('');
         setSelectedTimeslot('');
+        setMeetingInfo(defaultMeetingInfo);
       } else if (
         selectedTimeslot &&
         !data[selectedCourse][selectedTutor].find(
@@ -145,6 +149,7 @@ const MeetingScheduler = () => {
         )
       ) {
         setSelectedTimeslot('');
+        setMeetingInfo(defaultMeetingInfo);
       }
     }
   }, [selectedCourse, selectedTutor, selectedTimeslot]);
@@ -175,7 +180,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Course'
-                  name='course'
                 />
               )}
             />
@@ -190,7 +194,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Tutor'
-                  name='tutor'
                 />
               )}
             />
@@ -212,7 +215,6 @@ const MeetingScheduler = () => {
                 <TextField
                   {...params}
                   label='Timeslot'
-                  name='timeslot'
                 />
               )}
             />
@@ -269,84 +271,21 @@ const MeetingScheduler = () => {
   );
 };
 
-export const getReadableDateTime = (dateTime: string, duration: number) => {
-  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
-  const weekday = [
-    'Sunday',
-    'Monday',
-    'Tuesday',
-    'Wednesday',
-    'Thursday',
-    'Friday',
-    'Saturday',
-  ];
-  const month = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December',
-  ];
-
-  const suffixMap = new Map([
-    ['1', 'st'],
-    ['2', 'nd'],
-    ['3', 'rd'],
-  ]);
-
-  // Split dateTime (formatted like YYYY-MM-DD hh:mm:ss) into an array of strings based on dashes, spaces, or colons
-  const t = dateTime.split(/[- :]/).map((str) => +str);
-  // Create a new Date object based on the year, month, day, etc, values from t
-  const m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-  // Get the day as a number in the range 1-31
-  const day = m.getDate();
-  // Select the appropriate suffix for the numerical day
-  const suffix =
-    (suffixMap.has(day.toString()) ? suffixMap.get(day.toString()) : 'th') ||
-    '';
-  // Get the hour as a number in the range 0-23
-  const hour = m.getHours();
-  // Convert hour to a human-readable 12-hour value
-  const modifiedHour =
-    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
-  // Get the minutes as a number in the range 0-59
-  const minutes = m.getMinutes();
-  // Convert minutes to a double-digit zeros if it's a 0
-  const modifiedMinutes = minutes === 0 ? '00' : minutes;
-  // Check whether an 'am' or 'pm' should be present
-  const am = hour < 11;
-  // Construct the human-readable date time value to display in the available timeslots autocomplete
-  const readable_date_time = `${weekday[m.getDay()]}, ${
-    month[m.getMonth()]
-  } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
-    am ? 'am' : 'pm'
-  }, ${duration}m`;
-
-  return readable_date_time;
-};
-
 export const loader: LoaderFunction = async () => {
   // Retrieve logged in user's token
   const token = store.getState().auth.token;
   if (!token) {
     return redirect('/signin');
   }
-
-  const response = await axios.get('availability/all');
+  const instance = axiosInstance();
+  const response = await instance.get('/availability/all');
   if (response.status !== 200) {
     throw json({
       ...response.data,
       status: response.status,
     });
   }
-  const data = response.data as ResponseDataType;
+  const data = response.data as Response;
   console.log(data);
 
   // For every subject
@@ -378,11 +317,9 @@ export const action: ActionFunction = async ({ request }) => {
   if (!token) {
     return redirect('/signin');
   }
-  userInfo.token = token;
 
-  const meetingInfo = JSON.parse(
-    userInfo.meeting_info as string
-  ) as TimeslotType;
+  const timeslot = JSON.parse(userInfo.meeting_info as string) as Timeslot;
+  console.log('timeslot:', timeslot);
 
   const payload = {
     token,
@@ -394,8 +331,8 @@ export const action: ActionFunction = async ({ request }) => {
     meeting_desc: userInfo.meeting_desc,
   };
   console.log(payload);
-
-  const response = await axios.post('/appointments/create', userInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('/appointments/create', payload);
   console.log(response);
   if (response.status != 200) {
     throw json({

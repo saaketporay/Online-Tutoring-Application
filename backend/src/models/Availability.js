@@ -65,11 +65,16 @@ const Availability = {
 
   getAllTutorsBySubjectId: async (subjectId) => {
     try {
-      const tutors = await Subject.findAll({
+      const tutors = await Subject.findOne({
         where: {
           subject_id: subjectId,
         },
-        include: [Tutor],
+        include: [
+          {
+            model: Tutor,
+            include: [{ model: User }],
+          },
+        ],
       });
       return tutors;
     } catch (err) {
@@ -80,7 +85,12 @@ const Availability = {
   getAllAvailabilityInfo: async () => {
     try {
       const data = await Subject.findAll({
-        include: [{ model: Tutor, include: Tutor_Availability }],
+        include: [
+          {
+            model: Tutor,
+            include: [{ model: Tutor_Availability }, { model: User }],
+          },
+        ],
       });
       return data;
     } catch (err) {

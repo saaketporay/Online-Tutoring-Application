@@ -9,7 +9,7 @@ import ScheduleSelector from 'react-schedule-selector';
 import Box from '@mui/material/Box';
 import Slider from '@mui/material/Slider';
 
-import React, { useState } from 'react';
+import { useState } from 'react';
 
 const theme = createTheme(autocompleteTheme, {
   components: {
@@ -32,8 +32,6 @@ const theme = createTheme(autocompleteTheme, {
   },
 });
 
-const DUMMY_COURSES = [{ label: 'CS 1336' }, { label: 'CS 1337' }];
-
 const getLastSunday = () => {
   const t = new Date();
   t.setDate(t.getDate() - t.getDay());
@@ -45,22 +43,26 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
-export interface AvailableCourseType {
+export interface Subject {
   subject_id: number;
   subject_name: string;
 }
 
-interface TutorSignupInfoProps {
-  subjects: AvailableCourseType[];
+export interface FormattedSubject {
+  label: string;
+  subject_id: number;
 }
 
-const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
-  const availableCourses = subjects.map((course) => ({
+const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
+  const formattedSubjects = subjects.map((course) => ({
     label: course.subject_name,
-  })) as { label: string }[];
+    subject_id: course.subject_id,
+  })) as FormattedSubject[];
 
   const [aboutMe, setAboutMe] = useState<string>('');
-  const [courses, setCourses] = useState<{ label: string }[]>([]);
+  const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
+    []
+  );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
@@ -116,11 +118,11 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
           </Typography>
           <Autocomplete
             multiple
-            id='tutor-course-select'
-            options={availableCourses}
+            id='tutor-subject-select'
+            options={formattedSubjects}
             disablePortal
             onChange={(e, v) => {
-              setCourses(v);
+              setSelectedSubjects(v);
             }}
             renderInput={(params) => (
               <TextField
@@ -141,7 +143,7 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
             </Typography>
             <Typography gutterBottom>Time range</Typography>
             <Slider
-              aria-label='Time range'
+              getAriaLabel={() => 'Time range'}
               getAriaValueText={(value: number) => value.toString()}
               value={timeRange}
               onChange={timeRangeSliderChangeHandler}
@@ -157,6 +159,7 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
             <Typography>Hourly chunks</Typography>
             <Slider
               aria-label='Hourly chunks'
+              name='hourly_chunks'
               getAriaValueText={(value: number) => value.toString()}
               value={hrChunks}
               onChange={(e, v) => {
@@ -182,18 +185,22 @@ const TutorSignupInfo: React.FC<TutorSignupInfoProps> = ({ subjects }) => {
         </Stack>
         <input
           hidden
-          name='courses'
-          value={JSON.stringify(courses)}></input>
+          name='subjects'
+          value={JSON.stringify(selectedSubjects)}
+        />
         <input
           hidden
           name='schedule'
-          value={JSON.stringify(schedule)}></input>
+          value={JSON.stringify(schedule)}
+        />
         <Button
           variant='contained'
           color='success'
           size='large'
           className='mx-auto'
-          disabled={!aboutMe || courses.length == 0 || schedule.length == 0}
+          disabled={
+            !aboutMe || selectedSubjects.length == 0 || schedule.length == 0
+          }
           type='submit'>
           Submit
         </Button>

@@ -11,7 +11,7 @@ import type { ActionFunction } from 'react-router-dom';
 import { redirect, json } from 'react-router-dom';
 import { store } from '../redux/store';
 import { setToken, setExpiration, setUserType } from '../redux/authSlice';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const StudentSignup = () => {
   return (
@@ -51,12 +51,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   const data = await request.formData();
   const studentInfo = Object.fromEntries(data);
   let errors = [];
-  const { email, phone_number, password } = studentInfo;
+  const { email, password } = studentInfo;
   if (!email.toString().includes('@')) {
     errors.push('Email address is invalid.');
-  }
-  if (isNaN(parseInt(phone_number.toString()))) {
-    errors.push('Phone number can only contain numbers.');
   }
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
@@ -70,7 +67,8 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
   console.log(studentInfo);
-  const response = await axios.post('http://localhost:3000/user/register', {
+  const instance = axiosInstance();
+  const response = await instance.post('/user/register', {
     ...studentInfo,
     user_type: 'student',
   });
@@ -83,10 +81,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };

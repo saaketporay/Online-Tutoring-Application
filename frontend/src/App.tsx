@@ -38,7 +38,7 @@ import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const user_type = useAppSelector((state) => state.auth.user_type)
+  const user_type = useAppSelector((state) => state.auth.user_type);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -46,53 +46,48 @@ const App = () => {
         path='/'
         element={<AppLayout />}
         errorElement={<ErrorPage />}
-        id='root'
-      >
-        <Route 
-          index={true}  
+        id='root'>
+        <Route
+          index={true}
           element={
             <ProtectedRoute
               isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
+              redirectTo='/dashboard'>
               <Home />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path='signin' 
+        <Route
+          path='signin'
           element={
             <ProtectedRoute
               isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
+              redirectTo='/dashboard'>
               <EmailSignIn />
             </ProtectedRoute>
-          } 
-          action={authAction} 
+          }
+          action={authAction}
         />
         <Route
           path='verify'
           id='mfa-auth'
           element={
-            <ProtectedRoute 
+            <ProtectedRoute
               isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
+              redirectTo='/dashboard'>
               <MultifactorAuth />
             </ProtectedRoute>
           }
         />
-        <Route 
+        <Route
           path='signup'
           element={
-            <ProtectedRoute 
-              isAllowed={ user_type == '' }
+            <ProtectedRoute
+              isAllowed={user_type == ''}
               redirectTo='/dashboard'
               children={null}
             />
-          }
-        >
+          }>
           <Route
             path='student'
             element={<StudentSignup />}
@@ -110,8 +105,7 @@ const App = () => {
           element={
             <ProtectedRoute
               isAllowed={user_type == 'tutor'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <EditTutorProfile />
             </ProtectedRoute>
           }
@@ -124,32 +118,28 @@ const App = () => {
           element={
             <ProtectedRoute
               isAllowed={user_type == 'student' || user_type == 'tutor'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <UserDashboard />
             </ProtectedRoute>
           }
-          loader={dashboardLoader}
-        >
+          loader={dashboardLoader}>
           <Route
             path='edit-profile'
             element={
               <ProtectedRoute
                 isAllowed={user_type == 'student'}
-                redirectTo='/'
-              >
+                redirectTo='/'>
                 <StudentEditProfileModal />
               </ProtectedRoute>
             }
             action={studentEditProfileAction}
           />
-          <Route 
+          <Route
             path='favorite/:tutorId'
             element={
               <ProtectedRoute
                 isAllowed={user_type == 'student'}
-                redirectTo='/'
-              >
+                redirectTo='/'>
                 <FavoriteTutorModal />
               </ProtectedRoute>
             }
@@ -166,24 +156,23 @@ const App = () => {
           element={
             <ProtectedRoute
               isAllowed={user_type == 'student'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <MeetingScheduler />
             </ProtectedRoute>
           }
           loader={meetingSchedulerLoader}
           action={meetingSchedulerAction}
         />
-        <Route 
-          path='success' 
-          element={<FormSuccess />} 
+        <Route
+          path='success'
+          element={<FormSuccess />}
         />
         <Route
-        path='search'
-        element={<Search />}
-        loader={searchLoader}
-      />
-    </Route>
+          path='search'
+          element={<Search />}
+          loader={searchLoader}
+        />
+      </Route>
     )
   );
 

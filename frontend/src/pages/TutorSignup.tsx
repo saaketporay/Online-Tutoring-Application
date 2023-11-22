@@ -9,17 +9,17 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import { setExpiration, setToken, setUserType } from '../redux/authSlice';
 import GeneralSignupInfo, {
   signupError,
 } from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
-import { AvailableCourseType } from '../components/TutorSignupInfo';
+import { Subject, FormattedSubject } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
 
 const TutorSignup = () => {
-  const subjects = useLoaderData();
+  const subjects = useLoaderData() as Subject[];
   const data = useActionData() as signupError;
 
   return (
@@ -57,7 +57,8 @@ const TutorSignup = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const response = await axios.get('availability/subjects');
+  const instance = axiosInstance();
+  const response = await instance.get('/availability/subjects');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -65,23 +66,18 @@ export const loader: LoaderFunction = async () => {
     });
   }
   console.log(response.data);
-  return response.data as AvailableCourseType[];
+  return response.data as Subject[];
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  console.log('action');
-
   const tutorInfo = Object.fromEntries(await request.formData());
 
   console.log(tutorInfo);
 
   const errors = [];
-  const { email, phone_number, password } = tutorInfo;
+  const { email, password } = tutorInfo;
   if (!email.toString().includes('@')) {
     errors.push('Email address is invalid.');
-  }
-  if (isNaN(parseInt(phone_number.toString()))) {
-    errors.push('Phone number can only contain numbers.');
   }
   if (password.toString().length < 9) {
     errors.push('Password must have at least 8 characters.');
@@ -96,23 +92,25 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
 
-  const courses = (
-    JSON.parse(tutorInfo.courses as string) as { label: string }[]
-  ).map(({ label }) => label);
+  const subjects = (
+    JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
+  ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
+
   const schedule = (JSON.parse(tutorInfo.schedule as string) as string[]).map(
     (date) => new Date(date)
   );
+
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    is_criminal: false,
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
-    courses, // TODO: accept in the backend
-    schedule, // TODO: accept in the backend
+    subjects,
+    schedule,
+    hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
-
-  const response = await axios.post('user/register', modifiedTutorInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('/user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
@@ -122,10 +120,9 @@ export const action: ActionFunction = async ({ request }) => {
   }
   const { token, user_type } = response.data;
   store.dispatch(setUserType(user_type));
-  axios.defaults.headers['Authorization'] = token;
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24 * 7);
+  expiration.setHours(expiration.getHours() + 1);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };
