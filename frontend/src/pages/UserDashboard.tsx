@@ -74,6 +74,7 @@ type userProps = {
       }
       about_me: string,
       profile_picture: string,
+      tutor_id: string,
     },
   }[] | undefined,
 };
