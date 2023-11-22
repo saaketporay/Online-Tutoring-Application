@@ -108,7 +108,6 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    is_criminal: false,
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
     courses, // TODO: accept in the backend
     schedule, // TODO: accept in the backend

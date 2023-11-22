@@ -94,7 +94,7 @@ const register = async (req, res) => {
       // If user is a tutor, create a corresponding entry in the Tutors table
       if (user_type === 'tutor') {
         const tutorId = await createTutor(
-          user_id,
+          user.user_id,
           about_me,
           profile_picture,
           false,
