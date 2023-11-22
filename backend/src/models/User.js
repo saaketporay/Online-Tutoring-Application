@@ -14,6 +14,20 @@ const getUserByEmail = async (email) => {
   }
 };
 
+const getUserByID = async (user_id) => {
+  try {
+    const user = await User.findOne({
+      where: {
+        user_id: user_id,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.error('Error in getUserByEmail:', err);
+    return null;
+  }
+};
+
 const createUser = async (firstname, lastname, email, password, user_type) => {
   try {
     console.log(firstname, lastname, email, password, user_type);
@@ -33,7 +47,7 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
     });
 
     console.log(`New user created with ID: ${newUser.user_id}`);
-    return newUser.user_id;
+    return newUser;
   } catch (err) {
     console.error('Error in createUser:', err);
     return null;
@@ -86,4 +100,5 @@ module.exports = {
   getUserByEmail,
   createUser,
   createTutor,
+  getUserByID,
 };
