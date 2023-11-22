@@ -38,7 +38,7 @@ const theme = createTheme(cardTheme, textFieldTheme, {
   }
 });
 
-type appointment = {
+export type appointmentsType = [{
   User: {
     first_name: string,
     last_name: string,
@@ -57,9 +57,9 @@ type appointment = {
   meeting_title: string,
   meeting_desc: string,
   appointment_id: string,
-}
+}];
 
-type favoriteTutor = {
+export type favoriteTutorsType = [{
   Tutor: {
     User: {
       first_name: string,
@@ -69,7 +69,7 @@ type favoriteTutor = {
     profile_picture: string,
     tutor_id: string,
   },
-}
+}];
 
 type userProps = {
   user: {
@@ -79,8 +79,8 @@ type userProps = {
     total_tutoring_hours: string,
     user_type: string,
   },
-  appointments: appointment[],
-  favorite_tutors: favoriteTutor[] | undefined,
+  appointments: appointmentsType,
+  favorite_tutors: favoriteTutorsType,
 };
 
 const UserDashboard = () => {
@@ -93,17 +93,17 @@ const UserDashboard = () => {
     dispatch(setShowModal(false));
     navigate('/dashboard');
   };
-
+  console.log(userInfo.appointments)
   return (
     <>
-      <Box className="grid justify-items-center bg-[#191919]">
+      <Box className="grid justify-center bg-[#191919]">
         <ThemeProvider theme={roundButtonTheme}>
           <Outlet context={handleCloseModal} />
           {user_type != "tutor" ?
             <Button
               to='/new-appt'
               component={RouterLink}
-              className='my-8 py-3 px-16'
+              className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#B45309',
                 "&:hover": {
@@ -111,13 +111,13 @@ const UserDashboard = () => {
                 }
               }}
             >
-              <Typography className="font-bold">
+              <Typography className="font-bold ">
                 Schedule appointment
               </Typography>
             </Button>
             :
             <Button
-              className='my-8 py-3 px-28'
+              className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#BE185D',
                 "&:hover": {

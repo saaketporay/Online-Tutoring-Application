@@ -10,31 +10,11 @@ import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal, setAppointmentId } from "../redux/modalSlice";
 import { getReadableDateTime } from '../utils/datetime';
+import { appointmentsType } from '../pages/UserDashboard';
 
-type appointmentsProps = {
-  appointments: {
-    User: {
-      first_name: string,
-      last_name: string,
-    },
-    Tutor: {
-      User: {
-        first_name: string,
-        last_name: string,
-      }
-      about_me: string,
-      profile_picture: string,
-    },
-    date_time: string,
-    duration: number,
-    meeting_title: string,
-    meeting_desc: string,
-    appointment_id: string,
-  }[],
-}
-
-const AppointmentList = ({ appointments }: appointmentsProps) => {
+const AppointmentList = ({ appointments }: {appointments: appointmentsType}) => {
   const dispatch = useAppDispatch();
+  console.log(appointments)
   const user_type = useAppSelector((state) => state.auth.user_type);
 
   return (

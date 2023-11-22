@@ -4,22 +4,9 @@ import CardContent from '@mui/material/CardContent';
 import { NavLink } from 'react-router-dom';
 import { useAppDispatch } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
+import { favoriteTutorsType } from '../pages/UserDashboard';
 
-type favoriteTutorListProps = {
-  favorite_tutors: {
-    Tutor: {
-      User: {
-        first_name: string,
-        last_name: string,
-      }
-      about_me: string,
-      profile_picture: string,
-      tutor_id: string,
-    },
-  }[] | undefined,
-};
-
-const FavoriteTutorList = ({ favorite_tutors }: favoriteTutorListProps) => {
+const FavoriteTutorList = ({ favorite_tutors }: {favorite_tutors: favoriteTutorsType}) => {
   const dispatch = useAppDispatch();
 
   return (
