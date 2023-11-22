@@ -43,25 +43,26 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
-export interface AvailableCourseType {
+export interface Subject {
   subject_id: number;
   subject_name: string;
 }
 
-interface TutorSignupInfoProps {
-  subjects: AvailableCourseType[];
+export interface FormattedSubject {
+  label: string;
+  subject_id: number;
 }
 
-const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
-  const availableCourses = subjects.map((course) => ({
+const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
+  const formattedSubjects = subjects.map((course) => ({
     label: course.subject_name,
     subject_id: course.subject_id,
-  })) as { label: string; subject_id: number }[];
+  })) as FormattedSubject[];
 
   const [aboutMe, setAboutMe] = useState<string>('');
-  const [courses, setCourses] = useState<
-    { label: string; subject_id: number }[]
-  >([]);
+  const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
+    []
+  );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
@@ -117,11 +118,11 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
           </Typography>
           <Autocomplete
             multiple
-            id='tutor-course-select'
-            options={availableCourses}
+            id='tutor-subject-select'
+            options={formattedSubjects}
             disablePortal
             onChange={(e, v) => {
-              setCourses(v);
+              setSelectedSubjects(v);
             }}
             renderInput={(params) => (
               <TextField
@@ -184,8 +185,8 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
         </Stack>
         <input
           hidden
-          name='courses'
-          value={JSON.stringify(courses)}
+          name='subjects'
+          value={JSON.stringify(selectedSubjects)}
         />
         <input
           hidden
@@ -197,7 +198,9 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
           color='success'
           size='large'
           className='mx-auto'
-          disabled={!aboutMe || courses.length == 0 || schedule.length == 0}
+          disabled={
+            !aboutMe || selectedSubjects.length == 0 || schedule.length == 0
+          }
           type='submit'>
           Submit
         </Button>

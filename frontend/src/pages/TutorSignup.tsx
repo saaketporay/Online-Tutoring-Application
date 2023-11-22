@@ -15,11 +15,11 @@ import GeneralSignupInfo, {
   signupError,
 } from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
-import { AvailableCourseType } from '../components/TutorSignupInfo';
+import { Subject, FormattedSubject } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
 
 const TutorSignup = () => {
-  const subjects = useLoaderData() as AvailableCourseType[];
+  const subjects = useLoaderData() as Subject[];
   const data = useActionData() as signupError;
 
   return (
@@ -66,12 +66,10 @@ export const loader: LoaderFunction = async () => {
     });
   }
   console.log(response.data);
-  return response.data as AvailableCourseType[];
+  return response.data as Subject[];
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  console.log('action');
-
   const tutorInfo = Object.fromEntries(await request.formData());
 
   console.log(tutorInfo);
@@ -94,11 +92,8 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
 
-  const courses = (
-    JSON.parse(tutorInfo.courses as string) as {
-      label: string;
-      subject_id: number;
-    }[]
+  const subjects = (
+    JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
   ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
 
   const schedule = (JSON.parse(tutorInfo.schedule as string) as string[]).map(
@@ -109,8 +104,8 @@ export const action: ActionFunction = async ({ request }) => {
     ...tutorInfo,
     user_type: 'tutor',
     profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
-    courses, // TODO: accept in the backend
-    schedule, // TODO: accept in the backend
+    subjects,
+    schedule,
     hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);

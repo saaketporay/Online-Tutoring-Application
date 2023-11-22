@@ -18,7 +18,7 @@ import {
 import { store } from '../redux/store';
 import { getReadableDateTime } from '../utils/datetime';
 
-interface TimeslotType {
+interface Timeslot {
   subject_id: number;
   tutor_id: number;
   date_time: string;
@@ -34,9 +34,9 @@ const defaultMeetingInfo = {
   readable_date_time: '',
 };
 
-interface ResponseDataType {
+interface Response {
   [key: string]: {
-    [key: string]: TimeslotType[];
+    [key: string]: Timeslot[];
   };
 }
 
@@ -60,7 +60,7 @@ const getOptionEquality = (
 ) => option.label === value.label;
 
 const MeetingScheduler = () => {
-  const data = useLoaderData() as ResponseDataType;
+  const data = useLoaderData() as Response;
 
   const courses = Object.keys(data).map((name) => ({
     label: name,
@@ -72,8 +72,7 @@ const MeetingScheduler = () => {
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
   const [meetingTitle, setMeetingTitle] = useState<string>('');
   const [meetingDesc, setMeetingDesc] = useState<string>('');
-  const [meetingInfo, setMeetingInfo] =
-    useState<TimeslotType>(defaultMeetingInfo);
+  const [meetingInfo, setMeetingInfo] = useState<Timeslot>(defaultMeetingInfo);
 
   const availableTutors = selectedCourse
     ? Object.keys(data[selectedCourse]).map((name) => ({
@@ -286,7 +285,7 @@ export const loader: LoaderFunction = async () => {
       status: response.status,
     });
   }
-  const data = response.data as ResponseDataType;
+  const data = response.data as Response;
   console.log(data);
 
   // For every subject
@@ -319,7 +318,7 @@ export const action: ActionFunction = async ({ request }) => {
     return redirect('/signin');
   }
 
-  const timeslot = JSON.parse(userInfo.meeting_info as string) as TimeslotType;
+  const timeslot = JSON.parse(userInfo.meeting_info as string) as Timeslot;
   console.log('timeslot:', timeslot);
 
   const payload = {
