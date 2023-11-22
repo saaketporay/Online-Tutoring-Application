@@ -52,7 +52,7 @@ export type appointmentsType = [{
     profile_picture: string,
     tutor_id: string,
   },
-  date_time: Date,
+  date_time: string,
   duration: number,
   meeting_title: string,
   meeting_desc: string,
