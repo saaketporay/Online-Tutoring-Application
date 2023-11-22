@@ -93,7 +93,7 @@ const register = async (req, res) => {
       console.log('Hashed Password:', hashedPassword);
       // If user is a tutor, create a corresponding entry in the Tutors table
       if (user_type === 'tutor') {
-        const tutorId = await createTutor(
+        await createTutor(
           user.user_id,
           about_me,
           profile_picture,
