@@ -396,7 +396,7 @@ export const action: ActionFunction = async ({ request }) => {
   };
   console.log(payload);
   const instance = axiosInstance();
-  const response = await instance.post('/appointments/create', userInfo);
+  const response = await instance.post('/appointments/create', payload);
   console.log(response);
   if (response.status != 200) {
     throw json({
