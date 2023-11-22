@@ -239,31 +239,24 @@ const UserDashboard = () => {
 export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
-  const userInfo: Record<string, any> = {};
+  const userData: Record<string, any> = {};
   const instance = axiosInstance();
-  // const userResponse = await instance.get('/user/get');
-  // if (userResponse.status != 200) {
-  //   throw json({
-  //     ...userResponse.data,
-  //     status: userResponse.data,
-  //   });
-  // }
-  // userInfo.userInfo = userResponse.data;
-  const appointmentsResponse = await instance.get('/appointments/get');
-  if (appointmentsResponse.status != 200) {
+  const userResponse = await instance.get('/user/info');
+  if (userResponse.status != 200) {
     throw json({
-      ...appointmentsResponse.data,
-      status: appointmentsResponse.data,
+      ...userResponse.data,
+      status: userResponse.data,
     });
   }
-  userInfo.appointments = appointmentsResponse.data;
+  userData.userInfo = userResponse.data;
   const favoritesResponse = await instance.get('/favorite/get');
   if (favoritesResponse.status != 200) {
     throw json({
       ...favoritesResponse.data,
       status: favoritesResponse.data,
-    });
+    }); 
   }
-  userInfo.favorite_tutors = favoritesResponse.data;
-  return appointmentsResponse.data;
+  userData.favorite_tutors = favoritesResponse.data;
+  console.log(userData)
+  return userData;
 };
