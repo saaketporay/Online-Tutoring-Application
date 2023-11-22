@@ -19,7 +19,8 @@ import { useAppSelector } from '../redux/hooks';
 import { axiosInstance } from '../utils/axios';
 
 const StudentEditProfileModal = () => {
-  const handleCloseModal = useOutletContext() as VoidFunction;
+  const { handleCloseModal, userInfo } = useOutletContext() as any;
+  const { user } = userInfo;
   const showModal = useAppSelector((state) => state.modal.showModal);
 
   return (
@@ -36,7 +37,7 @@ const StudentEditProfileModal = () => {
               <Typography id="edit-profile-title" variant="h5">
                 Edit profile
               </Typography>
-              <GeneralSignupInfo />
+              <GeneralSignupInfo userData={user}/>
               <Button
                 type="submit"
                 variant="contained"

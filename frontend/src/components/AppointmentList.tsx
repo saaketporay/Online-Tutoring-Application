@@ -14,7 +14,6 @@ import { appointmentsType } from '../pages/UserDashboard';
 
 const AppointmentList = ({ appointments }: {appointments: appointmentsType}) => {
   const dispatch = useAppDispatch();
-  console.log(appointments)
   const user_type = useAppSelector((state) => state.auth.user_type);
 
   return (
@@ -37,7 +36,7 @@ const AppointmentList = ({ appointments }: {appointments: appointmentsType}) => 
                   </Typography>
                   <Button
                     component={NavLink}
-                    to={`delete-appt/${appt.appointment_id}`}
+                    to={`appt/info/${appt.appointment_id}`}
                     onClick={() => {
                       dispatch(setAppointmentId(appt.appointment_id));
                       dispatch(setShowModal(true));
@@ -59,7 +58,7 @@ const AppointmentList = ({ appointments }: {appointments: appointmentsType}) => 
                   </Button>
                   <Button
                     component={NavLink}
-                    to={`delete-appt/${appt.appointment_id}`}
+                    to={`appt/delete/${appt.appointment_id}`}
                     onClick={() => {
                       dispatch(setAppointmentId(appt.appointment_id));
                       dispatch(setShowModal(true));

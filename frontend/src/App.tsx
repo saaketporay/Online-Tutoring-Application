@@ -36,6 +36,7 @@ import FavoriteTutorModal, {
 } from './components/FavoriteTutorModal';
 import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
+import InfoAppointmentModal, { addFavoriteTutorAction } from './components/InfoAppointmentModal';
 
 const App = () => {
   const user_type = useAppSelector((state) => state.auth.user_type);
@@ -146,10 +147,19 @@ const App = () => {
             action={favoriteTutorAction}
           />
           <Route
-            path='delete-appt/:apptId'
-            element={<DeleteAppointmentModal />}
-            action={deleteAppointmentAction}
-          />
+            path='appt'
+          >
+            <Route 
+              path='info/:apptId'
+              element={<InfoAppointmentModal />}
+              action={addFavoriteTutorAction}
+            />
+            <Route
+              path='delete/:apptId'
+              element={<DeleteAppointmentModal />}
+              action={deleteAppointmentAction}
+            />
+          </Route>
         </Route>
         <Route
           path='new-appt'

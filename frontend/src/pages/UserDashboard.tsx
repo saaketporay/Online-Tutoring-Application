@@ -52,11 +52,11 @@ export type appointmentsType = [{
     profile_picture: string,
     tutor_id: string,
   },
-  date_time: string,
+  date_time: Date,
   duration: number,
   meeting_title: string,
   meeting_desc: string,
-  appointment_id: string,
+  appointment_id: number,
 }];
 
 export type favoriteTutorsType = [{
@@ -67,18 +67,20 @@ export type favoriteTutorsType = [{
     }
     about_me: string,
     profile_picture: string,
-    tutor_id: string,
+    tutor_id: number,
   },
 }];
 
-type userProps = {
-  user: {
-    first_name: string,
-    last_name: string,
-    email: string,
-    total_tutoring_hours: string,
-    user_type: string,
-  },
+export type userType = {
+  first_name: string,
+  last_name: string,
+  email: string,
+  total_tutoring_hours: number,
+  user_type: 'student' | 'tutor' | undefined,
+}
+
+export type userProps = {
+  user: userType,
   appointments: appointmentsType,
   favorite_tutors: favoriteTutorsType,
 };
@@ -93,12 +95,15 @@ const UserDashboard = () => {
     dispatch(setShowModal(false));
     navigate('/dashboard');
   };
-  console.log(userInfo.appointments)
   return (
     <>
       <Box className="grid justify-center bg-[#191919]">
         <ThemeProvider theme={roundButtonTheme}>
-          <Outlet context={handleCloseModal} />
+          <Outlet context={{
+              handleCloseModal,
+              userInfo
+            }} 
+          />
           {user_type != "tutor" ?
             <Button
               to='/new-appt'
@@ -149,7 +154,7 @@ const UserDashboard = () => {
               <UserInfo
                 first_name={userInfo.user.first_name}
                 last_name={userInfo.user.last_name}
-                total_meeting_time={userInfo.user.total_tutoring_hours}
+                total_tutoring_hours={userInfo.user.total_tutoring_hours}
               />
             </Card>
             <Card
@@ -195,6 +200,6 @@ export const dashboardLoader: LoaderFunction = async () => {
     }
     userData.favorite_tutors = favoritesResponse.data;
   }
-  console.log(userData)
+  // console.log(userData)
   return userData;
 };

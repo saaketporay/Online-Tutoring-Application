@@ -18,7 +18,7 @@ import { clearAppointmentId } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
 
 const DeleteAppointmentModal = () => {
-  const handleCloseModal = useOutletContext() as VoidFunction;
+  const { handleCloseModal } = useOutletContext() as any;
   const showModal = useAppSelector((state) => state.modal.showModal);
   const dispatch = useAppDispatch();
 
