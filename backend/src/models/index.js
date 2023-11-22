@@ -216,6 +216,24 @@ Tutor_Availability.belongsTo(Tutor, {
   foreignKey: 'tutor_id',
 });
 
+User.hasMany(Scheduled_Appointments, {
+  foreignKey: 'student_id',
+  onDelete: 'CASCADE',
+});
+
+Tutor.hasMany(Scheduled_Appointments, {
+  foreignKey: 'tutor_id',
+  onDelete: 'CASCADE',
+});
+
+Scheduled_Appointments.belongsTo(User, {
+  foreignKey: 'student_id'
+});
+
+Scheduled_Appointments.belongsTo(Tutor, {
+  foreignKey: 'tutor_id'
+});
+
 module.exports = {
   User,
   Tutor,

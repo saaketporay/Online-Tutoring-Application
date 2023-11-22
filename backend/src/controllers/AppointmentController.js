@@ -5,13 +5,13 @@ const appointmentController = {
   createAppointment: async (req, res) => {
     const token = req.headers.authorization;
     const decodedToken = jwtUtil.decodeToken(token);
-
-    const { tutor_Id, date_time, duration, meeting_title, meeting_desc } =
+    
+    const { tutor_id, date_time, duration, meeting_title, meeting_desc } =
       req.body;
 
     console.log(
       token,
-      tutor_Id,
+      tutor_id,
       date_time,
       duration,
       meeting_title,
@@ -23,12 +23,13 @@ const appointmentController = {
     try {
       const appointment_id = await Appointment.create(
         student_Id,
-        tutor_Id,
+        tutor_id,
         date_time,
         duration,
         meeting_title,
         meeting_desc
       );
+      console.log(appointment_id);
       return res.status(200).json(appointment_id);
     } catch (err) {
       return res.status(500).send('Internal Server Error');
