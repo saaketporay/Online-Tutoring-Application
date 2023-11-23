@@ -17,7 +17,7 @@ import {
 import { createTheme } from '@mui/material';
 import FavoriteTutorList from '../components/FavoriteTutorList';
 import AppointmentList from '../components/AppointmentList';
-import UserInfo from '../components/UserCardContent';
+import UserCardContent from '../components/UserCardContent';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
@@ -42,15 +42,17 @@ export type appointmentsType = [{
   User: {
     first_name: string,
     last_name: string,
+    email: string,
   },
   Tutor: {
     User: {
       first_name: string,
       last_name: string,
+      email: string,
     }
     about_me: string,
     profile_picture: string,
-    tutor_id: string,
+    tutor_id: number,
   },
   date_time: string,
   duration: number,
@@ -64,6 +66,7 @@ export type favoriteTutorsType = [{
     User: {
       first_name: string,
       last_name: string,
+      email: string,
     }
     about_me: string,
     profile_picture: string,
@@ -77,6 +80,7 @@ export type userType = {
   email: string,
   total_tutoring_hours: number,
   user_type: 'student' | 'tutor' | undefined,
+  profile_picture: string | undefined,
 }
 
 export type userProps = {
@@ -87,6 +91,8 @@ export type userProps = {
 
 const UserDashboard = () => {
   const userInfo = useLoaderData() as userProps;
+  const { user, appointments, favorite_tutors } = userInfo
+  // console.log(favorite_tutors)
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
   const navigate = useNavigate();
@@ -151,10 +157,10 @@ const UserDashboard = () => {
                 height: 600
               }}
             >
-              <UserInfo
-                first_name={userInfo.user.first_name}
-                last_name={userInfo.user.last_name}
-                total_tutoring_hours={userInfo.user.total_tutoring_hours}
+              <UserCardContent
+                first_name={user.first_name}
+                last_name={user.last_name}
+                total_tutoring_hours={user.total_tutoring_hours}
               />
             </Card>
             <Card
@@ -165,9 +171,9 @@ const UserDashboard = () => {
               }}
             >
               {user_type == "student" && 
-                (<FavoriteTutorList favorite_tutors={userInfo.favorite_tutors} />)
+                (<FavoriteTutorList favorite_tutors={favorite_tutors} />)
               }
-              <AppointmentList appointments={userInfo.appointments} />
+              <AppointmentList appointments={appointments} favorite_tutors={favorite_tutors} />
             </Card>
           </Stack>
         </ThemeProvider>
@@ -200,6 +206,6 @@ export const dashboardLoader: LoaderFunction = async () => {
     }
     userData.favorite_tutors = favoritesResponse.data;
   }
-  // console.log(userData)
+  console.log(userData)
   return userData;
 };
