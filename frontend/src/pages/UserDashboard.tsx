@@ -91,8 +91,7 @@ export type userProps = {
 
 const UserDashboard = () => {
   const userInfo = useLoaderData() as userProps;
-  const { user, appointments, favorite_tutors } = userInfo
-  // console.log(favorite_tutors)
+  const { user, appointments, favorite_tutors } = userInfo;
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
   const navigate = useNavigate();
@@ -107,7 +106,7 @@ const UserDashboard = () => {
         <ThemeProvider theme={roundButtonTheme}>
           <Outlet context={{
               handleCloseModal,
-              userInfo
+              userInfo,
             }} 
           />
           {user_type != "tutor" ?

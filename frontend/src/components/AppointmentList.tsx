@@ -8,12 +8,11 @@ import Avatar from '@mui/material/Avatar';
 import HollowStar from '../assets/icons/Hollow-Star.svg';
 import Star from '../assets/icons/Star.svg';
 import DeleteIcon from '../assets/icons/Delete-Appointment-Icon.svg';
-import { NavLink, Form, ActionFunction, useSubmit, redirect } from 'react-router-dom';
+import { NavLink, Form } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal, setAppointmentId } from "../redux/modalSlice";
 import { getReadableDateTime } from '../utils/datetime';
 import { appointmentsType, favoriteTutorsType } from '../pages/UserDashboard';
-import { axiosInstance } from '../utils/axios';
 
 const AppointmentList = (
   {
@@ -24,9 +23,7 @@ const AppointmentList = (
     favorite_tutors: favoriteTutorsType,
   }) => {
   const dispatch = useAppDispatch();
-  const submit = useSubmit();
   const user_type = useAppSelector((state) => state.auth.user_type);
-  // console.log(favorite_tutors)
 
   return (
     <>

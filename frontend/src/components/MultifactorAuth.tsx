@@ -58,6 +58,6 @@ function MultifactorAuth() {
       </ThemeProvider>
     </>
   );
-};
+}
 
 export default MultifactorAuth;

@@ -32,7 +32,7 @@ import EditTutorProfile, {
 } from './pages/EditTutorProfile';
 import Search, { loader as searchLoader } from './pages/Search';
 import FavoriteTutorModal, {
-  favoriteTutorAction,
+  favoriteTutorAction, favoriteTutorLoader,
 } from './components/FavoriteTutorModal';
 import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -146,6 +146,7 @@ const App = () => {
                   <FavoriteTutorModal />
                 </ProtectedRoute>
               }
+              loader={favoriteTutorLoader}
               action={favoriteTutorAction}
             />
           </Route>
