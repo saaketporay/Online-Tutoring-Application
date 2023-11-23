@@ -234,6 +234,24 @@ Scheduled_Appointments.belongsTo(Tutor, {
   foreignKey: 'tutor_id'
 });
 
+User.hasMany(Favorite, {
+  foreignKey: 'student_id',
+  onDelete: 'CASCADE',
+})
+
+Tutor.hasMany(Favorite, {
+  foreignKey: 'tutor_id',
+  onDelete: 'CASCADE',
+})
+
+Favorite.belongsTo(User, {
+  foreignKey: 'student_id'
+})
+
+Favorite.belongsTo(Tutor, {
+  foreignKey: 'tutor_id'
+})
+
 module.exports = {
   User,
   Tutor,
