@@ -4,6 +4,7 @@ import { squareButtonTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
 import { useEffect, useState } from "react";
 import { useActionData } from "react-router-dom";
+import { userType } from "../pages/UserDashboard";
 
 const theme = createTheme(textFieldTheme, squareButtonTheme);
 
@@ -11,9 +12,9 @@ export type signupError = {
   errors: string[],
 };
 
-const GeneralSignupInfo = () => {
+const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
   const data = useActionData() as signupError;
-
+  console.log(userData);
   return (
     <>
       <ThemeProvider theme={theme}>
@@ -34,6 +35,7 @@ const GeneralSignupInfo = () => {
           required
           id='first_name'
           name='first_name'
+          defaultValue={userData?.first_name}
           label='Required'
           placeholder='First Name'
           autoComplete='off'
@@ -43,6 +45,7 @@ const GeneralSignupInfo = () => {
           required
           id='last_name'
           name='last_name'
+          defaultValue={userData?.last_name}
           label='Required'
           placeholder='Last Name'
           autoComplete='off'
@@ -52,6 +55,7 @@ const GeneralSignupInfo = () => {
           required
           id='email'
           name='email'
+          defaultValue={userData?.email}
           label='Required'
           placeholder='Email Address'
           autoComplete='off'

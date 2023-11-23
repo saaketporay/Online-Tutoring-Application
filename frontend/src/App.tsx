@@ -32,7 +32,7 @@ import EditTutorProfile, {
 } from './pages/EditTutorProfile';
 import Search, { loader as searchLoader } from './pages/Search';
 import FavoriteTutorModal, {
-  favoriteTutorAction,
+  favoriteTutorAction, favoriteTutorLoader,
 } from './components/FavoriteTutorModal';
 import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
@@ -135,21 +135,30 @@ const App = () => {
             action={studentEditProfileAction}
           />
           <Route
-            path='favorite/:tutorId'
-            element={
-              <ProtectedRoute
-                isAllowed={user_type == 'student'}
-                redirectTo='/'>
-                <FavoriteTutorModal />
-              </ProtectedRoute>
-            }
-            action={favoriteTutorAction}
-          />
+            path='favorite'
+          >
+            <Route
+              path=':tutorId'
+              element={
+                <ProtectedRoute
+                  isAllowed={user_type == 'student'}
+                  redirectTo='/'>
+                  <FavoriteTutorModal />
+                </ProtectedRoute>
+              }
+              loader={favoriteTutorLoader}
+              action={favoriteTutorAction}
+            />
+          </Route>
           <Route
-            path='delete-appt/:apptId'
-            element={<DeleteAppointmentModal />}
-            action={deleteAppointmentAction}
-          />
+            path='appt'
+          >
+            <Route
+              path='delete/:apptId'
+              element={<DeleteAppointmentModal />}
+              action={deleteAppointmentAction}
+            />
+          </Route>
         </Route>
         <Route
           path='new-appt'

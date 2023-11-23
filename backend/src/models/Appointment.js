@@ -25,18 +25,18 @@ const Appointment = {
         include: [
           {
             model: User,
-            attributes: ['first_name', 'last_name']
+            attributes: ['first_name', 'last_name', 'email']
           },
           {
             model: Tutor,
             include: {
               model: User,
-              attributes: ['first_name', 'last_name']
+              attributes: ['first_name', 'last_name', 'email']
             }
           },
         ]
       });
-      console.log(appointments);
+      // console.log(appointments);
       return appointments;
     } catch (error) {
       throw error;
@@ -51,13 +51,13 @@ const Appointment = {
         include: [
           {
             model: User,
-            attributes: ['first_name', 'last_name'],
+            attributes: ['first_name', 'last_name', 'email'],
           },
           {
             model: Tutor,
             include: {
               model: User,
-              attributes: ['first_name', 'last_name'],
+              attributes: ['first_name', 'last_name', 'email'],
             },
           },
         ],

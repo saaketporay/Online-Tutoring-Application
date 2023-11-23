@@ -2,7 +2,7 @@ import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface ModalState {
   showModal: boolean,
-  appointmentId: string | undefined,
+  appointmentId: number | undefined,
 };
 
 const initialState: ModalState = {
@@ -17,7 +17,7 @@ export const modalSlice = createSlice({
     setShowModal: (state, action: PayloadAction<boolean>) => {
       state.showModal = action.payload;
     },
-    setAppointmentId: (state, action: PayloadAction<string>) => {
+    setAppointmentId: (state, action: PayloadAction<number>) => {
       state.appointmentId = action.payload;
     },
     clearAppointmentId: (state) => {

@@ -7,17 +7,11 @@ import { NavLink } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
 
-type userProps = {
-  first_name: string,
-  last_name: string,
-  total_meeting_time: string,
-};
-
-const UserInfo = ({
+const UserCardContent = ({
   first_name,
   last_name,
-  total_meeting_time,
-}: userProps) => {
+  total_tutoring_hours,
+}: { first_name: string, last_name: string, total_tutoring_hours: number }) => {
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
 
@@ -27,14 +21,16 @@ const UserInfo = ({
         <Stack
           direction={'row'}
           spacing={3}
-          className={user_type == "student" ? "grid" : ""}>
+          className={user_type == "student" ? "grid" : ""}
+        >
           {user_type == "tutor" &&
             <Avatar
               variant='square'
               sx={{
                 height: 75,
                 width: 75
-              }} />
+              }}
+            />
           }
           <Typography
             variant='h6'
@@ -65,7 +61,7 @@ const UserInfo = ({
               Total meeting time
             </Typography>
             <Typography variant='body2'>
-              {total_meeting_time}
+              {total_tutoring_hours} hours
             </Typography>
           </Stack>
         </Stack>
@@ -74,4 +70,4 @@ const UserInfo = ({
   )
 };
 
-export default UserInfo;
+export default UserCardContent;

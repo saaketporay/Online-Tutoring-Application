@@ -10,7 +10,6 @@ import {
   json,
   redirect,
   ActionFunction,
-  useSubmit
 } from 'react-router-dom';
 import { modalStyle } from '../utils/theme';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
@@ -18,7 +17,7 @@ import { clearAppointmentId } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
 
 const DeleteAppointmentModal = () => {
-  const handleCloseModal = useOutletContext() as VoidFunction;
+  const { handleCloseModal } = useOutletContext() as any;
   const showModal = useAppSelector((state) => state.modal.showModal);
   const dispatch = useAppDispatch();
 
