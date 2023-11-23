@@ -29,7 +29,7 @@ const FavoriteTutorList = ({ favorite_tutors }: {favorite_tutors: favoriteTutors
                     className='no-underline text-white'
                   >
                     <CardContent className='break-normal'>
-                      `{tutor.Tutor.User.first_name} {tutor.Tutor.User.last_name}`
+                      {tutor.Tutor.User.first_name} {tutor.Tutor.User.last_name}
                     </CardContent>
                   </NavLink>
                 </Card>
