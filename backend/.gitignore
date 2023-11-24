@@ -3,6 +3,8 @@ logs
 *.log
 npm-debug.log*
 
+# profile picture uploads
+./src/uploads
 # Dependency directories
 node_modules/
 
