@@ -66,6 +66,7 @@ const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [hrChunks, setHrChunks] = useState<number>(2);
+  const [pfp, setPfp] = useState<string>('');
 
   const marks = [];
   for (let i = 0; i <= 24; i++) {
@@ -97,18 +98,49 @@ const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
   return (
     <ThemeProvider theme={theme}>
       <Stack spacing={6}>
-        <TextField
-          className='my-6'
-          id='tutor-about-me-field'
-          name='about_me'
-          label='About me'
-          multiline
-          rows={3}
-          value={aboutMe}
-          onChange={(e) => {
-            setAboutMe(e.target.value);
-          }}
-        />
+        <Stack spacing={4}>
+          <TextField
+            className='my-6'
+            id='tutor-about-me-field'
+            name='about_me'
+            label='About me'
+            multiline
+            rows={3}
+            value={aboutMe}
+            onChange={(e) => {
+              setAboutMe(e.target.value);
+            }}
+          />
+          <Box className='flex flex-col items-center'>
+            <Button
+              variant='outlined'
+              component='label'
+              className='text-neutral-100 border-neutral-700 rounded-md'>
+              Upload profile picture
+              <input
+                name='profile_picture'
+                type='file'
+                onChange={(e) => {
+                  if (
+                    e &&
+                    e.target &&
+                    e.target.files &&
+                    e.target.files.length === 1
+                  )
+                    setPfp(URL.createObjectURL(e.target.files[0]));
+                }}
+                hidden
+              />
+            </Button>
+            {pfp && (
+              <img
+                src={pfp}
+                alt='Profile picture'
+                className='my-3 w-40 h-full'
+              />
+            )}
+          </Box>
+        </Stack>
         <Box>
           <Typography
             variant='h6'
