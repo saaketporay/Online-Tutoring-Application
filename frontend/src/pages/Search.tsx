@@ -152,7 +152,7 @@ const Search = () => {
                     className='flex items-center justify-evenly'>
                     <img
                       className='max-w-[100px] h-auto rounded-full mx-3'
-                      src={val.profile_picture}
+                      src={`http://localhost:3000/uploads/${val.profile_picture}`}
                       alt={`${key}'s profile picture`}
                     />
                     <Stack spacing={2}>
@@ -173,7 +173,7 @@ const Search = () => {
               className='flex items-center justify-evenly'>
               <img
                 className='max-w-[100px] h-auto rounded-full'
-                src={selectedTutorInfo.profile_picture}
+                src={`http://localhost:3000/uploads/${selectedTutorInfo.profile_picture}`}
                 alt={`${selectedTutor}'s profile picture`}
               />
               <Stack spacing={2}>

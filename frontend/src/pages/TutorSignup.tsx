@@ -25,7 +25,8 @@ const TutorSignup = () => {
   return (
     <Form
       method='post'
-      className='grid justify-center bg-[#191919]'>
+      className='grid justify-center bg-[#191919]'
+      encType='multipart/form-data'>
       <Typography
         variant='h4'
         className='mt-8 mb-10 justify-self-center'>
@@ -92,6 +93,18 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
 
+  let instance = axiosInstance(true);
+  let response = await instance.post('/upload/profile-picture', {
+    profile_picture: tutorInfo.profile_picture,
+  });
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
   ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
@@ -103,14 +116,14 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    profile_picture: 'http://example.com/fatman.jpg', // TODO: implement file picker on the frontend
+    profile_picture: response.data.filename,
     subjects,
     schedule,
     hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
-  const instance = axiosInstance();
-  const response = await instance.post('/user/register', modifiedTutorInfo);
+  instance = axiosInstance();
+  response = await instance.post('/user/register', modifiedTutorInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({
