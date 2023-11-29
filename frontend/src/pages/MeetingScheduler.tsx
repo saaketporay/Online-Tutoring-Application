@@ -92,6 +92,7 @@ const MeetingScheduler = () => {
           })
         )
       : new Set();
+  console.log(availableDates);
 
   const availableTimeslots =
     selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]

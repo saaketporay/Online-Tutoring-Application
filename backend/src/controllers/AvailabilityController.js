@@ -89,20 +89,7 @@ const AvailabilityController = {
       // Build responseData object
       for (subject of data) {
         responseData[subject.subject_name] = {};
-        console.log(subject.subject_name);
         for (tutor of subject.Tutors) {
-          console.log(tutor.User.first_name, tutor.User.last_name);
-          // responseData[subject.subject_name][
-          //   `${tutor.User.first_name} ${tutor.User.last_name}`
-          // ] = tutor.Tutor_Availabilities.map(
-          //   ({ tutor_id, date_time, duration }) => ({
-          //     tutor_id,
-          //     date_time,
-          //     duration,
-          //     subject_id: subject.subject_id,
-          //   })
-          // );
-
           available_appts = [];
           for ({
             tutor_id,
@@ -139,7 +126,6 @@ const AvailabilityController = {
             }
 
             if (!foundOverlap) {
-              console.log('Adding', appt);
               available_appts.push({
                 ...appt,
                 subject_id: subject.subject_id,
@@ -154,11 +140,9 @@ const AvailabilityController = {
       }
 
       console.log(responseData);
-      console.log(1);
       return res.status(200).json(responseData);
     } catch (error) {
       console.error(error);
-      console.log(2);
       return res
         .status(500)
         .json({ success: false, error: 'Internal Server Error' });
