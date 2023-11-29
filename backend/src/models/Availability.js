@@ -4,6 +4,7 @@ const {
   Subject,
   Tutor_Subject,
   Tutor_Availability,
+  Scheduled_Appointments,
 } = require('./index');
 
 const Availability = {
@@ -77,6 +78,22 @@ const Availability = {
         ],
       });
       return tutors;
+    } catch (err) {
+      return err;
+    }
+  },
+
+  getAllOverlappingAppointments: async (tutor_id, start, end) => {
+    try {
+      const data = await Scheduled_Appointments.findAll({
+        where: {
+          tutor_id: tutor_id,
+          date_time: {
+            $between: [start, end],
+          },
+        },
+      });
+      return data;
     } catch (err) {
       return err;
     }

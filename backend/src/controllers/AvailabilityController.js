@@ -89,24 +89,76 @@ const AvailabilityController = {
       // Build responseData object
       for (subject of data) {
         responseData[subject.subject_name] = {};
+        console.log(subject.subject_name);
         for (tutor of subject.Tutors) {
+          console.log(tutor.User.first_name, tutor.User.last_name);
+          // responseData[subject.subject_name][
+          //   `${tutor.User.first_name} ${tutor.User.last_name}`
+          // ] = tutor.Tutor_Availabilities.map(
+          //   ({ tutor_id, date_time, duration }) => ({
+          //     tutor_id,
+          //     date_time,
+          //     duration,
+          //     subject_id: subject.subject_id,
+          //   })
+          // );
+
+          available_appts = [];
+          for ({
+            tutor_id,
+            date_time,
+            duration,
+          } of tutor.Tutor_Availabilities) {
+            appt = { tutor_id, date_time, duration };
+            const start = date_time;
+            const end = new Date(start.getTime());
+            end.setMinutes(end.getMinutes() + duration);
+            start.setHours(start.getHours() - 1); // Subtract 1 hour to include appts that start before this appt but finish during/after it
+
+            possible_overlaps =
+              await Availability.getAllOverlappingAppointments(
+                tutor_id,
+                start,
+                end
+              );
+
+            start.setHours(start.getHours() + 1); // Restore original start datetime
+
+            foundOverlap = false;
+            for ({ date_time2, duration2 } of possible_overlaps) {
+              const start2 = date_time2;
+              const end2 = new Date(start2.getTime());
+              end2.setMinutes(end2.getMinutes() + duration2);
+              if (
+                (start < start2 && start2 < end) ||
+                (start < end2 && end2 < end)
+              ) {
+                foundOverlap = true;
+                break;
+              }
+            }
+
+            if (!foundOverlap) {
+              console.log('Adding', appt);
+              available_appts.push({
+                ...appt,
+                subject_id: subject.subject_id,
+              });
+            }
+          }
+
           responseData[subject.subject_name][
             `${tutor.User.first_name} ${tutor.User.last_name}`
-          ] = tutor.Tutor_Availabilities.map(
-            ({ tutor_id, date_time, duration }) => ({
-              tutor_id,
-              date_time,
-              duration,
-              subject_id: subject.subject_id,
-            })
-          );
+          ] = available_appts;
         }
       }
 
       console.log(responseData);
+      console.log(1);
       return res.status(200).json(responseData);
     } catch (error) {
       console.error(error);
+      console.log(2);
       return res
         .status(500)
         .json({ success: false, error: 'Internal Server Error' });
