@@ -199,33 +199,6 @@ Tutor_Availability.init(
   }
 );
 
-// Available Appointments model
-class Available_Appointments extends Model {}
-Available_Appointments.init(
-  {
-    appointment_id: {
-      type: DataTypes.INTEGER,
-      primaryKey: true,
-      autoIncrement: true,
-    },
-    tutor_id: {
-      type: DataTypes.INTEGER,
-      references: {
-        model: Tutor,
-        key: 'tutor_id',
-      },
-    },
-    date_time: {
-      type: DataTypes.DATE,
-      allowNull: false,
-    },
-    duration: DataTypes.INTEGER,
-    meeting_title: DataTypes.STRING(255),
-    meeting_desc: DataTypes.TEXT,
-  },
-  { sequelize, modelName: 'Available_Appointments' }
-);
-
 // Associations
 User.hasOne(Tutor, {
   foreignKey: 'user_id',
@@ -277,20 +250,11 @@ Tutor.hasMany(Scheduled_Appointments, {
   onDelete: 'CASCADE',
 });
 
-Tutor.hasMany(Available_Appointments, {
-  foreignKey: 'tutor_id',
-  onDelete: 'CASCADE',
-});
-
 Scheduled_Appointments.belongsTo(User, {
   foreignKey: 'student_id',
 });
 
 Scheduled_Appointments.belongsTo(Tutor, {
-  foreignKey: 'tutor_id',
-});
-
-Available_Appointments.belongsTo(Tutor, {
   foreignKey: 'tutor_id',
 });
 
@@ -320,5 +284,4 @@ module.exports = {
   Scheduled_Appointments,
   Favorite,
   Tutor_Availability,
-  Available_Appointments,
 };
