@@ -4,7 +4,10 @@ import TextField from '@mui/material/TextField';
 import Autocomplete from '@mui/material/Autocomplete';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
-import { autocompleteTheme } from '../utils/theme';
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
+import { autocompleteTheme, datepickerTheme } from '../utils/theme';
 import { useState, useEffect } from 'react';
 import { axiosInstance } from '../utils/axios';
 import {
@@ -40,7 +43,7 @@ interface Response {
   };
 }
 
-const theme = createTheme(autocompleteTheme, {
+const theme = createTheme(autocompleteTheme, datepickerTheme, {
   components: {
     MuiButton: {
       styleOverrides: {
@@ -80,12 +83,28 @@ const MeetingScheduler = () => {
       }))
     : [];
 
+  const availableDates =
+    selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
+      ? new Set(
+          data[selectedCourse][selectedTutor].map((timeslot) => {
+            const t = timeslot.date_time.split(/\D+/).map((str) => +str);
+            return `${t[0]}-${t[1] - 1}-${t[2]}`;
+          })
+        )
+      : new Set();
+
   const availableTimeslots =
     selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
       ? data[selectedCourse][selectedTutor].map((timeslot) => ({
           label: timeslot.readable_date_time,
         }))
       : [];
+
+  const disableUnavailableDates = (date) => {
+    console.log('available dates: ', availableDates);
+    console.log('cur date: ', `${date.$y}-${date.$M}-${date.$D}`);
+    return !availableDates.has(`${date.$y}-${date.$M}-${date.$D}`);
+  };
 
   const courseSelectChangeHandler = (
     e: React.FormEvent<EventTarget>,
@@ -204,6 +223,12 @@ const MeetingScheduler = () => {
               align='center'>
               Select an available timeslot
             </Typography>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <StaticDatePicker
+                disablePast={true}
+                shouldDisableDate={disableUnavailableDates}
+              />
+            </LocalizationProvider>
             <Autocomplete
               id='timeslot-select'
               options={availableTimeslots}

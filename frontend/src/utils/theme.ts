@@ -241,3 +241,76 @@ export const modalStyle = {
   boxShadow: 24,
   p: 4,
 };
+
+export const datepickerTheme = createTheme({
+  components: {
+    MuiPickersLayout: {
+      styleOverrides: {
+        root: {
+          color: neutral100,
+          borderColor: neutral400,
+          backgroundColor: neutral700,
+          '& .MuiPickersLayout-contentWrapper': {
+            backgroundColor: neutral700,
+          },
+          '& .MuiDialogActions-root': {
+            backgroundColor: neutral700,
+            '& .MuiButtonBase-root': {
+              color: neutral100,
+            },
+          },
+        },
+      },
+    },
+    MuiPickersToolbar: {
+      styleOverrides: {
+        root: {
+          color: neutral100,
+          borderColor: neutral400,
+          backgroundColor: neutral700,
+          '& .MuiTypography-root': {
+            color: neutral100,
+          },
+        },
+      },
+    },
+    MuiDateCalendar: {
+      styleOverrides: {
+        root: {
+          color: neutral100,
+          borderColor: neutral400,
+          backgroundColor: neutral700,
+        },
+      },
+    },
+    MuiPickersCalendarHeader: {
+      styleOverrides: {
+        root: {
+          '& .MuiPickersArrowSwitcher-root .MuiButtonBase-root .MuiSvgIcon-root':
+            {
+              color: neutral100,
+            },
+        },
+        switchViewIcon: {
+          color: neutral100,
+        },
+      },
+    },
+    MuiDayCalendar: {
+      styleOverrides: {
+        weekDayLabel: {
+          color: neutral100,
+        },
+      },
+    },
+    MuiPickersDay: {
+      styleOverrides: {
+        root: {
+          color: neutral100,
+          borderColor: neutral400,
+          backgroundColor: neutral700,
+        },
+      },
+    },
+  },
+});
