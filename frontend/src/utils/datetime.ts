@@ -45,7 +45,7 @@ export const getReadableDateTime = (dateTime: string, duration: number) => {
   const hour = m.getHours();
   // Convert hour to a human-readable 12-hour value
   const modifiedHour =
-    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
+    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
   // Get the minutes as a number in the range 0-59
   const minutes = m.getMinutes();
   // Convert minutes to a double-digit zeros if it's a 0
