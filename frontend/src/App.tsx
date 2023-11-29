@@ -179,11 +179,11 @@ const App = () => {
           element={<FormSuccess />} 
         />
         <Route
-        path='search'
-        element={<Search />}
-        loader={searchLoader}
-      />
-    </Route>
+          path='search'
+          element={<Search />}
+          loader={searchLoader}
+        />
+      </Route>
     )
   );
 

@@ -6,7 +6,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import { autocompleteTheme } from '../utils/theme';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 import {
   Form,
   useLoaderData,
@@ -341,8 +341,8 @@ export const loader: LoaderFunction = async () => {
   if (!token) {
     return redirect('/signin');
   }
-
-  const response = await axios.get('availability/all');
+  const instance = axiosInstance();
+  const response = await instance.get('/availability/all');
   if (response.status !== 200) {
     throw json({
       ...response.data,
@@ -395,8 +395,8 @@ export const action: ActionFunction = async ({ request }) => {
     meeting_desc: userInfo.meeting_desc,
   };
   console.log(payload);
-
-  const response = await axios.post('/appointments/create', userInfo);
+  const instance = axiosInstance();
+  const response = await instance.post('/appointments/create', userInfo);
   console.log(response);
   if (response.status != 200) {
     throw json({

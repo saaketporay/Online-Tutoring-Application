@@ -5,12 +5,40 @@ const {
   createTutor,
   getUserSecret,
 } = require("../models/User");
+
+const Appointment = require('../models/Appointment');
+
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
 const { sendTOTP } = require("../utils/totp");
+const {checkCriminalDB} = require('../utils/isCriminal');
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const speakeasy = require("speakeasy");
+
+const getUserInfo = async(req, res) => {
+  const token = req.headers.authorization;
+  const decodedToken = decodeToken(token);
+  try
+  {
+    const user_email = decodedToken.email;
+    const student_Id = decodedToken.id;
+    const user = await getUserByEmail(user_email);
+    const appointments = await Appointment.getByStudentId(student_Id);
+    console.log(user);
+    if (!user)
+    {
+      return res.status(404).send("User not found");
+    }
+    return res.status(200).json({user, appointments});
+  }
+  catch (err)
+  {
+    console.log(err)
+    res.status(500).send("Internal Server Error");
+  }
+}
+
 
 const login = async (req, res) => {
   const { email, password } = req.body;
@@ -52,6 +80,13 @@ const register = async (req, res) => {
     schedule,
     hourly_chunks,
   } = req.body;
+  const criminal = await checkCriminalDB(first_name, last_name);
+  if (criminal && user_type === 'tutor')
+  {
+    return res.status(403).send("User is criminal");
+  }
+  else
+  {
 
   //generate new totp secret
   const secret = speakeasy.generateSecret();
@@ -79,7 +114,7 @@ const register = async (req, res) => {
         user_id,
         about_me,
         profile_picture,
-        is_criminal,
+        false,
         courses,
         schedule,
         hourly_chunks
@@ -95,7 +130,7 @@ const register = async (req, res) => {
     console.error(err);
     res.status(500).send("Internal Server Error");
   }
-};
+}}
 
 const verifyTOTP = async (req, res) => {
   const { email, totp } = req.body;
@@ -142,9 +177,11 @@ const verifyTOTP = async (req, res) => {
   }
 };
 
+
 module.exports = {
   login,
   register,
   sendTOTP,
   verifyTOTP,
-};
+  getUserInfo
+}

@@ -16,7 +16,7 @@ import {
 } from 'react-router-dom';
 import { modalStyle } from '../utils/theme';
 import { useAppSelector } from '../redux/hooks';
-import axios from 'axios';
+import { axiosInstance } from '../utils/axios';
 
 const StudentEditProfileModal = () => {
   const handleCloseModal = useOutletContext() as VoidFunction;
@@ -58,7 +58,8 @@ export const studentEditProfileAction: ActionFunction = async ({ request }) => {
   const editProfileInfo = Object.fromEntries(data);
   console.log(editProfileInfo);
   return redirect('/dashboard');
-  // const response = await axios.patch('/user/info', editProfileInfo);
+  // const instance = axiosInstance();
+  // const response = await instance.patch('/user/info', editProfileInfo);
   // if (response.status != 200) {
   //   throw json({
   //     ...response.data,
