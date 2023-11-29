@@ -3,18 +3,26 @@ import {
   json,
   redirect,
   useLoaderData,
+  useActionData,
   LoaderFunction,
   ActionFunction,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { axiosInstance } from '../utils/axios';
 
-import GeneralSignupInfo from '../components/GeneralSignupInfo';
-import TutorSignupInfo from '../components/TutorSignupInfo';
+import { axiosInstance } from '../utils/axios';
+import GeneralSignupInfo, {
+  signupError,
+} from '../components/GeneralSignupInfo';
+import TutorSignupInfo, {
+  Subject,
+  FormattedSubject,
+} from '../components/TutorSignupInfo';
+import { userType } from './UserDashboard';
 
 const EditTutorProfile = () => {
-  const data = useLoaderData();
+  const subjects = useLoaderData() as Subject[];
+  const data = useActionData() as signupError;
 
   return (
     <Form
@@ -29,28 +37,42 @@ const EditTutorProfile = () => {
         <GeneralSignupInfo />
       </Box>
       <Box className='w-[500px] justify-self-center'>
-        <TutorSignupInfo availableCourses={data} />
+        <TutorSignupInfo subjects={subjects} />
       </Box>
     </Form>
   );
 };
 
 export const loader: LoaderFunction = async () => {
-  // TODO: extract user_id to use in req url
   // TODO: extract JWT from logged in user and send with request
 
-  // const instance = axiosInstance();
-  // const response = await instance.get('/user/:user_id');
-  // if (response.status !== 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
-  //   });
-  // }
-  // console.log(response);
-  // return response.data as BACKEND_USER_DATA_FORMAT;
+  const data = {};
 
-  return null;
+  let instance = axiosInstance();
+  let response = await instance.get('/availability/subjects');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  console.log(response.data);
+
+  data.subjects = response.data;
+
+  instance = axiosInstance();
+  response = await instance.get('/user/getTutorInfo');
+  if (response.status !== 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  console.log(response.data);
+
+  data.userInfo = response.data;
+
+  return response.data as { subjects: Subject[]; userInfo: userType };
 };
 
 export const action: ActionFunction = async ({ request }) => {
