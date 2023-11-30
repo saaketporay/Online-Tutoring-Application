@@ -8,8 +8,7 @@ import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
-import MultifactorAuth from './components/MultifactorAuth';
+import EmailSignIn from './pages/EmailSignIn';
 import StudentSignup, { userSignupAction } from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
@@ -61,12 +60,11 @@ const App = () => {
           path='signin'
           element={
             <ProtectedRoute
-              isAllowed={user_type == ''}
+              isAllowed={user_type === ''}
               redirectTo='/dashboard'>
               <EmailSignIn />
             </ProtectedRoute>
           }
-          action={authAction}
         />
         <Route
           path='signup'

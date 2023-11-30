@@ -7,11 +7,8 @@ import Link from "@mui/material/Link";
 import {
   Link as RouterLink,
   Form,
-  json,
-  redirect,
   useActionData,
 } from "react-router-dom";
-import type { ActionFunction } from "react-router";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import {
@@ -19,8 +16,6 @@ import {
   checkboxTheme,
   textFieldTheme,
 } from "../utils/theme";
-import { store } from "../redux/store";
-import { setToken, setExpiration, setUserType } from "../redux/authSlice";
 import { axiosInstance } from "../utils/axios";
 import MultifactorAuth from "../components/MultifactorAuth";
 
@@ -41,6 +36,12 @@ const EmailSignin = () => {
     const userInfo = Object.fromEntries(formData.entries());
     // Ensure the email is a string before setting the state
     const emailValue = userInfo.email;
+
+    if (typeof emailValue === "string" && !emailValue.includes("@")) {
+      // Update your state or UI to show the email format error
+      return; // Stop further processing
+    }
+
     if (typeof emailValue === "string") {
       setUserEmail(emailValue);
     }
@@ -122,27 +123,3 @@ const EmailSignin = () => {
 };
 
 export default EmailSignin;
-
-export const authAction: ActionFunction = async ({ request }) => {
-  const data = await request.formData();
-  const userInfo = Object.fromEntries(data);
-  if (!userInfo.email.toString().includes("@")) {
-    return json({ error: "Email address must have the '@' symbol." });
-  }
-  const instance = axiosInstance();
-  const response = await instance.post("/user/login", userInfo);
-  console.log(response);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
-  }
-  const { token, user_type } = response.data;
-  store.dispatch(setUserType(user_type));
-  store.dispatch(setToken(token));
-  const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 24);
-  store.dispatch(setExpiration(expiration.toISOString()));
-  return redirect("/dashboard");
-};
