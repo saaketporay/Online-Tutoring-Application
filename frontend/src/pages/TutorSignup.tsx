@@ -156,13 +156,8 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
-  const { token, user_type } = response.data;
-  store.dispatch(setUserType(user_type));
-  store.dispatch(setToken(token));
-  const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 1);
-  store.dispatch(setExpiration(expiration.toISOString()));
-  return redirect("/dashboard");
+
+  return json({ status: "Registration Successful" });
 };
 
 export default TutorSignup;
