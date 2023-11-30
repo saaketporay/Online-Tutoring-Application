@@ -69,17 +69,6 @@ const App = () => {
           action={authAction}
         />
         <Route
-          path='verify'
-          id='mfa-auth'
-          element={
-            <ProtectedRoute
-              isAllowed={user_type == ''}
-              redirectTo='/dashboard'>
-              <MultifactorAuth />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path='signup'
           element={
             <ProtectedRoute

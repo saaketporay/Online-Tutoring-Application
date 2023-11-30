@@ -116,7 +116,7 @@ const EmailSignin = () => {
           </ThemeProvider>
         </Form>
       </Box>
-      {show2FAModal && <MultifactorAuth />}
+      {show2FAModal && <MultifactorAuth email={userEmail} />}
     </>
   );
 };
