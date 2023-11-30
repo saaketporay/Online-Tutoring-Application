@@ -10,6 +10,7 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 
+import { store } from '../redux/store';
 import { axiosInstance } from '../utils/axios';
 import GeneralSignupInfo, {
   signupError,

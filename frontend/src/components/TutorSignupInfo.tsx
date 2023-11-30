@@ -104,7 +104,7 @@ const TutorSignupInfo = ({
   }
 
   const timeRangeSliderChangeHandler = (
-    e: Event,
+    _e: Event,
     newValue: number | number[],
     activeThumb: number
   ) => {
@@ -177,7 +177,7 @@ const TutorSignupInfo = ({
             id='tutor-subject-select'
             options={formattedSubjects}
             disablePortal
-            onChange={(e, v) => {
+            onChange={(_e, v) => {
               setSelectedSubjects(v);
             }}
             renderInput={(params) => (
@@ -218,7 +218,7 @@ const TutorSignupInfo = ({
               name='hourly_chunks'
               getAriaValueText={(value: number) => value.toString()}
               value={hrChunks}
-              onChange={(e, v) => {
+              onChange={(_e, v) => {
                 setHrChunks(+v);
               }}
               valueLabelDisplay='auto'
