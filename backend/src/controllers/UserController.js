@@ -93,7 +93,7 @@ const register = async (req, res) => {
   } = req.body;
   const criminal = await checkCriminalDB(first_name, last_name);
   if (criminal && user_type === 'tutor') {
-    return res.status(403).send('User is criminal');
+    return res.status(451).send('User is criminal');
   } else {
     try {
       const hashedPassword = await hashPassword(password);
