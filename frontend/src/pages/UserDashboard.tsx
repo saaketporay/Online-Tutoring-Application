@@ -13,6 +13,7 @@ import {
   useLoaderData,
   useNavigate,
   json,
+  redirect,
 } from 'react-router-dom';
 import { createTheme } from '@mui/material';
 import FavoriteTutorList from '../components/FavoriteTutorList';
@@ -22,6 +23,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
 import { store } from '../redux/store';
+import { AxiosError } from 'axios';
+import { setExpiration, setToken } from '../redux/authSlice';
 
 const theme = createTheme(cardTheme, textFieldTheme, {
   components: {
@@ -193,28 +196,49 @@ export default UserDashboard;
 export const dashboardLoader: LoaderFunction = async () => {
   const userData: Record<string, any> = {};
   const instance = axiosInstance();
-  const userResponse = await instance.get('/user/info');
-  if (userResponse.status != 200) {
-    throw json({
-      ...userResponse.data,
-      status: userResponse.data,
-    });
-  }
-  userData.user = userResponse.data.user;
-  userData.appointments = userResponse.data.appointments;
-  if (store.getState().auth.user_type == 'student') {
-    const favoritesResponse = await instance.get('/favorite/get');
-    if (favoritesResponse.status != 200) {
+  try {
+    const userResponse = await instance.get('/user/info');
+    if (userResponse.status != 200) {
+      console.log('entering throw json statement')
       throw json({
-        ...favoritesResponse.data,
-        status: favoritesResponse.data,
-      }); 
+        ...userResponse.data,
+        status: userResponse.data,
+      });
     }
-    userData.favorite_tutors = favoritesResponse.data;
+    userData.user = userResponse.data.user;
+    userData.appointments = userResponse.data.appointments;
+    if (store.getState().auth.user_type == 'student') {
+      const favoritesResponse = await instance.get('/favorite/get');
+      if (favoritesResponse.status != 200) {
+        throw json({
+          ...favoritesResponse.data,
+          status: favoritesResponse.data,
+        }); 
+      }
+      userData.favorite_tutors = favoritesResponse.data;
+    }
+    else {
+      userData.tutor = userResponse.data.tutor;
+    }
+    console.log(userData);
+    return userData;
+  } catch(e) {
+    console.log(e);
+    if (e instanceof AxiosError) {
+      if (e.response?.status == 401) {
+        store.dispatch(setExpiration(''));
+        store.dispatch(setToken(''));
+        return redirect('/');
+      }
+      else {
+        throw json({
+          message: e.message,
+          status: e.response?.status,
+        })
+      }
+    }
+    else {
+      return redirect('/');
+    }
   }
-  else {
-    userData.tutor = userResponse.data.tutor;
-  }
-  console.log(userData)
-  return userData;
 };

@@ -83,7 +83,7 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   store.dispatch(setUserType(user_type));
   store.dispatch(setToken(token));
   const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 1);
+  expiration.setHours(expiration.getHours() + 24);
   store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };
