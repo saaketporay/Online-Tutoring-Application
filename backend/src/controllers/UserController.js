@@ -21,20 +21,24 @@ const speakeasy = require("speakeasy");
 const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = decodeToken(token);
+  if (decodedToken == null) {
+    return res.status(401).send("Invalid or expired credentials")
+  }
   try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
     let appointments;
     if (user.user_type == "student") {
       appointments = await Appointment.getByStudentId(student_Id);
-    } else if (user.user_type == "tutor") {
-      const { tutor_id } = await getTutorByID(user.user_id);
-      appointments = await Appointment.getByTutorId(tutor_id);
+      return res.status(200).json({ user, appointments });
+    } else if (user.user_type == 'tutor') {
+      const tutor = await getTutorByID(user.user_id);
+      appointments = await Appointment.getByTutorId(tutor.tutor_id);
+      return res.status(200).json({ user, tutor, appointments })
     }
-    if (!user) {
-      return res.status(404).send("User not found");
-    }
-    return res.status(200).json({ user, appointments });
   } catch (err) {
     console.log(err);
     res.status(500).send("Internal Server Error");

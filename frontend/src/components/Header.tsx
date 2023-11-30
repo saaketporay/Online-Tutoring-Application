@@ -6,18 +6,15 @@ import SvgIcon from '@mui/material/SvgIcon';
 import {
   Link as RouterLink,
   NavLink,
-  NavLinkProps,
-  useNavigate,
 } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import { Button, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { logout } from '../redux/authSlice';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   return (
     <>

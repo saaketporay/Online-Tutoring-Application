@@ -13,6 +13,7 @@ import {
   useLoaderData,
   useNavigate,
   json,
+  redirect,
 } from 'react-router-dom';
 import { createTheme } from '@mui/material';
 import FavoriteTutorList from '../components/FavoriteTutorList';
@@ -22,6 +23,8 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
 import { store } from '../redux/store';
+import { AxiosError } from 'axios';
+import { setExpiration, setToken } from '../redux/authSlice';
 
 const theme = createTheme(cardTheme, textFieldTheme, {
   components: {
@@ -80,18 +83,23 @@ export type userType = {
   email: string,
   total_tutoring_hours: number,
   user_type: 'student' | 'tutor' | undefined,
+}
+
+export type tutorType = {
   profile_picture: string | undefined,
+  about_me: string,
 }
 
 export type userProps = {
   user: userType,
+  tutor: tutorType | undefined,
   appointments: appointmentsType,
   favorite_tutors: favoriteTutorsType,
 };
 
 const UserDashboard = () => {
   const userInfo = useLoaderData() as userProps;
-  const { user, appointments, favorite_tutors } = userInfo;
+  const { user, tutor, appointments, favorite_tutors } = userInfo;
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
   const navigate = useNavigate();
@@ -160,13 +168,15 @@ const UserDashboard = () => {
                 first_name={user.first_name}
                 last_name={user.last_name}
                 total_tutoring_hours={user.total_tutoring_hours}
+                profile_picture={tutor?.profile_picture}
               />
             </Card>
             <Card
               className='justify-self-stretch'
               sx={{
                 width: 800,
-                height: 600
+                height: 600,
+                overflow: 'auto'
               }}
             >
               {user_type == "student" && 
@@ -186,25 +196,49 @@ export default UserDashboard;
 export const dashboardLoader: LoaderFunction = async () => {
   const userData: Record<string, any> = {};
   const instance = axiosInstance();
-  const userResponse = await instance.get('/user/info');
-  if (userResponse.status != 200) {
-    throw json({
-      ...userResponse.data,
-      status: userResponse.data,
-    });
-  }
-  userData.user = userResponse.data.user;
-  userData.appointments = userResponse.data.appointments;
-  if (store.getState().auth.user_type == 'student') {
-    const favoritesResponse = await instance.get('/favorite/get');
-    if (favoritesResponse.status != 200) {
+  try {
+    const userResponse = await instance.get('/user/info');
+    if (userResponse.status != 200) {
+      console.log('entering throw json statement')
       throw json({
-        ...favoritesResponse.data,
-        status: favoritesResponse.data,
-      }); 
+        ...userResponse.data,
+        status: userResponse.data,
+      });
     }
-    userData.favorite_tutors = favoritesResponse.data;
+    userData.user = userResponse.data.user;
+    userData.appointments = userResponse.data.appointments;
+    if (store.getState().auth.user_type == 'student') {
+      const favoritesResponse = await instance.get('/favorite/get');
+      if (favoritesResponse.status != 200) {
+        throw json({
+          ...favoritesResponse.data,
+          status: favoritesResponse.data,
+        }); 
+      }
+      userData.favorite_tutors = favoritesResponse.data;
+    }
+    else {
+      userData.tutor = userResponse.data.tutor;
+    }
+    console.log(userData);
+    return userData;
+  } catch(e) {
+    console.log(e);
+    if (e instanceof AxiosError) {
+      if (e.response?.status == 401) {
+        store.dispatch(setExpiration(''));
+        store.dispatch(setToken(''));
+        return redirect('/');
+      }
+      else {
+        throw json({
+          message: e.message,
+          status: e.response?.status,
+        })
+      }
+    }
+    else {
+      return redirect('/');
+    }
   }
-  console.log(userData)
-  return userData;
 };

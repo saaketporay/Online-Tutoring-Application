@@ -88,7 +88,7 @@ const MeetingScheduler = () => {
       : [];
 
   const courseSelectChangeHandler = (
-    e: React.FormEvent<EventTarget>,
+    _e: React.FormEvent<EventTarget>,
     value: string,
     reason: string
   ) => {
@@ -105,7 +105,7 @@ const MeetingScheduler = () => {
   };
 
   const tutorSelectChangeHandler = (
-    e: React.FormEvent<EventTarget>,
+    _e: React.FormEvent<EventTarget>,
     value: string,
     reason: string
   ) => {
@@ -121,7 +121,7 @@ const MeetingScheduler = () => {
   };
 
   const timeslotSelectChangeHandler = (
-    e: React.FormEvent<EventTarget>,
+    _e: React.FormEvent<EventTarget>,
     value: string,
     reason: string
   ) => {
