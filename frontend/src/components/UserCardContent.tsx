@@ -11,7 +11,8 @@ const UserCardContent = ({
   first_name,
   last_name,
   total_tutoring_hours,
-}: { first_name: string, last_name: string, total_tutoring_hours: number }) => {
+  profile_picture
+}: { first_name: string, last_name: string, total_tutoring_hours: number, profile_picture: string | undefined }) => {
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
 
@@ -30,6 +31,7 @@ const UserCardContent = ({
                 height: 75,
                 width: 75
               }}
+              src={`http://localhost:3000/uploads/${profile_picture}`}
             />
           }
           <Typography
