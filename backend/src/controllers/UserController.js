@@ -5,6 +5,7 @@ const {
   createUser,
   createTutor,
   getUserByID,
+  updateTutoringHours
 } = require('../models/User');
 const { getTutorByID } = require('../models/Tutor');
 const Appointment = require('../models/Appointment');
@@ -18,24 +19,37 @@ const bcrypt = require('bcrypt');
 const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = decodeToken(token);
+
   try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
+
     if (!user) {
       return res.status(404).send('User not found');
     }
+
     let appointments;
-    if (user.user_type == 'student') {
+
+    if (user.user_type === 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
-      console.log("this shouldnt print")
-      return res.status(200).json({ user, appointments });
-    } else if (user.user_type == 'tutor') {
-      const tutor = await getTutorByID(user.user_id);
-      appointments = await Appointment.getByTutorId(tutor.tutor_id);
-      return res.status(200).json({ user, tutor, appointments })
+    } else if (user.user_type === 'tutor') {
+      const { tutor_id } = await getTutorByID(user.user_id);
+      appointments = await Appointment.getByTutorId(tutor_id);
     }
+
+    // Update total_tutoring_hours for passed appointments
+    for (const appointment of appointments) {
+      const appointmentDate = new Date(appointment.date_time);
+
+      if (appointmentDate < new Date()) {
+        // If the appointment date has passed, update total_tutoring_hours by 1
+        await updateTutoringHours(user.user_id, 1);
+      }
+    }
+
+    return res.status(200).json({ user, appointments });
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send('Internal Server Error');
   }
 };

@@ -96,9 +96,68 @@ const createTutor = async (
   }
 };
 
+const updateTutoringHours = async (user_id, additionalHours) => {
+  try {
+    // Find the user by user_id
+    const user = await User.findOne({
+      where: {
+        user_id: user_id,
+      },
+      include: [Tutor], // Include Tutor model if it exists
+    });
+
+    if (!user) {
+      throw new Error('User does not exist.');
+    }
+
+    let totalAppointments;
+    if (user.user_type === 'student') {
+      totalAppointments = await Appointment.count({
+        where: {
+          student_id: user_id,
+        },
+      });
+    } else if (user.user_type === 'tutor' && user.Tutor) {
+      totalAppointments = await Appointment.count({
+        where: {
+          tutor_id: user.Tutor.tutor_id,
+        },
+      });
+    }
+
+    // Calculate the maximum allowed tutoring hours based on the total appointments
+    const maxAllowedHours = totalAppointments;
+
+    if (user.user_type === 'tutor' && user.Tutor) {
+      // If the user is a tutor and has an associated Tutor record
+      user.Tutor.total_tutoring_hours = Math.min(
+        user.Tutor.total_tutoring_hours + additionalHours,
+        maxAllowedHours
+      );
+      await user.Tutor.save();
+    } else {
+      // If the user is not a tutor or does not have an associated Tutor record,
+      // update the total_tutoring_hours in the User model directly
+      user.total_tutoring_hours = Math.min(
+        user.total_tutoring_hours + additionalHours,
+        maxAllowedHours
+      );
+      await user.save();
+    }
+
+    return user;
+  } catch (error) {
+    console.error('Error updating tutoring hours:', error);
+    return null;
+  }
+};
+
+
+
 module.exports = {
   getUserByEmail,
   createUser,
   createTutor,
   getUserByID,
+  updateTutoringHours
 };
