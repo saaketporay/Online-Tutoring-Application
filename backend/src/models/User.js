@@ -1,4 +1,4 @@
-const { User, Tutor, Tutor_Subject, Tutor_Availability } = require('./index'); // Import the User model
+const { User, Tutor, Tutor_Subject, Tutor_Availability, Scheduled_Appointments } = require('./index'); // Import the User model
 
 const getUserByEmail = async (email) => {
   try {
@@ -111,31 +111,17 @@ const updateTutoringHours = async (user_id, additionalHours) => {
     }
 
     let totalAppointments;
-    if (user.user_type === 'student') {
-      totalAppointments = await Appointment.count({
+      totalAppointments = await Scheduled_Appointments.count({
         where: {
           student_id: user_id,
         },
       });
-    } else if (user.user_type === 'tutor' && user.Tutor) {
-      totalAppointments = await Appointment.count({
-        where: {
-          tutor_id: user.Tutor.tutor_id,
-        },
-      });
-    }
+    
 
     // Calculate the maximum allowed tutoring hours based on the total appointments
     const maxAllowedHours = totalAppointments;
 
-    if (user.user_type === 'tutor' && user.Tutor) {
-      // If the user is a tutor and has an associated Tutor record
-      user.Tutor.total_tutoring_hours = Math.min(
-        user.Tutor.total_tutoring_hours + additionalHours,
-        maxAllowedHours
-      );
-      await user.Tutor.save();
-    } else {
+
       // If the user is not a tutor or does not have an associated Tutor record,
       // update the total_tutoring_hours in the User model directly
       user.total_tutoring_hours = Math.min(
@@ -143,7 +129,7 @@ const updateTutoringHours = async (user_id, additionalHours) => {
         maxAllowedHours
       );
       await user.save();
-    }
+    
 
     return user;
   } catch (error) {

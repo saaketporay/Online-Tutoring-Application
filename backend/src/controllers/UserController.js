@@ -29,7 +29,6 @@ const getUserInfo = async (req, res) => {
     }
 
     let appointments;
-
     if (user.user_type === 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
     } else if (user.user_type === 'tutor') {
