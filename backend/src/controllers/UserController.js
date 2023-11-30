@@ -18,6 +18,9 @@ const bcrypt = require('bcrypt');
 const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = decodeToken(token);
+  if (decodedToken == null) {
+    return res.status(401).send("Invalid or expired credentials")
+  }
   try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
@@ -27,7 +30,6 @@ const getUserInfo = async (req, res) => {
     let appointments;
     if (user.user_type == 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
-      console.log("this shouldnt print")
       return res.status(200).json({ user, appointments });
     } else if (user.user_type == 'tutor') {
       const tutor = await getTutorByID(user.user_id);
