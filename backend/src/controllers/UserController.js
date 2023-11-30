@@ -5,14 +5,15 @@ const {
   createUser,
   createTutor,
   getUserByID,
-} = require('../models/User');
-const { getTutorByID } = require('../models/Tutor');
-const Appointment = require('../models/Appointment');
+  getUserSecret,
+} = require("../models/User");
+const { getTutorByID } = require("../models/Tutor");
+const Appointment = require("../models/Appointment");
 
 const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
 const { decodeToken, generateToken } = require("../utils/jwtUtil");
 const { sendTOTP } = require("../utils/totp");
-const {checkCriminalDB} = require('../utils/isCriminal');
+const { checkCriminalDB } = require("../utils/isCriminal");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const speakeasy = require("speakeasy");
@@ -24,19 +25,19 @@ const getUserInfo = async (req, res) => {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
     let appointments;
-    if (user.user_type == 'student') {
+    if (user.user_type == "student") {
       appointments = await Appointment.getByStudentId(student_Id);
-    } else if (user.user_type == 'tutor') {
+    } else if (user.user_type == "tutor") {
       const { tutor_id } = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor_id);
     }
     if (!user) {
-      return res.status(404).send('User not found');
+      return res.status(404).send("User not found");
     }
     return res.status(200).json({ user, appointments });
   } catch (err) {
     console.log(err);
-    res.status(500).send('Internal Server Error');
+    res.status(500).send("Internal Server Error");
   }
 };
 
@@ -80,56 +81,52 @@ const register = async (req, res) => {
     hourly_chunks,
   } = req.body;
   const criminal = await checkCriminalDB(first_name, last_name);
-  if (criminal && user_type === 'tutor')
-  {
+  if (criminal && user_type === "tutor") {
     return res.status(403).send("User is criminal");
-  }
-  else
-  {
+  } else {
+    // Generate new TOTP secret
+    const secret = speakeasy.generateSecret();
+    const userSecret = secret.base32;
+    console.log(userSecret);
 
-  //generate new totp secret
-  const secret = speakeasy.generateSecret();
-  const userSecret = secret.base32;
-  console.log(userSecret);
+    try {
+      const hashedPassword = await hashPassword(password);
+      const user_id = await createUser(
+        first_name,
+        last_name,
+        email,
+        hashedPassword,
+        user_type,
+        userSecret
+      );
 
-  try {
-    const hashedPassword = await hashPassword(password);
-    const user_id = await createUser(
-      first_name,
-      last_name,
-      email,
-      hashedPassword,
-      user_type,
-      userSecret
-    );
-
-      if (!user.user_id) {
-        throw new Error('User already exists.');
+      if (!user_id) {
+        throw new Error("User already exists.");
       }
 
-    // If user is a tutor, create a corresponding entry in the Tutors table
-    if (user_type === "tutor") {
-      const tutorId = await createTutor(
-        user_id,
-        about_me,
-        profile_picture,
-        false,
-        courses,
-        schedule,
-        hourly_chunks
-      );
+      // If user is a tutor, create a corresponding entry in the Tutors table
+      if (user_type === "tutor") {
+        const tutorId = await createTutor(
+          user_id,
+          about_me,
+          profile_picture,
+          false,
+          subjects,
+          schedule,
+          hourly_chunks
+        );
+      }
+      return res
+        .status(200)
+        .send(
+          "User registered successfully. Please verify your email for TOTP."
+        );
+    } catch (err) {
+      console.error(err);
+      res.status(500).send("Internal Server Error");
     }
-    const user = await getUserByEmail(email);
-    const token = generateToken(user);
-    return res.status(200).json({
-      token: token,
-      user_type: user_type,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send("Internal Server Error");
   }
-}}
+};
 
 const verifyTOTP = async (req, res) => {
   const { email, totp } = req.body;
@@ -176,11 +173,10 @@ const verifyTOTP = async (req, res) => {
   }
 };
 
-
 module.exports = {
   login,
   register,
   sendTOTP,
   verifyTOTP,
-  getUserInfo
-}
+  getUserInfo,
+};
