@@ -30,6 +30,7 @@ const TutorSignup = () => {
 
   return (
     <>
+    {!showTOTPModal && 
       <Form
         method="post"
         className="grid justify-center bg-[#191919]"
@@ -54,6 +55,7 @@ const TutorSignup = () => {
           <TutorSignupInfo subjects={subjects} />
         </Box>
       </Form>
+}
       {showTOTPModal && <MultifactorAuth email={userEmail} />}
     </>
   );

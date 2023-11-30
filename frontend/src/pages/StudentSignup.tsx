@@ -22,7 +22,10 @@ const StudentSignup = () => {
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    const userInfo = Object.fromEntries(formData.entries()) as Record<string, string>;
+    const userInfo = Object.fromEntries(formData.entries()) as Record<
+      string,
+      string
+    >;
     setUserEmail(userInfo.email); // Store the email for TOTP verification
 
     const axios = axiosInstance();
@@ -37,28 +40,33 @@ const StudentSignup = () => {
 
   return (
     <>
-      <Form method="post" onSubmit={handleSubmit}>
-        <Box className="grid justify-center bg-[#191919]">
-          <Typography variant="h4" className="mt-12 mb-6 justify-self-center">
-            Sign up
-          </Typography>
-          <GeneralSignupInfo />
-          <ThemeProvider theme={squareButtonTheme}>
-            <Button className="mt-4 py-2 px-44 place-self-center" type="submit">
-              SIGN UP
-            </Button>
-            <Link
-              to="/signin"
-              component={RouterLink}
-              className="mt-2 place-self-center"
-              color="#A3A3A3"
-              fontSize={14}
-            >
-              Already have an account? Sign in
-            </Link>
-          </ThemeProvider>
-        </Box>
-      </Form>
+      {!showTOTPModal && (
+        <Form method="post" onSubmit={handleSubmit}>
+          <Box className="grid justify-center bg-[#191919]">
+            <Typography variant="h4" className="mt-12 mb-6 justify-self-center">
+              Sign up
+            </Typography>
+            <GeneralSignupInfo />
+            <ThemeProvider theme={squareButtonTheme}>
+              <Button
+                className="mt-4 py-2 px-44 place-self-center"
+                type="submit"
+              >
+                SIGN UP
+              </Button>
+              <Link
+                to="/signin"
+                component={RouterLink}
+                className="mt-2 place-self-center"
+                color="#A3A3A3"
+                fontSize={14}
+              >
+                Already have an account? Sign in
+              </Link>
+            </ThemeProvider>
+          </Box>
+        </Form>
+      )}
       {showTOTPModal && <MultifactorAuth email={userEmail} />}
     </>
   );
@@ -72,15 +80,15 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   let errors = [];
 
   // Email and password validation
-  if (!studentInfo.email.toString().includes('@')) {
-    errors.push('Email address is invalid.');
+  if (!studentInfo.email.toString().includes("@")) {
+    errors.push("Email address is invalid.");
   }
   if (studentInfo.password.toString().length < 9) {
-    errors.push('Password must have at least 8 characters.');
+    errors.push("Password must have at least 8 characters.");
   }
   if (studentInfo.password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
     errors.push(
-      'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
+      "Password must contain one of the following special characters: `~!@#%&-=_,.<>;"
     );
   }
 
@@ -92,9 +100,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
   // Register the user
   console.log(studentInfo);
   const instance = axiosInstance();
-  const response = await instance.post('/user/register', {
+  const response = await instance.post("/user/register", {
     ...studentInfo,
-    user_type: 'student',
+    user_type: "student",
   });
 
   // Handle any errors from the registration process
@@ -107,5 +115,8 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
 
   // The response of this action is handled by the frontend
   // The frontend will show the TOTP modal based on this response
-  return json({ success: true, message: 'Registration initiated. Please verify email.' });
+  return json({
+    success: true,
+    message: "Registration initiated. Please verify email.",
+  });
 };

@@ -54,24 +54,24 @@ function MultifactorAuth({ email }: { email: any }) {
       <ThemeProvider theme={theme}>
         <Box className="grid justify-center bg-[#191919]">
           <Card className="mt-16" sx={{ width: 500, height: 400 }}>
-            <CardContent className="grid justify-items-center">
-              <form onSubmit={verifyHandler} className="grid">
-                <Typography variant="h5" className="mt-6">
-                  Check your phone messages
+            <CardContent className="grid justify-items-center items-center">
+              <form onSubmit={verifyHandler} className="grid items-center text-center gap-y-4 mt-10">
+                <Typography variant="h4" component="div">
+                  Check your email.
                 </Typography>
-                <Typography className="mt-6">
-                  You should be receiving a verification code shortly
+                <Typography component="div" className="text-xs">
+                  (You will receive a verification code shortly)
                 </Typography>
-                <Typography className="mt-6">Enter the code below</Typography>
+                <Typography component="div" className="mt-10">Enter the code below:</Typography>
                 <TextField
                   required
                   id="number"
                   name="number"
                   type="number"
-                  className="w-[200px] my-4"
+                  className="mx-auto w-[200px] mt-1"
                   onChange={(e) => setNumber(e.target.value)}
                 />
-                <Button className="mt-6" type="submit">
+                <Button className="mt-5"type="submit">
                   Verify
                 </Button>
               </form>
@@ -81,6 +81,7 @@ function MultifactorAuth({ email }: { email: any }) {
       </ThemeProvider>
     </>
   );
+  
 }
 
 export default MultifactorAuth;
