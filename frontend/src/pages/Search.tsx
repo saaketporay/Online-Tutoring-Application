@@ -3,6 +3,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
+import Avatar from '@mui/material/Avatar';
 import { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
@@ -153,8 +154,13 @@ const Search = () => {
                     direction='row'
                     spacing={2}
                     className='flex items-center justify-evenly'>
-                    <img
-                      className='max-w-[100px] h-auto rounded-full mx-3'
+                    <Avatar
+                      variant='square'
+                      sx={{
+                        height: 75,
+                        width: 75,
+                      }}
+                      className='max-w-[100px] h-auto mx-3'
                       src={`http://localhost:3000/uploads/${val.profile_picture}`}
                       alt={`${key}'s profile picture`}
                     />
