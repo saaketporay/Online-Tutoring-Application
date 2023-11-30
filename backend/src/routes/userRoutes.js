@@ -11,5 +11,6 @@ router.post('/login', userController.login);
 router.post('/register', userController.register);
 router.get('/info', userController.getUserInfo);
 router.get('/tutorInfo', userController.getTutorInfo);
+router.patch('/edit', userController.edit);
 
 module.exports = router;

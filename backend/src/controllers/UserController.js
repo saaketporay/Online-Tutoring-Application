@@ -19,7 +19,7 @@ const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
   const decodedToken = decodeToken(token);
   if (decodedToken == null) {
-    return res.status(401).send("Invalid or expired credentials")
+    return res.status(401).send('Invalid or expired credentials');
   }
   try {
     const student_Id = decodedToken.id;
@@ -34,7 +34,7 @@ const getUserInfo = async (req, res) => {
     } else if (user.user_type == 'tutor') {
       const tutor = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor.tutor_id);
-      return res.status(200).json({ user, tutor, appointments })
+      return res.status(200).json({ user, tutor, appointments });
     }
   } catch (err) {
     console.log(err);
@@ -147,9 +147,59 @@ const register = async (req, res) => {
   }
 };
 
+// Work in progress - not ready for testing
+const edit = async (req, res) => {
+  console.log(req.body);
+  const {
+    first_name,
+    last_name,
+    email,
+    password,
+    user_type,
+    phone_number,
+    about_me,
+    profile_picture,
+    subjects,
+  } = req.body;
+  try {
+    const hashedPassword = await hashPassword(password);
+    const user = await createUser(
+      first_name,
+      last_name,
+      email,
+      hashedPassword,
+      user_type,
+      phone_number
+    );
+
+    console.log('Hashed Password:', hashedPassword);
+    // If user is a tutor, create a corresponding entry in the Tutors table
+    if (user_type === 'tutor') {
+      await createTutor(
+        user.user_id,
+        about_me,
+        profile_picture,
+        false,
+        subjects,
+        schedule,
+        hourly_chunks
+      );
+    }
+    const token = generateToken(user);
+    return res.status(200).json({
+      token: token,
+      user_type: user_type,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 module.exports = {
   login,
   register,
   getUserInfo,
   getTutorInfo,
+  edit,
 };
