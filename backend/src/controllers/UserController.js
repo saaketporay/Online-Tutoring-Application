@@ -80,6 +80,8 @@ const register = async (req, res) => {
     schedule,
     hourly_chunks,
   } = req.body;
+
+  // Check for criminal record if user is a tutor
   const criminal = await checkCriminalDB(first_name, last_name);
   if (criminal && user_type === "tutor") {
     return res.status(403).send("User is criminal");
@@ -87,9 +89,9 @@ const register = async (req, res) => {
     // Generate new TOTP secret
     const secret = speakeasy.generateSecret();
     const userSecret = secret.base32;
-    console.log(userSecret);
 
     try {
+      // Hash the password and create a new user
       const hashedPassword = await hashPassword(password);
       const user_id = await createUser(
         first_name,
@@ -104,9 +106,9 @@ const register = async (req, res) => {
         throw new Error("User already exists.");
       }
 
-      // If user is a tutor, create a corresponding entry in the Tutors table
+      // Create a tutor profile if user is a tutor
       if (user_type === "tutor") {
-        const tutorId = await createTutor(
+        await createTutor(
           user_id,
           about_me,
           profile_picture,
@@ -116,10 +118,14 @@ const register = async (req, res) => {
           hourly_chunks
         );
       }
+
+      // Send TOTP to the user's email for verification
+      await sendTOTP(email);
+
       return res
         .status(200)
         .send(
-          "User registered successfully. Please verify your email for TOTP."
+          "User registered successfully. TOTP sent to email for verification."
         );
     } catch (err) {
       console.error(err);
