@@ -53,7 +53,7 @@ export interface FormattedSubject {
   subject_id: number;
 }
 
-const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
+const TutorSignupInfo = ({ subjects }: { subjects: Subject[]}) => {
   const formattedSubjects = subjects.map((course) => ({
     label: course.subject_name,
     subject_id: course.subject_id,
@@ -80,7 +80,7 @@ const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
   }
 
   const timeRangeSliderChangeHandler = (
-    e: Event,
+    _e: Event,
     newValue: number | number[],
     activeThumb: number
   ) => {
@@ -153,7 +153,7 @@ const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
             id='tutor-subject-select'
             options={formattedSubjects}
             disablePortal
-            onChange={(e, v) => {
+            onChange={(_e, v) => {
               setSelectedSubjects(v);
             }}
             renderInput={(params) => (
@@ -194,7 +194,7 @@ const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
               name='hourly_chunks'
               getAriaValueText={(value: number) => value.toString()}
               value={hrChunks}
-              onChange={(e, v) => {
+              onChange={(_e, v) => {
                 setHrChunks(+v);
               }}
               valueLabelDisplay='auto'

@@ -3,7 +3,7 @@ import Typography from '@mui/material/Typography';
 import Stack from '@mui/material/Stack';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -50,7 +50,7 @@ interface Response {
   subjects: Subject[];
 }
 
-const getOptionEquality = (option: FormattedSubject, value: FormattedSubject) =>
+const getOptionEquality = (option: { label: string }, value: { label: string }) =>
   option.label === value.label;
 
 const Search = () => {
@@ -80,15 +80,18 @@ const Search = () => {
     setTutors(response.data as Tutors);
   };
 
-  const subjectSelectChangeHandler = (e, v) => {
+  const subjectSelectChangeHandler = (
+    _e: React.FormEvent<EventTarget>, 
+    v: FormattedSubject | null
+  ) => {
     console.log('v', v);
     if (v?.subject_id !== -1) {
-      fetchTutors(v.subject_id);
+      fetchTutors(v!.subject_id);
     }
   };
 
   const tutorSelectChangeHandler = (
-    e: React.FormEvent<EventTarget>,
+    _e: React.FormEvent<EventTarget>,
     value: string,
     reason: string
   ) => {
@@ -190,7 +193,7 @@ const Search = () => {
 };
 
 export const loader: LoaderFunction = async () => {
-  const responseData = {};
+  const responseData: Record<any, any> = {};
 
   let instance = axiosInstance();
   let response = await instance.get('/availability/tutors');

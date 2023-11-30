@@ -23,7 +23,7 @@ const StudentSignup = () => {
             className='mt-12 mb-6 justify-self-center'>
             Sign up
           </Typography>
-          <GeneralSignupInfo />
+          <GeneralSignupInfo userData={undefined}/>
           <ThemeProvider theme={squareButtonTheme}>
             <Button
               className='mt-4 py-2 px-44 place-self-center'

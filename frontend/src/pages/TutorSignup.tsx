@@ -48,7 +48,7 @@ const TutorSignup = () => {
         </>
       )}
       <Box className='w-[410px] justify-self-center'>
-        <GeneralSignupInfo />
+        <GeneralSignupInfo userData={undefined}/>
       </Box>
       <Box className='w-[500px] justify-self-center'>
         <TutorSignupInfo subjects={subjects} />

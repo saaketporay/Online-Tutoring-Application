@@ -1,6 +1,6 @@
 import {
   Form,
-  json,
+  // json,
   redirect,
   useLoaderData,
   LoaderFunction,
@@ -8,13 +8,14 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import { axiosInstance } from '../utils/axios';
+import { Subject } from '../components/TutorSignupInfo';
+// import { axiosInstance } from '../utils/axios';
 
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 
 const EditTutorProfile = () => {
-  const data = useLoaderData();
+  const data = useLoaderData() as Subject[];
 
   return (
     <Form
@@ -26,10 +27,10 @@ const EditTutorProfile = () => {
         Sign up
       </Typography>
       <Box className='w-[410px] justify-self-center'>
-        <GeneralSignupInfo />
+        <GeneralSignupInfo userData={undefined}/>
       </Box>
       <Box className='w-[500px] justify-self-center'>
-        <TutorSignupInfo availableCourses={data} />
+        <TutorSignupInfo subjects={data} />
       </Box>
     </Form>
   );

@@ -5,16 +5,16 @@ import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
 import {
   Form,
-  useActionData,
+  // useActionData,
   useOutletContext,
-  json,
+  // json,
   redirect,
   ActionFunction,
 } from 'react-router-dom';
 import { modalStyle } from '../utils/theme';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { clearAppointmentId } from "../redux/modalSlice";
-import { axiosInstance } from '../utils/axios';
+// import { axiosInstance } from '../utils/axios';
 
 const DeleteAppointmentModal = () => {
   const { handleCloseModal } = useOutletContext() as any;
