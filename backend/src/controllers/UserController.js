@@ -93,7 +93,7 @@ const register = async (req, res) => {
     try {
       // Hash the password and create a new user
       const hashedPassword = await hashPassword(password);
-      const user_id = await createUser(
+      const user = await createUser(
         first_name,
         last_name,
         email,
@@ -101,11 +101,10 @@ const register = async (req, res) => {
         user_type,
         userSecret
       );
-
-      if (!user_id) {
+      if (!user) {
         throw new Error("User already exists.");
       }
-
+      const { user_id } = user;
       // Create a tutor profile if user is a tutor
       if (user_type === "tutor") {
         await createTutor(

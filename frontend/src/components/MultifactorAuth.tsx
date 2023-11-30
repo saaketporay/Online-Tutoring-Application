@@ -12,12 +12,15 @@ import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import { store } from "../redux/store";
 import { setToken, setExpiration, setUserType } from "../redux/authSlice";
+import { useAppDispatch } from "../redux/hooks";
+import { setShowModal } from "../redux/modalSlice";
 
 const theme = createTheme(cardTheme, textFieldTheme, squareButtonTheme);
 
 function MultifactorAuth({ email }: { email: any }) {
   const [number, setNumber] = useState<string>("");
   const navigate = useNavigate();
+  const dispatch = useAppDispatch();
 
   const verifyHandler = async (e: React.FormEvent<EventTarget>) => {
     e.preventDefault();
@@ -31,11 +34,12 @@ function MultifactorAuth({ email }: { email: any }) {
       if (response.status === 200) {
         console.log("TOTP Verified:", response.data);
         const { token, user_type } = response.data;
-        store.dispatch(setUserType(user_type));
-        store.dispatch(setToken(token));
+        dispatch(setUserType(user_type));
+        dispatch(setToken(token));
         const expiration = new Date();
         expiration.setHours(expiration.getHours() + 24);
-        store.dispatch(setExpiration(expiration.toISOString()));
+        dispatch(setExpiration(expiration.toISOString()));
+        dispatch(setShowModal(false));
         navigate("/dashboard"); // Redirect to dashboard on successful verification
       } else {
         console.error("Failed to verify TOTP:", response.data);

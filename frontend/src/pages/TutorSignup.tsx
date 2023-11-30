@@ -10,7 +10,7 @@ import {
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { axiosInstance } from "../utils/axios";
-import { setExpiration, setToken, setUserType } from "../redux/authSlice";
+import { setEmail, setExpiration, setToken, setUserType } from "../redux/authSlice";
 import GeneralSignupInfo, {
   signupError,
 } from "../components/GeneralSignupInfo";
@@ -19,42 +19,19 @@ import { Subject, FormattedSubject } from "../components/TutorSignupInfo";
 import { store } from "../redux/store";
 import React, { useState } from "react";
 import MultifactorAuth from "../components/MultifactorAuth";
+import { useAppSelector } from "../redux/hooks";
+import { setShowModal } from "../redux/modalSlice";
 
 const TutorSignup = () => {
   const subjects = useLoaderData() as Subject[];
   const data = useActionData() as signupError;
-  const [showTOTPModal, setShowTOTPModal] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const tutorInfo = Object.fromEntries(formData.entries());
-
-    const email = tutorInfo.email as string;
-    setUserEmail(email);
-
-    // Submit form data to your API
-    try {
-      const axios = axiosInstance();
-      const response = await axios.post("/user/register", tutorInfo);
-
-      if (response.status === 200) {
-        setShowTOTPModal(true); // Show TOTP modal on successful registration
-      } else {
-        // Handle errors or unsuccessful registration
-        console.error("Registration failed:", response.data);
-      }
-    } catch (error) {
-      console.error("Error during registration:", error);
-    }
-  };
+  const showTOTPModal = useAppSelector((state) => state.modal.showModal);
+  const userEmail = useAppSelector((state) => state.auth.email);
 
   return (
     <>
       <Form
         method="post"
-        onSubmit={handleSubmit}
         className="grid justify-center bg-[#191919]"
         encType="multipart/form-data"
       >
@@ -156,6 +133,9 @@ export const action: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
+
+  store.dispatch(setEmail(email as string));
+  store.dispatch(setShowModal(true));
 
   return json({ status: "Registration Successful" });
 };
