@@ -108,24 +108,68 @@ export const loader: LoaderFunction = async () => {
 };
 
 export const action: ActionFunction = async ({ request }) => {
-  const data = await request.formData();
-  const userInfo = Object.fromEntries(data);
-  console.log(userInfo);
-  // TODO: parse JSON.stringified courses and schedule and change them into the proper format
+  const tutorInfo = Object.fromEntries(await request.formData());
 
-  // TODO: extract JWT from logged in user and send with request
-  // TODO: extract user_id to use in req url
+  console.log(tutorInfo);
 
-  // const instance = axiosInstance();
-  // const response = await instance.post('/user/edit?tutor=true', userInfo);
-  // console.log(response);
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     "status": response.status
-  //   })
-  // }
+  const errors = [];
+  const { email, password } = tutorInfo;
+  if (!email.toString().includes('@')) {
+    errors.push('Email address is invalid.');
+  }
+  if (password.toString().length < 9) {
+    errors.push('Password must have at least 8 characters.');
+  }
+  if (password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
+    errors.push(
+      'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
+    );
+  }
+  console.log('errors:', errors);
+  if (errors.length > 0) {
+    return json({ errors: errors });
+  }
 
+  let instance = axiosInstance(true);
+  let response = await instance.post('/upload/profile-picture', {
+    profile_picture: tutorInfo.profile_picture,
+  });
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+
+  const subjects = (
+    JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
+  ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
+
+  const modifiedTutorInfo = {
+    ...tutorInfo,
+    user_type: 'tutor',
+    profile_picture: response.data.filename,
+    subjects,
+    hourly_chunks: 60 / +tutorInfo.hourly_chunks,
+  };
+  console.log(modifiedTutorInfo);
+
+  instance = axiosInstance();
+  response = await instance.patch('/user/edit', modifiedTutorInfo);
+  console.log(response);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  const { token, user_type } = response.data;
+  store.dispatch(setUserType(user_type));
+  store.dispatch(setToken(token));
+  const expiration = new Date();
+  expiration.setHours(expiration.getHours() + 1);
+  store.dispatch(setExpiration(expiration.toISOString()));
   return redirect('/dashboard');
 };
 

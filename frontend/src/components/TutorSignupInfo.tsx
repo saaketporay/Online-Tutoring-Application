@@ -59,8 +59,6 @@ export interface TutorInfo {
   email: string;
   aboutMe: string;
   selectedSubjects: Subject[];
-  schedule: string[];
-  hrChunks: number;
   pfp: string;
 }
 
@@ -83,22 +81,16 @@ const TutorSignupInfo = ({
       })) as FormattedSubject[])
     : [];
 
-  // const defaultSchedule = tutorInfo
-  //   ? tutorInfo.schedule.map((date_time) => new Date(date_time))
-  //   : [];
-
   const [aboutMe, setAboutMe] = useState<string>('');
   const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
     defaultSelectedSubjects
   );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
-  const [timeRange, setTimeRange] = useState<[number, number]>(
-    tutorInfo ? [0, 23] : [9, 17]
+  const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
+  const [hrChunks, setHrChunks] = useState<number>(2);
+  const [pfp, setPfp] = useState<string>(
+    tutorInfo ? `http://localhost:3000/uploads/${tutorInfo.pfp}` : ''
   );
-  const [hrChunks, setHrChunks] = useState<number>(
-    tutorInfo ? tutorInfo.hrChunks : 2
-  );
-  const [pfp, setPfp] = useState<string>(tutorInfo ? tutorInfo.pfp : '');
 
   const marks = [];
   for (let i = 0; i <= 24; i++) {

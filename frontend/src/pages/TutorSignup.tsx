@@ -109,19 +109,15 @@ export const action: ActionFunction = async ({ request }) => {
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
   ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
 
-  const schedule = (JSON.parse(tutorInfo.schedule as string) as string[]).map(
-    (date) => new Date(date)
-  );
-
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
     profile_picture: response.data.filename,
     subjects,
-    schedule,
     hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
+
   instance = axiosInstance();
   response = await instance.post('/user/register', modifiedTutorInfo);
   console.log(response);

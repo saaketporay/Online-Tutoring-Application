@@ -52,10 +52,6 @@ const getTutorInfo = async (req, res) => {
       email: tutorInfo.User.email,
       aboutMe: tutorInfo.aboutMe,
       selectedSubjects: tutorInfo.Subjects,
-      schedule: tutorInfo.Tutor_Availabilities.map(({ date_time }) => ({
-        date_time,
-      })),
-      hrChunks: tutorInfo.Tutor_Availabilities[0].duration * 60,
       pfp: tutorInfo.profile_picture,
     };
 
