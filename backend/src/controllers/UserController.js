@@ -38,6 +38,34 @@ const getUserInfo = async (req, res) => {
   }
 };
 
+const getTutorInfo = async (req, res) => {
+  const token = req.headers.authorization;
+  const decodedToken = decodeToken(token);
+  try {
+    const user_Id = decodedToken.id;
+    const tutorInfo = await getTutorByID(user_Id);
+    console.log('tutorInfo', tutorInfo);
+
+    const data = {
+      first_name: tutorInfo.User.first_name,
+      last_name: tutorInfo.User.last_name,
+      email: tutorInfo.User.email,
+      aboutMe: tutorInfo.aboutMe,
+      selectedSubjects: tutorInfo.Subjects,
+      schedule: tutorInfo.Tutor_Availabilities.map(({ date_time }) => ({
+        date_time,
+      })),
+      hrChunks: tutorInfo.Tutor_Availabilities[0].duration * 60,
+      pfp: tutorInfo.profile_picture,
+    };
+
+    return res.status(200).json(data);
+  } catch (err) {
+    console.log(err);
+    res.status(500).send('Internal Server Error');
+  }
+};
+
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -123,4 +151,5 @@ module.exports = {
   login,
   register,
   getUserInfo,
+  getTutorInfo,
 };

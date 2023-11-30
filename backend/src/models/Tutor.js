@@ -1,4 +1,10 @@
-const { Tutor } = require('./index');
+const {
+  User,
+  Tutor,
+  Subject,
+  Tutor_Subject,
+  Tutor_Availability,
+} = require('./index');
 
 const getTutorByID = async (user_id) => {
   try {
@@ -6,6 +12,11 @@ const getTutorByID = async (user_id) => {
       where: {
         user_id: user_id,
       },
+      include: [
+        { model: User },
+        { model: Subject },
+        { model: Tutor_Availability },
+      ],
     });
     return user;
   } catch (err) {
@@ -16,4 +27,4 @@ const getTutorByID = async (user_id) => {
 
 module.exports = {
   getTutorByID,
-}
+};

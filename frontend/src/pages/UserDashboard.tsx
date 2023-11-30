@@ -19,7 +19,7 @@ import FavoriteTutorList from '../components/FavoriteTutorList';
 import AppointmentList from '../components/AppointmentList';
 import UserCardContent from '../components/UserCardContent';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setShowModal } from "../redux/modalSlice";
+import { setShowModal } from '../redux/modalSlice';
 import { axiosInstance } from '../utils/axios';
 import { store } from '../redux/store';
 
@@ -30,63 +30,67 @@ const theme = createTheme(cardTheme, textFieldTheme, {
         root: {
           width: '325px',
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: "#404040",
+            borderColor: '#404040',
           },
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
 
-export type appointmentsType = [{
-  User: {
-    first_name: string,
-    last_name: string,
-    email: string,
-  },
-  Tutor: {
+export type appointmentsType = [
+  {
     User: {
-      first_name: string,
-      last_name: string,
-      email: string,
-    }
-    about_me: string,
-    profile_picture: string,
-    tutor_id: number,
-  },
-  date_time: string,
-  duration: number,
-  meeting_title: string,
-  meeting_desc: string,
-  appointment_id: number,
-}];
+      first_name: string;
+      last_name: string;
+      email: string;
+    };
+    Tutor: {
+      User: {
+        first_name: string;
+        last_name: string;
+        email: string;
+      };
+      about_me: string;
+      profile_picture: string;
+      tutor_id: number;
+    };
+    date_time: string;
+    duration: number;
+    meeting_title: string;
+    meeting_desc: string;
+    appointment_id: number;
+  }
+];
 
-export type favoriteTutorsType = [{
-  Tutor: {
-    User: {
-      first_name: string,
-      last_name: string,
-      email: string,
-    }
-    about_me: string,
-    profile_picture: string,
-    tutor_id: number,
-  },
-}];
+export type favoriteTutorsType = [
+  {
+    Tutor: {
+      User: {
+        first_name: string;
+        last_name: string;
+        email: string;
+      };
+      about_me: string;
+      profile_picture: string;
+      tutor_id: number;
+    };
+  }
+];
 
 export type userType = {
-  first_name: string,
-  last_name: string,
-  email: string,
-  total_tutoring_hours: number,
-  user_type: 'student' | 'tutor' | undefined,
-  profile_picture: string | undefined,
-}
+  first_name: string;
+  last_name: string;
+  email: string;
+  total_tutoring_hours: number | undefined;
+  user_type: 'student' | 'tutor' | undefined;
+  profile_picture: string | undefined;
+};
 
 export type userProps = {
-  user: userType,
-  appointments: appointmentsType,
-  favorite_tutors: favoriteTutorsType,
+  user: userType;
+  appointments: appointmentsType;
+  favorite_tutors: favoriteTutorsType;
 };
 
 const UserDashboard = () => {
@@ -102,60 +106,57 @@ const UserDashboard = () => {
   };
   return (
     <>
-      <Box className="grid justify-center bg-[#191919]">
+      <Box className='grid justify-center bg-[#191919]'>
         <ThemeProvider theme={roundButtonTheme}>
-          <Outlet context={{
+          <Outlet
+            context={{
               handleCloseModal,
               userInfo,
-            }} 
+            }}
           />
-          {user_type != "tutor" ?
+          {user_type != 'tutor' ? (
             <Button
               to='/new-appt'
               component={RouterLink}
               className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#B45309',
-                "&:hover": {
-                  backgroundColor: '#B45309'
-                }
-              }}
-            >
-              <Typography className="font-bold ">
+                '&:hover': {
+                  backgroundColor: '#B45309',
+                },
+              }}>
+              <Typography className='font-bold '>
                 Schedule appointment
               </Typography>
             </Button>
-            :
+          ) : (
             <Button
               className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#BE185D',
-                "&:hover": {
-                  backgroundColor: '#BE185D'
-                }
-              }}
-            >
+                '&:hover': {
+                  backgroundColor: '#BE185D',
+                },
+              }}>
               <Link
-                to="/edit-tutor-profile"
+                to='/edit-tutor-profile'
                 component={RouterLink}
-                className="no-underline"
-                color="#F4F4F4"
-              >
-                <Typography className="font-bold">
-                  Edit Profile
-                </Typography>
+                className='no-underline'
+                color='#F4F4F4'>
+                <Typography className='font-bold'>Edit Profile</Typography>
               </Link>
             </Button>
-          }
-          </ThemeProvider>
-          <ThemeProvider theme={theme}>
-          <Stack direction={'row'} spacing={3}>
+          )}
+        </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Stack
+            direction={'row'}
+            spacing={3}>
             <Card
               sx={{
                 width: 250,
-                height: 600
-              }}
-            >
+                height: 600,
+              }}>
               <UserCardContent
                 first_name={user.first_name}
                 last_name={user.last_name}
@@ -166,13 +167,15 @@ const UserDashboard = () => {
               className='justify-self-stretch'
               sx={{
                 width: 800,
-                height: 600
-              }}
-            >
-              {user_type == "student" && 
-                (<FavoriteTutorList favorite_tutors={favorite_tutors} />)
-              }
-              <AppointmentList appointments={appointments} favorite_tutors={favorite_tutors} />
+                height: 600,
+              }}>
+              {user_type == 'student' && (
+                <FavoriteTutorList favorite_tutors={favorite_tutors} />
+              )}
+              <AppointmentList
+                appointments={appointments}
+                favorite_tutors={favorite_tutors}
+              />
             </Card>
           </Stack>
         </ThemeProvider>
@@ -201,10 +204,10 @@ export const dashboardLoader: LoaderFunction = async () => {
       throw json({
         ...favoritesResponse.data,
         status: favoritesResponse.data,
-      }); 
+      });
     }
     userData.favorite_tutors = favoritesResponse.data;
   }
-  console.log(userData)
+  console.log(userData);
   return userData;
 };

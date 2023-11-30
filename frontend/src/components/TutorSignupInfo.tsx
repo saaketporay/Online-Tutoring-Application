@@ -53,20 +53,52 @@ export interface FormattedSubject {
   subject_id: number;
 }
 
-const TutorSignupInfo = ({ subjects }: { subjects: Subject[] }) => {
+export interface TutorInfo {
+  first_name: string;
+  last_name: string;
+  email: string;
+  aboutMe: string;
+  selectedSubjects: Subject[];
+  schedule: string[];
+  hrChunks: number;
+  pfp: string;
+}
+
+const TutorSignupInfo = ({
+  subjects,
+  tutorInfo,
+}: {
+  subjects: Subject[];
+  tutorInfo: TutorInfo | undefined;
+}) => {
   const formattedSubjects = subjects.map((course) => ({
     label: course.subject_name,
     subject_id: course.subject_id,
   })) as FormattedSubject[];
 
+  const defaultSelectedSubjects = tutorInfo
+    ? (tutorInfo.selectedSubjects.map((course) => ({
+        label: course.subject_name,
+        subject_id: course.subject_id,
+      })) as FormattedSubject[])
+    : [];
+
+  // const defaultSchedule = tutorInfo
+  //   ? tutorInfo.schedule.map((date_time) => new Date(date_time))
+  //   : [];
+
   const [aboutMe, setAboutMe] = useState<string>('');
   const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
-    []
+    defaultSelectedSubjects
   );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
-  const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
-  const [hrChunks, setHrChunks] = useState<number>(2);
-  const [pfp, setPfp] = useState<string>('');
+  const [timeRange, setTimeRange] = useState<[number, number]>(
+    tutorInfo ? [0, 23] : [9, 17]
+  );
+  const [hrChunks, setHrChunks] = useState<number>(
+    tutorInfo ? tutorInfo.hrChunks : 2
+  );
+  const [pfp, setPfp] = useState<string>(tutorInfo ? tutorInfo.pfp : '');
 
   const marks = [];
   for (let i = 0; i <= 24; i++) {
