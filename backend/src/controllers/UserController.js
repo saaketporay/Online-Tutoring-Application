@@ -21,17 +21,19 @@ const getUserInfo = async (req, res) => {
   try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
-    let appointments;
-    if (user.user_type == 'student') {
-      appointments = await Appointment.getByStudentId(student_Id);
-    } else if (user.user_type == 'tutor') {
-      const { tutor_id } = await getTutorByID(user.user_id);
-      appointments = await Appointment.getByTutorId(tutor_id);
-    }
     if (!user) {
       return res.status(404).send('User not found');
     }
-    return res.status(200).json({ user, appointments });
+    let appointments;
+    if (user.user_type == 'student') {
+      appointments = await Appointment.getByStudentId(student_Id);
+      console.log("this shouldnt print")
+      return res.status(200).json({ user, appointments });
+    } else if (user.user_type == 'tutor') {
+      const tutor = await getTutorByID(user.user_id);
+      appointments = await Appointment.getByTutorId(tutor.tutor_id);
+      return res.status(200).json({ user, tutor, appointments })
+    }
   } catch (err) {
     console.log(err);
     res.status(500).send('Internal Server Error');

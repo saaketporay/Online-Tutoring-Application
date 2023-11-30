@@ -31,7 +31,7 @@ const AppointmentList = (
         <Typography variant='h6' align='center' className='mb-3'>
           Upcoming Appointments
         </Typography>
-        {appointments ?
+        {appointments && appointments.length > 0 ?
           <Stack direction={'column'} spacing={1}>
             {appointments.sort((a, b) => a.date_time >= b.date_time ? 1 : -1).map(function (appt, i) {
               return (
@@ -48,6 +48,7 @@ const AppointmentList = (
                           width: 50,
                         }}
                         className='my-auto mr-3'
+                        src={`http://localhost:3000/uploads/${appt.Tutor.profile_picture}`}
                       />
                     </>
                   }
