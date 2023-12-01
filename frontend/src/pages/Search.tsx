@@ -60,7 +60,8 @@ const Search = () => {
   const responseData = useLoaderData() as Response;
 
   const [tutors, setTutors] = useState<Tutors>(responseData.tutors);
-  const [selectedSubject, setSelectedSubject] = useState<string>('');
+  const [selectedSubject, setSelectedSubject] =
+    useState<FormattedSubject | null>(null);
   const [selectedTutor, setSelectedTutor] = useState<string>('');
 
   const formattedTutors = Object.keys(tutors).map((key) => ({
@@ -89,21 +90,22 @@ const Search = () => {
     v: FormattedSubject | null
   ) => {
     if (v?.subject_id !== -1) {
+      setSelectedSubject(v);
       fetchTutors(v!.subject_id);
     }
   };
 
   const subjectSelectInputChangeHandler = (
     _e: React.FormEvent<EventTarget>,
-    value: string,
+    _value: string,
     reason: string
   ) => {
     if (reason === 'clear') {
-      setSelectedSubject('');
+      setSelectedSubject(null);
+      setSelectedTutor('');
       setTutors(responseData.tutors);
       return;
     }
-    setSelectedSubject(value);
   };
 
   const tutorSelectChangeHandler = (
