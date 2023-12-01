@@ -12,14 +12,14 @@ import { NavLink, Form } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal, setAppointmentId } from "../redux/modalSlice";
 import { getReadableDateTime } from '../utils/datetime';
-import { appointmentsType, favoriteTutorsType } from '../pages/UserDashboard';
+import { appointmentType, favoriteTutorsType } from '../pages/UserDashboard';
 
 const AppointmentList = (
   {
     appointments,
     favorite_tutors,
   }: {
-    appointments: appointmentsType,
+    appointments: appointmentType[],
     favorite_tutors: favoriteTutorsType,
   }) => {
   const dispatch = useAppDispatch();
