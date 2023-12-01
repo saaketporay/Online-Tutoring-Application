@@ -19,22 +19,20 @@ import {
   redirect,
 } from 'react-router-dom';
 import { store } from '../redux/store';
-import { getReadableDateTime } from '../utils/datetime';
+import { getReadableTime } from '../utils/datetime';
 
 interface Timeslot {
   subject_id: number;
   tutor_id: number;
   date_time: string;
-  duration: number;
-  readable_date_time: string;
+  readable_time: string;
 }
 
 const defaultMeetingInfo = {
   subject_id: 0,
   tutor_id: 0,
   date_time: '',
-  duration: 0,
-  readable_date_time: '',
+  readable_time: '',
 };
 
 interface Response {
@@ -62,6 +60,11 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
+const checkSameDay = (d1: Date, d2: Date) =>
+  d1.getFullYear() === d2.getFullYear() &&
+  d1.getMonth() === d2.getMonth() &&
+  d1.getDate() === d2.getDate();
+
 const MeetingScheduler = () => {
   const data = useLoaderData() as Response;
 
@@ -72,6 +75,7 @@ const MeetingScheduler = () => {
 
   const [selectedCourse, setSelectedCourse] = useState<string>('');
   const [selectedTutor, setSelectedTutor] = useState<string>('');
+  const [selectedDate, setSelectedDate] = useState<string>('');
   const [selectedTimeslot, setSelectedTimeslot] = useState<string>('');
   const [meetingTitle, setMeetingTitle] = useState<string>('');
   const [meetingDesc, setMeetingDesc] = useState<string>('');
@@ -92,20 +96,28 @@ const MeetingScheduler = () => {
           })
         )
       : new Set();
-  console.log(availableDates);
 
   const availableTimeslots =
-    selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
-      ? data[selectedCourse][selectedTutor].map((timeslot) => ({
-          label: timeslot.readable_date_time,
-        }))
+    selectedCourse &&
+    selectedTutor &&
+    selectedTutor in data[selectedCourse] &&
+    selectedDate
+      ? data[selectedCourse][selectedTutor]
+          .filter((timeslot) => {
+            const t = timeslot.date_time.split(/\D+/).map((str) => +str);
+            const m = new Date(
+              Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5])
+            );
+            const date = new Date(selectedDate);
+            return checkSameDay(m, date);
+          })
+          .map((timeslot) => ({
+            label: timeslot.readable_time,
+          }))
       : [];
 
-  const disableUnavailableDates = (date) => {
-    console.log('available dates: ', availableDates);
-    console.log('cur date: ', `${date.$y}-${date.$M}-${date.$D}`);
-    return !availableDates.has(`${date.$y}-${date.$M}-${date.$D}`);
-  };
+  const disableUnavailableDates = (date: Date) =>
+    !availableDates.has(`${date.$y}-${date.$M}-${date.$D}`);
 
   const courseSelectChangeHandler = (
     _e: React.FormEvent<EventTarget>,
@@ -140,6 +152,13 @@ const MeetingScheduler = () => {
     setSelectedTutor(value);
   };
 
+  const dateSelectChangeHandler = (value: Date | null) => {
+    if (value) {
+      console.log(value);
+      setSelectedDate(value.$d.toISOString());
+    }
+  };
+
   const timeslotSelectChangeHandler = (
     _e: React.FormEvent<EventTarget>,
     value: string,
@@ -149,12 +168,21 @@ const MeetingScheduler = () => {
       return;
     }
     setSelectedTimeslot(value);
+
+    const date = new Date(selectedDate);
+    const t = value.split(/[^0-9]/);
+    console.log('t', t);
+    date.setHours(+t[0]);
+    date.setMinutes(+t[1]);
+
     setMeetingInfo(
       data[selectedCourse][selectedTutor].find(
-        (timeslot) => timeslot.readable_date_time === value
+        (timeslot) => timeslot.date_time === date.toISOString()
       )!
     );
   };
+
+  console.log('meetingInfo', meetingInfo);
 
   useEffect(() => {
     if (selectedCourse && selectedTutor) {
@@ -165,7 +193,7 @@ const MeetingScheduler = () => {
       } else if (
         selectedTimeslot &&
         !data[selectedCourse][selectedTutor].find(
-          (timeslot) => timeslot.readable_date_time === selectedTimeslot
+          (timeslot) => timeslot.readable_time === selectedTimeslot
         )
       ) {
         setSelectedTimeslot('');
@@ -225,9 +253,11 @@ const MeetingScheduler = () => {
               Select an available timeslot
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StaticDatePicker
+              <StaticDatePicker<Date>
                 disablePast={true}
                 shouldDisableDate={disableUnavailableDates}
+                onChange={dateSelectChangeHandler}
+                value={selectedDate ? new Date(selectedDate) : null}
               />
             </LocalizationProvider>
             <Autocomplete
@@ -312,7 +342,6 @@ export const loader: LoaderFunction = async () => {
     });
   }
   const data = response.data as Response;
-  console.log(data);
 
   // For every subject
   for (const [subjectName, tutorsObject] of Object.entries(data)) {
@@ -321,11 +350,12 @@ export const loader: LoaderFunction = async () => {
       // For every timeslot
       for (let i = 0; i < timeslotsArr.length; i++) {
         const timeslot = data[subjectName][tutorName][i];
-        const readable_date_time = getReadableDateTime(
-          timeslot.date_time,
-          timeslot.duration
-        );
-        timeslot.readable_date_time = readable_date_time;
+
+        // const readable_date_time = getReadableDateTime(timeslot.date_time);
+        const readable_time = getReadableTime(timeslot.date_time);
+
+        // timeslot.readable_date_time = readable_date_time;
+        timeslot.readable_time = readable_time;
       }
     }
   }
