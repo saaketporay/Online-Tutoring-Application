@@ -35,17 +35,17 @@ const getUserInfo = async (req, res) => {
       const { tutor_id } = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor_id);
     }
-
+    let past_appointments = 0;
     // Update total_tutoring_hours for passed appointments
     for (const appointment of appointments) {
       const appointmentDate = new Date(appointment.date_time);
 
       if (appointmentDate < new Date()) {
+        past_appointments += 1;
         // If the appointment date has passed, update total_tutoring_hours by 1
-        await updateTutoringHours(user.user_id, 1);
       }
     }
-
+    await updateTutoringHours(user.user_id, past_appointments);
     return res.status(200).json({ user, appointments });
   } catch (err) {
     console.error(err);
