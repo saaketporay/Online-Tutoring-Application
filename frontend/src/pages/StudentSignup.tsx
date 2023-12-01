@@ -8,9 +8,7 @@ import GeneralSignupInfo from "../components/GeneralSignupInfo";
 import { squareButtonTheme } from "../utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import type { ActionFunction } from "react-router-dom";
-import { redirect, json } from "react-router-dom";
-import { store } from "../redux/store";
-import { setToken, setExpiration, setUserType } from "../redux/authSlice";
+import { json } from "react-router-dom";
 import { axiosInstance } from "../utils/axios";
 import React, { useState } from "react";
 import MultifactorAuth from "../components/MultifactorAuth";
@@ -46,7 +44,7 @@ const StudentSignup = () => {
             <Typography variant="h4" className="mt-12 mb-6 justify-self-center">
               Sign up
             </Typography>
-            <GeneralSignupInfo />
+            <GeneralSignupInfo userData={undefined}/>
             <ThemeProvider theme={squareButtonTheme}>
               <Button
                 className="mt-4 py-2 px-44 place-self-center"

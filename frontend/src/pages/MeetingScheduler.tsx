@@ -8,7 +8,7 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { StaticDatePicker } from '@mui/x-date-pickers/StaticDatePicker';
 import { autocompleteTheme, datepickerTheme } from '../utils/theme';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { axiosInstance } from '../utils/axios';
 import {
   Form,

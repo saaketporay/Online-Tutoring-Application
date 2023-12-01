@@ -3,17 +3,15 @@ import {
   json,
   redirect,
   useLoaderData,
-  useActionData,
+  // useActionData,
   LoaderFunction,
   ActionFunction,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
-import { store } from '../redux/store';
 import { axiosInstance } from '../utils/axios';
 import GeneralSignupInfo, {
-  signupError,
+  // signupError,
 } from '../components/GeneralSignupInfo';
 import TutorSignupInfo, {
   Subject,
@@ -28,7 +26,7 @@ const EditTutorProfile = () => {
     userData: userType;
     tutorInfo: TutorInfo;
   };
-  const data = useActionData() as signupError;
+  // const data = useActionData() as signupError;
 
   return (
     <Form
@@ -133,6 +131,7 @@ export const action: ActionFunction = async ({ request }) => {
     // profile_picture: response.data.filename,
     subjects,
   };
+  console.log(modifiedTutorInfo);
 
   // instance = axiosInstance();
   // response = await instance.patch('/user/edit', modifiedTutorInfo);
