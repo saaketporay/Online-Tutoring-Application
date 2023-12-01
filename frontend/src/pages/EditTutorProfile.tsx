@@ -67,7 +67,6 @@ export const loader: LoaderFunction = async () => {
       status: response.status,
     });
   }
-  console.log(response.data);
 
   data.subjects = response.data as Subject[];
 
@@ -79,7 +78,6 @@ export const loader: LoaderFunction = async () => {
       status: response.status,
     });
   }
-  console.log(response.data);
 
   data.tutorInfo = response.data as TutorInfo;
 
@@ -89,14 +87,11 @@ export const loader: LoaderFunction = async () => {
     email: data.tutorInfo.email,
   } as userType;
 
-  console.log(data);
   return data;
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const tutorInfo = Object.fromEntries(await request.formData());
-
-  console.log(tutorInfo);
 
   const errors = [];
   const { email, password } = tutorInfo;
@@ -120,7 +115,7 @@ export const action: ActionFunction = async ({ request }) => {
   // let response = await instance.post('/upload/profile-picture', {
   //   profile_picture: tutorInfo.profile_picture,
   // });
-  // console.log(response);
+
   // if (response.status != 200) {
   //   throw json({
   //     ...response.data,
@@ -138,11 +133,10 @@ export const action: ActionFunction = async ({ request }) => {
     // profile_picture: response.data.filename,
     subjects,
   };
-  console.log(modifiedTutorInfo);
 
   // instance = axiosInstance();
   // response = await instance.patch('/user/edit', modifiedTutorInfo);
-  // console.log(response);
+
   // if (response.status != 200) {
   //   throw json({
   //     ...response.data,
