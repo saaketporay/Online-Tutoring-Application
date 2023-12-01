@@ -142,16 +142,17 @@ const MeetingScheduler = () => {
     value: string,
     reason: string
   ) => {
-    if (reason === 'clear') {
-      setSelectedCourse('');
-      setSelectedTutor('');
-      setSelectedTimeslot('');
-      return;
-    }
     if (reason === 'input') {
       return;
+    } else if (reason === 'clear') {
+      setSelectedCourse('');
+    } else {
+      setSelectedCourse(value);
     }
-    setSelectedCourse(value);
+
+    setSelectedTutor('');
+    setSelectedDate('');
+    setSelectedTimeslot('');
   };
 
   const tutorSelectChangeHandler = (
@@ -159,22 +160,26 @@ const MeetingScheduler = () => {
     value: string,
     reason: string
   ) => {
-    if (reason === 'clear') {
-      setSelectedTutor('');
-      setSelectedTimeslot('');
-      return;
-    }
     if (reason === 'input') {
       return;
+    } else if (reason === 'clear') {
+      setSelectedTutor('');
+    } else {
+      setSelectedTutor(value);
     }
-    setSelectedTutor(value);
+
+    setSelectedDate('');
+    setSelectedTimeslot('');
   };
 
   const dateSelectChangeHandler = (value: DatePickerDate | null) => {
     if (value) {
       console.log(value);
       setSelectedDate(value.$d.toISOString());
+    } else {
+      setSelectedDate('');
     }
+    setSelectedTimeslot('');
   };
 
   const timeslotSelectChangeHandler = (
@@ -184,14 +189,19 @@ const MeetingScheduler = () => {
   ) => {
     if (reason === 'input') {
       return;
+    } else if (reason === 'clear') {
+      setSelectedTimeslot('');
+      return;
+    } else {
+      setSelectedTimeslot(value);
     }
-    setSelectedTimeslot(value);
 
-    const date = new Date(selectedDate);
-    const t = value.split(/[^0-9]/);
-    console.log('t', t);
-    date.setHours(+t[0] - 1);
-    date.setMinutes(+t[1]);
+    if (selectedCourse && selectedTutor) {
+      const date = new Date(selectedDate);
+      const t = value.split(/[^0-9]/);
+      console.log('t', t);
+      date.setHours(+t[0] - 1);
+      date.setMinutes(+t[1]);
 
     setMeetingInfo(
       data[selectedCourse][selectedTutor].find((timeslot) =>
@@ -273,7 +283,8 @@ const MeetingScheduler = () => {
                 disablePast={true}
                 shouldDisableDate={disableUnavailableDates}
                 onChange={dateSelectChangeHandler}
-                value={selectedDate ? { $d: new Date(selectedDate) } : null}
+                value={selectedDate.length > 0 ? new Date(selectedDate) : null}
+                componentsProps={{ actionBar: { actions: ['today', 'clear'] } }}
               />
             </LocalizationProvider>
             <Autocomplete
@@ -376,15 +387,12 @@ export const loader: LoaderFunction = async () => {
     }
   }
 
-  console.log(data);
-
   return data;
 };
 
 export const action: ActionFunction = async ({ request }) => {
   const formData = await request.formData();
   const userInfo = Object.fromEntries(formData);
-  console.log(userInfo);
 
   // Retrieve logged in user's token
   const token = store.getState().auth.token;
@@ -393,7 +401,6 @@ export const action: ActionFunction = async ({ request }) => {
   }
 
   const timeslot = JSON.parse(userInfo.meeting_info as string) as Timeslot;
-  console.log('timeslot:', timeslot);
 
   const payload = {
     token,
@@ -403,10 +410,10 @@ export const action: ActionFunction = async ({ request }) => {
     meeting_title: userInfo.meeting_title,
     meeting_desc: userInfo.meeting_desc,
   };
-  console.log(payload);
+
   const instance = axiosInstance();
   const response = await instance.post('/appointments/create', payload);
-  console.log(response);
+
   if (response.status != 200) {
     throw json({
       ...response.data,
