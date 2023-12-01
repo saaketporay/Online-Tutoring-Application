@@ -41,7 +41,7 @@ const theme = createTheme(cardTheme, textFieldTheme, {
   }
 });
 
-export type appointmentsType = [{
+export type appointmentType = {
   User: {
     first_name: string,
     last_name: string,
@@ -62,7 +62,7 @@ export type appointmentsType = [{
   meeting_title: string,
   meeting_desc: string,
   appointment_id: number,
-}];
+};
 
 export type favoriteTutorsType = [{
   Tutor: {
@@ -93,7 +93,7 @@ export type tutorType = {
 export type userProps = {
   user: userType,
   tutor: tutorType | undefined,
-  appointments: appointmentsType,
+  appointments: appointmentType[],
   favorite_tutors: favoriteTutorsType,
 };
 
@@ -206,7 +206,7 @@ export const dashboardLoader: LoaderFunction = async () => {
       });
     }
     userData.user = userResponse.data.user;
-    userData.appointments = userResponse.data.appointments;
+    userData.appointments = userResponse.data.appointments.filter((appt: appointmentType) => new Date() <= new Date(appt.date_time));
     if (store.getState().auth.user_type == 'student') {
       const favoritesResponse = await instance.get('/favorite/get');
       if (favoritesResponse.status != 200) {

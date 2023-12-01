@@ -1,4 +1,4 @@
-const { User, Tutor, Tutor_Subject, Tutor_Availability } = require('./index'); // Import the User model
+const { User, Tutor, Tutor_Subject, Tutor_Availability } = require("./index"); // Import the User model
 
 const getUserByEmail = async (email) => {
   try {
@@ -9,7 +9,7 @@ const getUserByEmail = async (email) => {
     });
     return user;
   } catch (err) {
-    console.error('Error in getUserByEmail:', err);
+    console.error("Error in getUserByEmail:", err);
     return null;
   }
 };
@@ -28,13 +28,21 @@ const getUserByID = async (user_id) => {
   }
 };
 
-const createUser = async (firstname, lastname, email, password, user_type) => {
+
+const createUser = async (
+  firstname,
+  lastname,
+  email,
+  password,
+  user_type,
+  totp_secret
+) => {
+  console.log("Received TOTP Secret in createUser:", totp_secret);
   try {
-    console.log(firstname, lastname, email, password, user_type);
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
-      console.log('User already exists!');
+      console.log("User already exists!");
       return false;
     }
 
@@ -44,12 +52,13 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
       email: email,
       hashed_password: password,
       user_type: user_type,
+      totp_secret: totp_secret,
     });
 
     console.log(`New user created with ID: ${newUser.user_id}`);
     return newUser;
   } catch (err) {
-    console.error('Error in createUser:', err);
+    console.error("Error in createUser:", err);
     return null;
   }
 };
@@ -64,8 +73,6 @@ const createTutor = async (
   hourly_chunks
 ) => {
   try {
-    console.log(user_id, about_me, profile_picture, is_criminal);
-
     const newTutor = await Tutor.create({
       user_id,
       about_me,
@@ -91,7 +98,20 @@ const createTutor = async (
       });
     }
   } catch (err) {
-    console.error('Error in createTutor:', err);
+    console.error("Error in createTutor:", err);
+    return null;
+  }
+};
+
+const getUserSecret = async (email) => {
+  try {
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: ["totp_secret"], // Fetch only the 'totp_secret' field
+    });
+    return user ? user.totp_secret : null;
+  } catch (err) {
+    console.error("Error in getUserSecret:", err);
     return null;
   }
 };
@@ -101,4 +121,5 @@ module.exports = {
   createUser,
   createTutor,
   getUserByID,
+  getUserSecret, 
 };

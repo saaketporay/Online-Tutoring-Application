@@ -37,6 +37,10 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    totp_secret: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
   },
   { sequelize, modelName: 'Users' }
 );
