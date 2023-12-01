@@ -41,7 +41,14 @@ interface Response {
   };
 }
 
-const theme = createTheme(autocompleteTheme, {
+interface DatePickerDate {
+  $y?: string;
+  $M?: string;
+  $D?: string;
+  $d: Date;
+}
+
+const theme = createTheme(autocompleteTheme, datepickerTheme, {
   components: {
     MuiButton: {
       styleOverrides: {
@@ -127,8 +134,8 @@ const MeetingScheduler = () => {
           }))
       : [];
 
-  const disableUnavailableDates = (date: Date) =>
-    !availableDates.has(`${date.$y}-${date.$M}-${date.$D}`);
+  const disableUnavailableDates = (date: DatePickerDate) =>
+    !availableDates.has(`${date.$y!}-${date.$M!}-${date.$D!}`);
 
   const courseSelectChangeHandler = (
     _e: React.FormEvent<EventTarget>,
@@ -163,7 +170,7 @@ const MeetingScheduler = () => {
     setSelectedTutor(value);
   };
 
-  const dateSelectChangeHandler = (value: Date | null) => {
+  const dateSelectChangeHandler = (value: DatePickerDate | null) => {
     if (value) {
       console.log(value);
       setSelectedDate(value.$d.toISOString());
@@ -192,8 +199,6 @@ const MeetingScheduler = () => {
       )!
     );
   };
-
-  console.log('meetingInfo', meetingInfo);
 
   useEffect(() => {
     if (selectedCourse && selectedTutor) {
@@ -264,11 +269,11 @@ const MeetingScheduler = () => {
               Select an available timeslot
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StaticDatePicker<Date>
+              <StaticDatePicker<DatePickerDate>
                 disablePast={true}
                 shouldDisableDate={disableUnavailableDates}
                 onChange={dateSelectChangeHandler}
-                value={selectedDate ? new Date(selectedDate) : null}
+                value={selectedDate ? { $d: new Date(selectedDate) } : null}
               />
             </LocalizationProvider>
             <Autocomplete

@@ -1,4 +1,5 @@
 import { createTheme } from '@mui/material/';
+import type {} from '@mui/x-date-pickers/themeAugmentation';
 
 const neutral100 = '#F5F5F5';
 const neutral400 = '#A3A3A3';
