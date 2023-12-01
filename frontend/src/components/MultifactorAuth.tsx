@@ -10,7 +10,6 @@ import { axiosInstance } from "../utils/axios"; // Ensure you have this import
 import { cardTheme, textFieldTheme, squareButtonTheme } from "../utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
-import { store } from "../redux/store";
 import { setToken, setExpiration, setUserType } from "../redux/authSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { setShowModal } from "../redux/modalSlice";

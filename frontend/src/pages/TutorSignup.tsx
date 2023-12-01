@@ -1,7 +1,6 @@
 import {
   Form,
   json,
-  redirect,
   useLoaderData,
   LoaderFunction,
   ActionFunction,
@@ -10,14 +9,13 @@ import {
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import { axiosInstance } from "../utils/axios";
-import { setEmail, setExpiration, setToken, setUserType } from "../redux/authSlice";
+import { setEmail } from "../redux/authSlice";
 import GeneralSignupInfo, {
   signupError,
 } from "../components/GeneralSignupInfo";
 import TutorSignupInfo from "../components/TutorSignupInfo";
 import { Subject, FormattedSubject } from "../components/TutorSignupInfo";
 import { store } from "../redux/store";
-import React, { useState } from "react";
 import MultifactorAuth from "../components/MultifactorAuth";
 import { useAppSelector } from "../redux/hooks";
 import { setShowModal } from "../redux/modalSlice";
@@ -49,10 +47,10 @@ const TutorSignup = () => {
           </ul>
         )}
         <Box className="w-[410px] justify-self-center">
-          <GeneralSignupInfo />
+          <GeneralSignupInfo userData={undefined}/>
         </Box>
         <Box className="w-[500px] justify-self-center">
-          <TutorSignupInfo subjects={subjects} />
+          <TutorSignupInfo subjects={subjects} tutorInfo={undefined}/>
         </Box>
       </Form>
 }

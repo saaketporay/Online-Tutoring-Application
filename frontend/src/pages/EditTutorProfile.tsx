@@ -9,8 +9,6 @@ import {
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-
-import { store } from '../redux/store';
 import { axiosInstance } from '../utils/axios';
 import GeneralSignupInfo, {
   signupError,
@@ -28,7 +26,7 @@ const EditTutorProfile = () => {
     userData: userType;
     tutorInfo: TutorInfo;
   };
-  const data = useActionData() as signupError;
+  // const data = useActionData() as signupError;
 
   return (
     <Form

@@ -41,7 +41,7 @@ interface Response {
   };
 }
 
-const theme = createTheme(autocompleteTheme, datepickerTheme, {
+const theme = createTheme(autocompleteTheme, {
   components: {
     MuiButton: {
       styleOverrides: {
