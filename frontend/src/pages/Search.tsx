@@ -51,13 +51,16 @@ interface Response {
   subjects: Subject[];
 }
 
-const getOptionEquality = (option: { label: string }, value: { label: string }) =>
-  option.label === value.label;
+const getOptionEquality = (
+  option: { label: string },
+  value: { label: string }
+) => option.label === value.label;
 
 const Search = () => {
   const responseData = useLoaderData() as Response;
 
   const [tutors, setTutors] = useState<Tutors>(responseData.tutors);
+  const [selectedSubject, setSelectedSubject] = useState<string>('');
   const [selectedTutor, setSelectedTutor] = useState<string>('');
 
   const formattedTutors = Object.keys(tutors).map((key) => ({
@@ -82,13 +85,25 @@ const Search = () => {
   };
 
   const subjectSelectChangeHandler = (
-    _e: React.FormEvent<EventTarget>, 
+    _e: React.FormEvent<EventTarget>,
     v: FormattedSubject | null
   ) => {
-    console.log('v', v);
     if (v?.subject_id !== -1) {
       fetchTutors(v!.subject_id);
     }
+  };
+
+  const subjectSelectInputChangeHandler = (
+    _e: React.FormEvent<EventTarget>,
+    value: string,
+    reason: string
+  ) => {
+    if (reason === 'clear') {
+      setSelectedSubject('');
+      setTutors(responseData.tutors);
+      return;
+    }
+    setSelectedSubject(value);
   };
 
   const tutorSelectChangeHandler = (
@@ -117,6 +132,8 @@ const Search = () => {
           options={formattedSubjects}
           disablePortal
           onChange={subjectSelectChangeHandler}
+          onInputChange={subjectSelectInputChangeHandler}
+          value={selectedSubject}
           isOptionEqualToValue={getOptionEquality}
           renderInput={(params) => (
             <TextField
