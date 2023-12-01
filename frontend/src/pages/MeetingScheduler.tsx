@@ -41,6 +41,13 @@ interface Response {
   };
 }
 
+interface DatePickerValue {
+  $y?: string;
+  $M?: string;
+  $D?: string;
+  $d: Date;
+}
+
 const theme = createTheme(autocompleteTheme, datepickerTheme, {
   components: {
     MuiButton: {
@@ -65,16 +72,10 @@ const checkSameDay = (d1: Date, d2: Date) =>
   d1.getMonth() === d2.getMonth() &&
   d1.getDate() === d2.getDate();
 
-const checkSameTimeslot = (d1: Date, d2: Date) => {
-  console.log(d1, d2);
-  console.log(d1.toISOString(), d2.toISOString());
-
-  return (
-    checkSameDay(d1, d2) &&
-    d1.getHours() === d2.getHours() &&
-    d1.getMinutes() === d2.getMinutes()
-  );
-};
+const checkSameTimeslot = (d1: Date, d2: Date) =>
+  checkSameDay(d1, d2) &&
+  d1.getHours() === d2.getHours() &&
+  d1.getMinutes() === d2.getMinutes();
 
 const MeetingScheduler = () => {
   const data = useLoaderData() as Response;
@@ -127,8 +128,8 @@ const MeetingScheduler = () => {
           }))
       : [];
 
-  const disableUnavailableDates = (date: Date) =>
-    !availableDates.has(`${date.$y}-${date.$M}-${date.$D}`);
+  const disableUnavailableDates = (date: DatePickerValue) =>
+    !availableDates.has(`${date.$y!}-${date.$M!}-${date.$D!}`);
 
   const courseSelectChangeHandler = (
     _e: React.FormEvent<EventTarget>,
@@ -165,9 +166,8 @@ const MeetingScheduler = () => {
     setSelectedTimeslot('');
   };
 
-  const dateSelectChangeHandler = (value: Date | null) => {
+  const dateSelectChangeHandler = (value: DatePickerValue | null) => {
     if (value) {
-      console.log(value);
       setSelectedDate(value.$d.toISOString());
     } else {
       setSelectedDate('');
@@ -189,10 +189,14 @@ const MeetingScheduler = () => {
       setSelectedTimeslot(value);
     }
 
-    if (selectedCourse && selectedTutor) {
+    if (
+      selectedCourse.length > 0 &&
+      selectedTutor.length > 0 &&
+      selectedDate.length > 0 &&
+      value.length > 0
+    ) {
       const date = new Date(selectedDate);
       const t = value.split(/[^0-9]/);
-      console.log('t', t);
       date.setHours(+t[0] - 1);
       date.setMinutes(+t[1]);
 
@@ -255,11 +259,15 @@ const MeetingScheduler = () => {
               Select an available timeslot
             </Typography>
             <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <StaticDatePicker<Date>
+              <StaticDatePicker<DatePickerValue>
                 disablePast={true}
                 shouldDisableDate={disableUnavailableDates}
                 onChange={dateSelectChangeHandler}
-                value={selectedDate.length > 0 ? new Date(selectedDate) : null}
+                value={
+                  selectedDate.length > 0
+                    ? { $d: new Date(selectedDate) }
+                    : null
+                }
                 componentsProps={{ actionBar: { actions: ['today', 'clear'] } }}
               />
             </LocalizationProvider>
