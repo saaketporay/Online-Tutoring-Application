@@ -83,14 +83,11 @@ const Availability = {
     }
   },
 
-  getAllOverlappingAppointments: async (tutor_id, start, end) => {
+  getAvailabilityByTutorId: async (tutor_id) => {
     try {
-      const data = await Scheduled_Appointments.findAll({
+      const data = await Tutor_Availability.findAll({
         where: {
           tutor_id: tutor_id,
-          date_time: {
-            $between: [start, end],
-          },
         },
       });
       return data;
@@ -105,7 +102,7 @@ const Availability = {
         include: [
           {
             model: Tutor,
-            include: [{ model: Tutor_Availability }, { model: User }],
+            include: [{ model: User }],
           },
         ],
       });

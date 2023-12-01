@@ -1,4 +1,5 @@
 const Availability = require('../models/Availability');
+const Appointment = require('../models/Appointment');
 
 const AvailabilityController = {
   getAllTimesByTutorId: async (req, res) => {
@@ -84,54 +85,52 @@ const AvailabilityController = {
     try {
       const data = await Availability.getAllAvailabilityInfo();
 
+      const tutorApptsMap = new Map(); // Stores previously calculated available appts for each tutor
       const responseData = {};
 
       // Build responseData object
       for (subject of data) {
         responseData[subject.subject_name] = {};
         for (tutor of subject.Tutors) {
-          available_appts = [];
-          for ({
-            tutor_id,
-            date_time,
-            duration,
-          } of tutor.Tutor_Availabilities) {
-            appt = { tutor_id, date_time, duration };
-            const start = date_time;
-            const end = new Date(start.getTime());
-            end.setMinutes(end.getMinutes() + duration);
-            start.setHours(start.getHours() - 1); // Subtract 1 hour to include appts that start before this appt but finish during/after it
-
-            possible_overlaps =
-              await Availability.getAllOverlappingAppointments(
-                tutor_id,
-                start,
-                end
-              );
-
-            start.setHours(start.getHours() + 1); // Restore original start datetime
-
-            foundOverlap = false;
-            for ({ date_time2, duration2 } of possible_overlaps) {
-              const start2 = date_time2;
-              const end2 = new Date(start2.getTime());
-              end2.setMinutes(end2.getMinutes() + duration2);
-              if (
-                (start < start2 && start2 < end) ||
-                (start < end2 && end2 < end)
-              ) {
-                foundOverlap = true;
-                break;
-              }
-            }
-
-            if (!foundOverlap) {
-              available_appts.push({
-                ...appt,
-                subject_id: subject.subject_id,
-              });
-            }
+          if (tutorApptsMap.has(tutor.tutor_id)) {
+            responseData[subject.subject_name][
+              `${tutor.User.first_name} ${tutor.User.last_name}`
+            ] = tutorApptsMap.get(tutor.tutor_id);
+            continue;
           }
+
+          const tutorAvailability = (
+            await Availability.getAvailabilityByTutorId(tutor.tutor_id)
+          ).map((timeslot) => timeslot.date_time);
+
+          const possibly_available_appts = [];
+          const cur_sunday = new Date();
+          cur_sunday.setDate(cur_sunday.getDate() - cur_sunday.getDay());
+          for (let i = 0; i < 4; i++) {
+            // Add appts for the next 4 weeks
+            for (timeslot of tutorAvailability) {
+              const cur_timeslot = new Date(cur_sunday.getTime());
+              cur_timeslot.setDate(cur_timeslot.getDate() + timeslot.getDay());
+              cur_timeslot.setHours(timeslot.getHours());
+              cur_timeslot.setMinutes(timeslot.getMinutes());
+              possibly_available_appts.push(cur_timeslot.toISOString());
+            }
+            cur_sunday.setDate(cur_sunday.getDate() + 7);
+          }
+
+          const scheduled_appts = (
+            await Appointment.getAllApptsByTutorId(tutor.tutor_id)
+          ).map((timeslot) => timeslot.date_time.toISOString());
+
+          const available_appts = Array.from(
+            setMinus(possibly_available_appts, scheduled_appts)
+          ).map((date_time) => ({
+            date_time,
+            tutor_id: tutor.tutor_id,
+            subject_id: subject.subject_id,
+          }));
+
+          tutorApptsMap.set(tutor.tutor_id, available_appts);
 
           responseData[subject.subject_name][
             `${tutor.User.first_name} ${tutor.User.last_name}`
@@ -139,7 +138,7 @@ const AvailabilityController = {
         }
       }
 
-      console.log(responseData);
+      // console.log(responseData);
       return res.status(200).json(responseData);
     } catch (error) {
       console.error(error);
@@ -149,5 +148,21 @@ const AvailabilityController = {
     }
   },
 };
+
+// Fast set difference between two input arrays A and B
+function* setMinus(A, B) {
+  const setA = new Set(A);
+  const setB = new Set(B);
+
+  for (const v of setB.values()) {
+    if (!setA.delete(v)) {
+      yield v;
+    }
+  }
+
+  for (const v of setA.values()) {
+    yield v;
+  }
+}
 
 module.exports = AvailabilityController;
