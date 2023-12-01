@@ -6,6 +6,7 @@ const {
   createTutor,
   getUserByID,
   getUserSecret,
+  updateTutoringHours
 } = require('../models/User');
 const { getTutorByID } = require('../models/Tutor');
 const Appointment = require('../models/Appointment');
@@ -27,20 +28,38 @@ const getUserInfo = async (req, res) => {
   try {
     const student_Id = decodedToken.id;
     const user = await getUserByID(student_Id);
+
     if (!user) {
       return res.status(404).send('User not found');
     }
+
     let appointments;
-    if (user.user_type == 'student') {
+    if (user.user_type === 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
       return res.status(200).json({ user, appointments });
     } else if (user.user_type == 'tutor') {
       const tutor = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor.tutor_id);
-      return res.status(200).json({ user, tutor, appointments });
+    }
+    let past_appointments = 0;
+    // Update total_tutoring_hours for passed appointments
+    for (const appointment of appointments) {
+      const appointmentDate = new Date(appointment.date_time);
+
+      if (appointmentDate < new Date()) {
+        past_appointments += 1;
+        // If the appointment date has passed, update total_tutoring_hours by 1
+      }
+    }
+    await updateTutoringHours(user.user_id, past_appointments);
+    // return res.status(200).json({ user, appointments });
+    if (user.user_type === 'student') {
+      return res.status(200).json({ user, appointments });
+    } else if (user.user_type === 'tutor') {
+      return res.status(200).json({ user, appointments, tutor_id });
     }
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -64,7 +83,7 @@ const getTutorInfo = async (req, res) => {
 
     return res.status(200).json(data);
   } catch (err) {
-    console.log(err);
+    console.error(err);
     res.status(500).send('Internal Server Error');
   }
 };
@@ -111,7 +130,7 @@ const register = async (req, res) => {
   // Check for criminal record if user is a tutor
   const criminal = await checkCriminalDB(first_name, last_name);
   if (criminal && user_type === 'tutor') {
-    return res.status(403).send('User is criminal');
+    return res.status(451).send('User is criminal');
   } else {
     // Generate new TOTP secret
     const secret = speakeasy.generateSecret();
@@ -227,45 +246,75 @@ const edit = async (req, res) => {
     email,
     password,
     user_type,
-    phone_number,
     about_me,
     profile_picture,
     subjects,
   } = req.body;
-  try {
-    const hashedPassword = await hashPassword(password);
-    const user = await createUser(
-      first_name,
-      last_name,
-      email,
-      hashedPassword,
-      user_type,
-      phone_number
-    );
+  const criminal = await checkCriminalDB(first_name, last_name);
+  if (criminal && user_type === 'tutor') {
+    return res.status(451).send('User is criminal');
+  } else {
+    // Generate new TOTP secret
+    const secret = speakeasy.generateSecret();
+    const userSecret = secret.base32;
 
-    console.log('Hashed Password:', hashedPassword);
-    // If user is a tutor, create a corresponding entry in the Tutors table
-    if (user_type === 'tutor') {
-      await createTutor(
-        user.user_id,
-        about_me,
-        profile_picture,
-        false,
-        subjects,
-        schedule,
-        hourly_chunks
+    try {
+      // Hash the password and create a new user
+      const hashedPassword = await hashPassword(password);
+      const user = await createUser(
+        first_name,
+        last_name,
+        email,
+        hashedPassword,
+        user_type,
+        userSecret
       );
+      if (!user) {
+        throw new Error('User already exists.');
+      }
+      const { user_id } = user;
+
+      // Create a tutor profile if user is a tutor
+      if (user_type === 'tutor') {
+        if (
+          profile_picture.length === 0 ||
+          about_me.length === 0 ||
+          subjects.length === 0 ||
+          schedule.length === 0
+        ) {
+          return res
+            .status(401)
+            .send(
+              'Missing one of the following: profile picture, about me, subjects, schedule'
+            );
+        }
+
+        await createTutor(
+          user_id,
+          about_me,
+          profile_picture,
+          false,
+          subjects,
+          schedule
+        );
+      }
+
+      // Send TOTP to the user's email for verification
+      await sendTOTP(email);
+
+      return res
+        .status(200)
+        .send(
+          'User registered successfully. TOTP sent to email for verification.'
+        );
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Internal Server Error');
     }
-    const token = generateToken(user);
-    return res.status(200).json({
-      token: token,
-      user_type: user_type,
-    });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Internal Server Error');
   }
 };
+
+
 
 module.exports = {
   login,
