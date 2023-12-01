@@ -32,8 +32,8 @@ const getUserInfo = async (req, res) => {
     if (user.user_type === 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
     } else if (user.user_type === 'tutor') {
-      const { tutor_id } = await getTutorByID(user.user_id);
-      appointments = await Appointment.getByTutorId(tutor_id);
+      const tutor = await getTutorByID(user.user_id);
+      appointments = await Appointment.getByTutorId(tutor.tutor_id);
     }
     let past_appointments = 0;
     // Update total_tutoring_hours for passed appointments
@@ -46,7 +46,12 @@ const getUserInfo = async (req, res) => {
       }
     }
     await updateTutoringHours(user.user_id, past_appointments);
-    return res.status(200).json({ user, appointments });
+    // return res.status(200).json({ user, appointments });
+    if (user.user_type === 'student') {
+      return res.status(200).json({ user, appointments });
+    } else if (user.user_type === 'tutor') {
+      return res.status(200).json({ user, appointments, tutor_id });
+    }
   } catch (err) {
     console.error(err);
     res.status(500).send('Internal Server Error');
