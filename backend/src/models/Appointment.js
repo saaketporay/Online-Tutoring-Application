@@ -1,6 +1,17 @@
-const { Scheduled_Appointments: AppointmentModel, User, Tutor } = require('./index')
+const {
+  Scheduled_Appointments: AppointmentModel,
+  User,
+  Tutor,
+} = require('./index');
 const Appointment = {
-  create: async (student_id, tutor_id, date_time, duration,meeting_title, meeting_desc) => {
+  create: async (
+    student_id,
+    tutor_id,
+    date_time,
+    duration,
+    meeting_title,
+    meeting_desc
+  ) => {
     try {
       const newAppointment = await AppointmentModel.create({
         student_id,
@@ -8,7 +19,7 @@ const Appointment = {
         date_time,
         duration,
         meeting_title,
-        meeting_desc
+        meeting_desc,
       });
       console.log(newAppointment.appointment_id);
       return newAppointment.appointment_id;
@@ -25,16 +36,16 @@ const Appointment = {
         include: [
           {
             model: User,
-            attributes: ['first_name', 'last_name', 'email']
+            attributes: ['first_name', 'last_name', 'email'],
           },
           {
             model: Tutor,
             include: {
               model: User,
-              attributes: ['first_name', 'last_name', 'email']
-            }
+              attributes: ['first_name', 'last_name', 'email'],
+            },
           },
-        ]
+        ],
       });
       // console.log(appointments);
       return appointments;
@@ -65,6 +76,18 @@ const Appointment = {
       return appointments;
     } catch (error) {
       throw error;
+    }
+  },
+  getAllApptsByTutorId: async (tutor_id) => {
+    try {
+      const data = await AppointmentModel.findAll({
+        where: {
+          tutor_id: tutor_id,
+        },
+      });
+      return data;
+    } catch (err) {
+      throw err;
     }
   },
 };

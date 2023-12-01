@@ -37,6 +37,10 @@ User.init(
       type: DataTypes.INTEGER,
       defaultValue: 0,
     },
+    totp_secret: {
+      type: DataTypes.STRING(255),
+      allowNull: false,
+    },
   },
   { sequelize, modelName: 'Users' }
 );
@@ -109,7 +113,7 @@ Tutor_Subject.init(
   { sequelize, modelName: 'Tutor_Subjects' }
 );
 
-// Appointments model
+// Scheduled Appointments model
 class Scheduled_Appointments extends Model {}
 Scheduled_Appointments.init(
   {

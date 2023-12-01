@@ -1,5 +1,5 @@
-export const getReadableDateTime = (dateTime: string, duration: number) => {
-  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am, 20m
+export const getReadableDateTime = (dateTime: string) => {
+  // Convert SQL's TIME data type to a JS Date object to a readable date format: Friday, October 27th, 2023, 1:19am
   const weekday = [
     'Sunday',
     'Monday',
@@ -45,7 +45,7 @@ export const getReadableDateTime = (dateTime: string, duration: number) => {
   const hour = m.getHours();
   // Convert hour to a human-readable 12-hour value
   const modifiedHour =
-    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 12;
+    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
   // Get the minutes as a number in the range 0-59
   const minutes = m.getMinutes();
   // Convert minutes to a double-digit zeros if it's a 0
@@ -57,7 +57,38 @@ export const getReadableDateTime = (dateTime: string, duration: number) => {
     month[m.getMonth()]
   } ${day}${suffix}, ${m.getFullYear()} - ${modifiedHour}:${modifiedMinutes}${
     am ? 'am' : 'pm'
-  }, ${duration}m`;
+  }`;
 
   return readable_date_time;
+};
+
+// Convert SQL's TIME data type to a JS Date object to a readable time format assuming 1 hour appts: 1:19am - 2:12am
+export const getReadableTime = (time: string) => {
+  const t = time.split(/\D+/).map((str) => +str);
+  // Create a new Date object based on the year, month, day, etc, values from t
+  let m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+  let hour = m.getHours();
+  let modifiedHour =
+    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
+  let minutes = m.getMinutes();
+  let modifiedMinutes = minutes === 0 ? '00' : minutes;
+  let am = hour < 11;
+  const readable_start_time = `${modifiedHour}:${modifiedMinutes}${
+    am ? 'am' : 'pm'
+  }`;
+
+  m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+  m.setTime(m.getTime() + 60 * 60 * 1000);
+  hour = m.getHours();
+  modifiedHour = hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
+  minutes = m.getMinutes();
+  modifiedMinutes = minutes === 0 ? '00' : minutes;
+  am = hour < 11;
+  const readable_end_time = `${modifiedHour}:${modifiedMinutes}${
+    am ? 'am' : 'pm'
+  }`;
+
+  const readable_time = readable_start_time + ' - ' + readable_end_time;
+
+  return readable_time;
 };

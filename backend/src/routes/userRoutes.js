@@ -12,5 +12,6 @@ router.post('/register', userController.register);
 router.get('/info', userController.getUserInfo);
 router.get('/tutorInfo', userController.getTutorInfo);
 router.patch('/edit', userController.edit);
+router.post('/verify-totp', userController.verifyTOTP);
 
 module.exports = router;
