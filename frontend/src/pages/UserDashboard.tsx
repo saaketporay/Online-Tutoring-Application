@@ -200,7 +200,6 @@ export const dashboardLoader: LoaderFunction = async () => {
   try {
     const userResponse = await instance.get('/user/info');
     if (userResponse.status != 200) {
-      console.log('entering throw json statement');
       throw json({
         ...userResponse.data,
         status: userResponse.data,
@@ -222,10 +221,8 @@ export const dashboardLoader: LoaderFunction = async () => {
     } else {
       userData.tutor = userResponse.data.tutor;
     }
-    console.log(userData);
     return userData;
   } catch (e) {
-    console.log(e);
     if (e instanceof AxiosError) {
       if (e.response?.status == 401) {
         store.dispatch(setExpiration(''));

@@ -139,7 +139,6 @@ export const action: ActionFunction = async ({ request }) => {
     
     return json({ status: 'Registration Successful' });
   } catch (e) {
-    console.log(e)
     if (e instanceof AxiosError) {
       if (e.response?.status == 403) {
         throw json({

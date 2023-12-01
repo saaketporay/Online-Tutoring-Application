@@ -242,8 +242,6 @@ export const loader: LoaderFunction = async () => {
 
   responseData.subjects = response.data;
 
-  console.log(responseData);
-
   return responseData as Response;
 };
 

@@ -13,7 +13,7 @@ export type signupError = {
 
 const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
   const data = useActionData() as signupError;
-  console.log(userData);
+  
   return (
     <>
       <ThemeProvider theme={theme}>

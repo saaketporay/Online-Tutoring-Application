@@ -31,7 +31,6 @@ function MultifactorAuth({ email }: { email: any }) {
       });
 
       if (response.status === 200) {
-        console.log("TOTP Verified:", response.data);
         const { token, user_type } = response.data;
         dispatch(setUserType(user_type));
         dispatch(setToken(token));
