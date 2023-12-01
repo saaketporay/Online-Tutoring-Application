@@ -9,45 +9,59 @@ const {
 } = require('./index');
 
 const Test = {
-  deleteTutorByTutorId: async (tutor_id) => {
+  deleteUserById: async (user_id) => {
     try {
-      const result1 = await Tutor_Subject.destroy({
+      const tutor = await Tutor.findOne({
         where: {
-          tutor_id,
+          user_id,
+        },
+        attributes: ['tutor_id'],
+      });
+      const tutor_id = tutor ? tutor.tutor_id : -1;
+      if (tutor_id !== -1) {
+        await Favorite.destroy({
+          where: {
+            tutor_id,
+          },
+        });
+        await Tutor_Subject.destroy({
+          where: {
+            tutor_id,
+          },
+        });
+        await Tutor_Availability.destroy({
+          where: {
+            tutor_id,
+          },
+        });
+        await Scheduled_Appointments.destroy({
+          where: {
+            tutor_id,
+          },
+        });
+        await Tutor.destroy({
+          where: {
+            tutor_id,
+          },
+        });
+      }
+
+      await Favorite.destroy({
+        where: {
+          student_id: user_id,
         },
       });
-      console.log(result1);
-      const result2 = await Tutor_Availability.destroy({
+      await Scheduled_Appointments.destroy({
         where: {
-          tutor_id,
+          student_id: user_id,
         },
       });
-      console.log(result2);
-      const result3 = await Favorite.destroy({
+      await User.destroy({
         where: {
-          tutor_id,
+          user_id,
         },
       });
-      console.log(result3);
-      const result4 = await Scheduled_Appointments.destroy({
-        where: {
-          tutor_id,
-        },
-      });
-      console.log(result4);
-      const result5 = await Tutor.destroy({
-        where: {
-          tutor_id,
-        },
-      });
-      console.log(result5);
-      const result6 = await User.destroy({
-        where: {
-          user_id: tutor_id,
-        },
-      });
-      console.log(result6);
-      return result5;
+      return { message: 'Deletion successful' };
     } catch (err) {
       return err;
     }

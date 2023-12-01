@@ -1,12 +1,11 @@
 const Test = require('../models/Test');
 
 const TestController = {
-  deleteTutorByTutorId: async (req, res) => {
-    const { tutor_id } = req.params;
-    console.log(tutor_id);
+  deleteUserById: async (req, res) => {
+    const { user_id } = req.params;
 
     try {
-      const result = await Test.deleteTutorByTutorId(tutor_id);
+      const result = await Test.deleteUserById(user_id);
       return res.status(200).json(result);
     } catch (error) {
       console.error(error);

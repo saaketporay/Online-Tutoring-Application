@@ -39,21 +39,6 @@ const EditTutorProfile = () => {
         className='mb-16 justify-self-center'>
         Edit your profile
       </Typography>
-      {data && data.errors && (
-        <>
-          <ul className='mt-0'>
-            {data.errors.map((error, i) => {
-              return (
-                <li
-                  key={i}
-                  className='text-red-500'>
-                  {error}
-                </li>
-              );
-            })}
-          </ul>
-        </>
-      )}
       <Box className='w-[410px] justify-self-center'>
         <GeneralSignupInfo userData={userData} />
       </Box>
@@ -131,17 +116,17 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ errors: errors });
   }
 
-  let instance = axiosInstance(true);
-  let response = await instance.post('/upload/profile-picture', {
-    profile_picture: tutorInfo.profile_picture,
-  });
-  console.log(response);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
-  }
+  // let instance = axiosInstance(true);
+  // let response = await instance.post('/upload/profile-picture', {
+  //   profile_picture: tutorInfo.profile_picture,
+  // });
+  // console.log(response);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
 
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
@@ -150,27 +135,21 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    profile_picture: response.data.filename,
+    // profile_picture: response.data.filename,
     subjects,
-    hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
   console.log(modifiedTutorInfo);
 
-  instance = axiosInstance();
-  response = await instance.patch('/user/edit', modifiedTutorInfo);
-  console.log(response);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
-  }
-  const { token, user_type } = response.data;
-  store.dispatch(setUserType(user_type));
-  store.dispatch(setToken(token));
-  const expiration = new Date();
-  expiration.setHours(expiration.getHours() + 1);
-  store.dispatch(setExpiration(expiration.toISOString()));
+  // instance = axiosInstance();
+  // response = await instance.patch('/user/edit', modifiedTutorInfo);
+  // console.log(response);
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
+
   return redirect('/dashboard');
 };
 

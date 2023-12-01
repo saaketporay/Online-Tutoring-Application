@@ -2,6 +2,6 @@ const express = require('express');
 const router = express.Router();
 const TestController = require('../controllers/TestController');
 
-router.delete('/:tutor_id', TestController.deleteTutorByTutorId);
+router.delete('/:user_id', TestController.deleteUserById);
 
 module.exports = router;

@@ -140,7 +140,6 @@ Scheduled_Appointments.init(
       type: DataTypes.DATE,
       allowNull: false,
     },
-    duration: DataTypes.INTEGER,
     meeting_title: DataTypes.STRING(255),
     meeting_desc: DataTypes.TEXT,
   },
@@ -189,10 +188,6 @@ Tutor_Availability.init(
     },
     date_time: {
       type: DataTypes.DATE,
-      allowNull: false,
-    },
-    duration: {
-      type: DataTypes.INTEGER,
       allowNull: false,
     },
   },

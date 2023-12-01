@@ -6,17 +6,17 @@ const {
   createTutor,
   getUserByID,
   getUserSecret,
-} = require("../models/User");
-const { getTutorByID } = require("../models/Tutor");
-const Appointment = require("../models/Appointment");
+} = require('../models/User');
+const { getTutorByID } = require('../models/Tutor');
+const Appointment = require('../models/Appointment');
 
-const { comparePasswords, hashPassword } = require("../utils/passwordUtils");
-const { decodeToken, generateToken } = require("../utils/jwtUtil");
-const { sendTOTP } = require("../utils/totp");
-const { checkCriminalDB } = require("../utils/isCriminal");
-const jwt = require("jsonwebtoken");
-const bcrypt = require("bcrypt");
-const speakeasy = require("speakeasy");
+const { comparePasswords, hashPassword } = require('../utils/passwordUtils');
+const { decodeToken, generateToken } = require('../utils/jwtUtil');
+const { sendTOTP } = require('../utils/totp');
+const { checkCriminalDB } = require('../utils/isCriminal');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcrypt');
+const speakeasy = require('speakeasy');
 
 const getUserInfo = async (req, res) => {
   const token = req.headers.authorization;
@@ -31,7 +31,7 @@ const getUserInfo = async (req, res) => {
       return res.status(404).send('User not found');
     }
     let appointments;
-    if (user.user_type == "student") {
+    if (user.user_type == 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
       return res.status(200).json({ user, appointments });
     } else if (user.user_type == 'tutor') {
@@ -41,7 +41,7 @@ const getUserInfo = async (req, res) => {
     }
   } catch (err) {
     console.log(err);
-    res.status(500).send("Internal Server Error");
+    res.status(500).send('Internal Server Error');
   }
 };
 
@@ -75,7 +75,7 @@ const login = async (req, res) => {
   try {
     const user = await getUserByEmail(email);
     if (!user || !(await comparePasswords(password, user.hashed_password))) {
-      return res.status(400).send("Failed to login. Wrong credentials");
+      return res.status(400).send('Failed to login. Wrong credentials');
     }
 
     try {
@@ -84,14 +84,14 @@ const login = async (req, res) => {
       // Indicate that further verification is needed
       return res
         .status(200)
-        .send("TOTP sent to email. Please verify to complete login.");
+        .send('TOTP sent to email. Please verify to complete login.');
     } catch (error) {
       console.error(error);
-      return res.status(500).send("Error sending TOTP: " + error.message);
+      return res.status(500).send('Error sending TOTP: ' + error.message);
     }
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send('Internal Server Error');
   }
 };
 
@@ -106,13 +106,12 @@ const register = async (req, res) => {
     profile_picture,
     subjects,
     schedule,
-    hourly_chunks,
   } = req.body;
 
   // Check for criminal record if user is a tutor
   const criminal = await checkCriminalDB(first_name, last_name);
-  if (criminal && user_type === "tutor") {
-    return res.status(403).send("User is criminal");
+  if (criminal && user_type === 'tutor') {
+    return res.status(403).send('User is criminal');
   } else {
     // Generate new TOTP secret
     const secret = speakeasy.generateSecret();
@@ -130,19 +129,32 @@ const register = async (req, res) => {
         userSecret
       );
       if (!user) {
-        throw new Error("User already exists.");
+        throw new Error('User already exists.');
       }
       const { user_id } = user;
+
       // Create a tutor profile if user is a tutor
-      if (user_type === "tutor") {
+      if (user_type === 'tutor') {
+        if (
+          profile_picture.length === 0 ||
+          about_me.length === 0 ||
+          subjects.length === 0 ||
+          schedule.length === 0
+        ) {
+          return res
+            .status(401)
+            .send(
+              'Missing one of the following: profile picture, about me, subjects, schedule'
+            );
+        }
+
         await createTutor(
           user_id,
           about_me,
           profile_picture,
           false,
           subjects,
-          schedule,
-          hourly_chunks
+          schedule
         );
       }
 
@@ -152,11 +164,11 @@ const register = async (req, res) => {
       return res
         .status(200)
         .send(
-          "User registered successfully. TOTP sent to email for verification."
+          'User registered successfully. TOTP sent to email for verification.'
         );
     } catch (err) {
       console.error(err);
-      res.status(500).send("Internal Server Error");
+      res.status(500).send('Internal Server Error');
     }
   }
 };
@@ -168,13 +180,13 @@ const verifyTOTP = async (req, res) => {
     // Retrieve the user's TOTP secret from the database
     const userSecret = await getUserSecret(email);
     if (!userSecret) {
-      return res.status(404).send("User not found or no TOTP secret available");
+      return res.status(404).send('User not found or no TOTP secret available');
     }
 
     // Verify the TOTP token
     const verified = speakeasy.totp.verify({
       secret: userSecret,
-      encoding: "base32",
+      encoding: 'base32',
       token: totp,
       step: 120,
       window: 1, // Allowing a bit of flexibility in timing
@@ -185,24 +197,24 @@ const verifyTOTP = async (req, res) => {
       // Retrieve user details for token generation
       const user = await getUserByEmail(email);
       if (!user) {
-        return res.status(404).send("User not found");
+        return res.status(404).send('User not found');
       }
 
       // Generate JWT token
       const token = generateToken(user);
 
       return res.status(200).json({
-        message: "TOTP verified successfully",
+        message: 'TOTP verified successfully',
         token: token,
         user_type: user.user_type,
       });
     } else {
       // TOTP is incorrect
-      return res.status(400).send("Invalid TOTP");
+      return res.status(400).send('Invalid TOTP');
     }
   } catch (err) {
     console.error(err);
-    return res.status(500).send("Internal Server Error");
+    return res.status(500).send('Internal Server Error');
   }
 };
 

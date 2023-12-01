@@ -87,7 +87,6 @@ const TutorSignupInfo = ({
   );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
-  const [hrChunks, setHrChunks] = useState<number>(2);
   const [pfp, setPfp] = useState<string>(
     tutorInfo ? `http://localhost:3000/uploads/${tutorInfo.pfp}` : ''
   );
@@ -211,28 +210,11 @@ const TutorSignupInfo = ({
               disableSwap
             />
           </Box>
-          <Box>
-            <Typography>Hourly chunks</Typography>
-            <Slider
-              aria-label='Hourly chunks'
-              name='hourly_chunks'
-              getAriaValueText={(value: number) => value.toString()}
-              value={hrChunks}
-              onChange={(_e, v) => {
-                setHrChunks(+v);
-              }}
-              valueLabelDisplay='auto'
-              step={1}
-              min={1}
-              max={6}
-              marks
-            />
-          </Box>
           <ScheduleSelector
             selection={schedule}
             minTime={timeRange[0]}
             maxTime={timeRange[1]}
-            hourlyChunks={hrChunks}
+            hourlyChunks={1}
             startDate={getLastSunday()}
             dateFormat='ddd'
             timeFormat='h:mm a'
@@ -255,7 +237,10 @@ const TutorSignupInfo = ({
           size='large'
           className='mx-auto'
           disabled={
-            !aboutMe || selectedSubjects.length == 0 || schedule.length == 0
+            !aboutMe ||
+            selectedSubjects.length == 0 ||
+            schedule.length == 0 ||
+            pfp.length == 0
           }
           type='submit'>
           Submit
