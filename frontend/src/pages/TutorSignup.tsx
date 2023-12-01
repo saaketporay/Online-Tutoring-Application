@@ -21,6 +21,7 @@ import { store } from '../redux/store';
 import MultifactorAuth from '../components/MultifactorAuth';
 import { useAppSelector } from '../redux/hooks';
 import { setShowModal } from '../redux/modalSlice';
+import { AxiosError } from 'axios';
 
 const TutorSignup = () => {
   const subjects = useLoaderData() as Subject[];
@@ -123,19 +124,31 @@ export const action: ActionFunction = async ({ request }) => {
   };
 
   instance = axiosInstance();
-  response = await instance.post('/user/register', modifiedTutorInfo);
-
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
+  try {
+    response = await instance.post('/user/register', modifiedTutorInfo);
+    
+    if (response.status != 200) {
+      return json({
+        ...response.data,
+        status: response.status,
+      });
+    }
+    
+    store.dispatch(setEmail(email as string));
+    store.dispatch(setShowModal(true));
+    
+    return json({ status: 'Registration Successful' });
+  } catch (e) {
+    console.log(e)
+    if (e instanceof AxiosError) {
+      if (e.response?.status == 403) {
+        throw json({
+          message: "Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.",
+          status: 403,
+        })
+      }
+    }
   }
-
-  store.dispatch(setEmail(email as string));
-  store.dispatch(setShowModal(true));
-
-  return json({ status: 'Registration Successful' });
 };
 
 export default TutorSignup;
