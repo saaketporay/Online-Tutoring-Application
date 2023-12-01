@@ -13,7 +13,6 @@ const AppLayout = () => {
   
   useEffect(() => {
     if (token) {
-      console.log(token);
       if (!token) {
         navigate('/');
       }
@@ -21,7 +20,6 @@ const AppLayout = () => {
         const expirationDate = new Date(expiration);
         const now = new Date();
         const duration = expirationDate.getTime() - now.getTime();
-        console.log(duration);
         setTimeout(() => {
           dispatch(logout());
           navigate('/');

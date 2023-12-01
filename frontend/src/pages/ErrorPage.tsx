@@ -8,11 +8,9 @@ import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 
 function ErrorPage() {
   const error = useRouteError();
-  console.log(error)
   let status;
   let errorMessage;
   if (isRouteErrorResponse(error)) {
-    console.log(error)
     // error is type `ErrorResponse`
     if (error.status == 404) {
       status = 404
