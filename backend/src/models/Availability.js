@@ -4,6 +4,7 @@ const {
   Subject,
   Tutor_Subject,
   Tutor_Availability,
+  Scheduled_Appointments,
 } = require('./index');
 
 const Availability = {
@@ -82,13 +83,26 @@ const Availability = {
     }
   },
 
+  getAvailabilityByTutorId: async (tutor_id) => {
+    try {
+      const data = await Tutor_Availability.findAll({
+        where: {
+          tutor_id: tutor_id,
+        },
+      });
+      return data;
+    } catch (err) {
+      return err;
+    }
+  },
+
   getAllAvailabilityInfo: async () => {
     try {
       const data = await Subject.findAll({
         include: [
           {
             model: Tutor,
-            include: [{ model: Tutor_Availability }, { model: User }],
+            include: [{ model: User }],
           },
         ],
       });
