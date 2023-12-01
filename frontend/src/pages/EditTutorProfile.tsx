@@ -3,7 +3,7 @@ import {
   json,
   redirect,
   useLoaderData,
-  useActionData,
+  // useActionData,
   LoaderFunction,
   ActionFunction,
 } from 'react-router-dom';
@@ -11,7 +11,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { axiosInstance } from '../utils/axios';
 import GeneralSignupInfo, {
-  signupError,
+  // signupError,
 } from '../components/GeneralSignupInfo';
 import TutorSignupInfo, {
   Subject,
