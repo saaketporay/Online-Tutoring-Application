@@ -65,6 +65,17 @@ const checkSameDay = (d1: Date, d2: Date) =>
   d1.getMonth() === d2.getMonth() &&
   d1.getDate() === d2.getDate();
 
+const checkSameTimeslot = (d1: Date, d2: Date) => {
+  console.log(d1, d2);
+  console.log(d1.toISOString(), d2.toISOString());
+
+  return (
+    checkSameDay(d1, d2) &&
+    d1.getHours() === d2.getHours() &&
+    d1.getMinutes() === d2.getMinutes()
+  );
+};
+
 const MeetingScheduler = () => {
   const data = useLoaderData() as Response;
 
@@ -172,12 +183,12 @@ const MeetingScheduler = () => {
     const date = new Date(selectedDate);
     const t = value.split(/[^0-9]/);
     console.log('t', t);
-    date.setHours(+t[0]);
+    date.setHours(+t[0] - 1);
     date.setMinutes(+t[1]);
 
     setMeetingInfo(
-      data[selectedCourse][selectedTutor].find(
-        (timeslot) => timeslot.date_time === date.toISOString()
+      data[selectedCourse][selectedTutor].find((timeslot) =>
+        checkSameTimeslot(new Date(timeslot.date_time), date)
       )!
     );
   };
@@ -360,6 +371,8 @@ export const loader: LoaderFunction = async () => {
     }
   }
 
+  console.log(data);
+
   return data;
 };
 
@@ -382,7 +395,6 @@ export const action: ActionFunction = async ({ request }) => {
     subject_id: timeslot.subject_id,
     tutor_id: timeslot.tutor_id,
     date_time: timeslot.date_time,
-    duration: timeslot.duration,
     meeting_title: userInfo.meeting_title,
     meeting_desc: userInfo.meeting_desc,
   };
@@ -397,7 +409,6 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  // TODO: add logged in student's id to redirect to the right dashboard
   return redirect('/dashboard');
 };
 
