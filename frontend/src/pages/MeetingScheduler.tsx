@@ -148,7 +148,15 @@ const MeetingScheduler = () => {
       setSelectedCourse('');
     } else {
       setSelectedCourse(value);
+    } else if (reason === 'clear') {
+      setSelectedCourse('');
+    } else {
+      setSelectedCourse(value);
     }
+
+    setSelectedTutor('');
+    setSelectedDate('');
+    setSelectedTimeslot('');
 
     setSelectedTutor('');
     setSelectedDate('');
