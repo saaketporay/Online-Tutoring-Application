@@ -199,12 +199,6 @@ export const dashboardLoader: LoaderFunction = async () => {
   const instance = axiosInstance();
   try {
     const userResponse = await instance.get('/user/info');
-    if (userResponse.status != 200) {
-      throw json({
-        ...userResponse.data,
-        status: userResponse.data,
-      });
-    }
     userData.user = userResponse.data.user;
     userData.appointments = userResponse.data.appointments.filter(
       (appt: appointmentType) => new Date() <= new Date(appt.date_time)
