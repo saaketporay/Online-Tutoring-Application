@@ -1,0 +1,24 @@
+services:
+  frontend:
+    build:
+      context: frontend # navigates from current directory to /frontend
+    environment:
+      - VITE_BACKEND_BASE_URL
+    ports:
+      - 80:80
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: backend # navigates from current directory to /backend
+    environment:
+      - DB_HOST
+      - DB_USER
+      - DB_PASS
+      - DB_NAME
+      - DB_PORT
+      - MFA_EMAIL
+      - MFA_PASSWORD
+    ports:
+      - 3000:3000
