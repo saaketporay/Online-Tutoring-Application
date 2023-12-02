@@ -4,7 +4,6 @@ import {
   useLoaderData,
   LoaderFunction,
   ActionFunction,
-  useActionData,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -12,9 +11,7 @@ import { axiosInstance } from '../utils/axios';
 import {
   setEmail,
 } from '../redux/authSlice';
-import GeneralSignupInfo, {
-  signupError,
-} from '../components/GeneralSignupInfo';
+import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { Subject, FormattedSubject } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
