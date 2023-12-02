@@ -5,9 +5,9 @@ services:
     environment:
       - VITE_BACKEND_BASE_URL
     ports:
-      - 80:80
+      - "80:80" # mapping port 80 on host to port 80 on container
     depends_on:
-      - backend
+      - backend # specifies dependencies for service. frontend will start after backend starts
 
   backend:
     build:
@@ -21,4 +21,4 @@ services:
       - MFA_EMAIL
       - MFA_PASSWORD
     ports:
-      - 3000:3000
+      - "3000:3000" # mapping port 3000 on host to port 3000 on container
