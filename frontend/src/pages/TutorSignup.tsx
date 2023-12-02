@@ -128,8 +128,14 @@ export const action: ActionFunction = async ({ request }) => {
       if (e.response?.status == 451) {
         throw json({
           message: "Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.",
-          status: 403,
-        })
+          status: 451,
+        });
+      }
+      else {
+        throw json({
+          message: e.response?.data,
+          status: e.response?.status,
+        });
       }
     }
   }
