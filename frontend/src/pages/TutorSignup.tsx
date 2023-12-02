@@ -25,7 +25,6 @@ import { AxiosError } from 'axios';
 
 const TutorSignup = () => {
   const subjects = useLoaderData() as Subject[];
-  const data = useActionData() as signupError;
   const showTOTPModal = useAppSelector((state) => state.modal.showModal);
   const userEmail = useAppSelector((state) => state.auth.email);
 
@@ -41,17 +40,6 @@ const TutorSignup = () => {
             className='mt-8 mb-10 justify-self-center'>
             Sign up
           </Typography>
-          {data && data.errors && (
-            <ul className='mt-0'>
-              {data.errors.map((error, i) => (
-                <li
-                  key={i}
-                  className='text-red-500'>
-                  {error}
-                </li>
-              ))}
-            </ul>
-          )}
           <Box className='w-[410px] justify-self-center'>
             <GeneralSignupInfo userData={undefined} />
           </Box>
