@@ -8,7 +8,7 @@ import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
-import EmailSignIn from './pages/EmailSignIn';
+import EmailSignIn, { emailSigninAction } from './pages/EmailSignIn';
 import StudentSignup from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
@@ -65,6 +65,7 @@ const App = () => {
               <EmailSignIn />
             </ProtectedRoute>
           }
+          action={emailSigninAction}
         />
         <Route
           path='signup'

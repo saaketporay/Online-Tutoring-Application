@@ -40,7 +40,7 @@ function ErrorPage() {
             <Typography variant="h4" className="my-6">404 Page Not Found!</Typography>
             <Typography variant="h6">Sorry, we couldn't find what you were looking for.</Typography>
           </>
-        : status == 403 ?
+        : status == 451 ?
           <>
             <SvgIcon
               viewBox="0 0 175 175"

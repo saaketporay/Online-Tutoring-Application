@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Form } from "react-router-dom";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -10,7 +10,7 @@ import { axiosInstance } from "../utils/axios"; // Ensure you have this import
 import { cardTheme, textFieldTheme, squareButtonTheme } from "../utils/theme";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
-import { setToken, setExpiration, setUserType } from "../redux/authSlice";
+import { setToken, setExpiration, setUserType, setEmail } from "../redux/authSlice";
 import { useAppDispatch } from "../redux/hooks";
 import { setShowModal } from "../redux/modalSlice";
 
@@ -38,6 +38,7 @@ function MultifactorAuth({ email }: { email: any }) {
         expiration.setHours(expiration.getHours() + 24);
         dispatch(setExpiration(expiration.toISOString()));
         dispatch(setShowModal(false));
+        dispatch(setEmail(''));
         navigate("/dashboard"); // Redirect to dashboard on successful verification
       } else {
         console.error("Failed to verify TOTP:", response.data);
@@ -53,7 +54,7 @@ function MultifactorAuth({ email }: { email: any }) {
         <Box className="grid justify-center bg-[#191919]">
           <Card className="mt-16" sx={{ width: 500, height: 400 }}>
             <CardContent className="grid justify-items-center items-center">
-              <form onSubmit={verifyHandler} className="grid items-center text-center gap-y-4 mt-10">
+              <Form onSubmit={verifyHandler} className="grid items-center text-center gap-y-4 mt-10">
                 <Typography variant="h4" component="div">
                   Check your email.
                 </Typography>
@@ -72,14 +73,13 @@ function MultifactorAuth({ email }: { email: any }) {
                 <Button className="mt-5"type="submit">
                   Verify
                 </Button>
-              </form>
+              </Form>
             </CardContent>
           </Card>
         </Box>
       </ThemeProvider>
     </>
   );
-  
 }
 
 export default MultifactorAuth;

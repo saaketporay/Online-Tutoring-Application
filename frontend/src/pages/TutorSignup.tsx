@@ -4,7 +4,6 @@ import {
   useLoaderData,
   LoaderFunction,
   ActionFunction,
-  useActionData,
 } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
@@ -12,9 +11,7 @@ import { axiosInstance } from '../utils/axios';
 import {
   setEmail,
 } from '../redux/authSlice';
-import GeneralSignupInfo, {
-  signupError,
-} from '../components/GeneralSignupInfo';
+import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { Subject, FormattedSubject } from '../components/TutorSignupInfo';
 import { store } from '../redux/store';
@@ -25,7 +22,6 @@ import { AxiosError } from 'axios';
 
 const TutorSignup = () => {
   const subjects = useLoaderData() as Subject[];
-  const data = useActionData() as signupError;
   const showTOTPModal = useAppSelector((state) => state.modal.showModal);
   const userEmail = useAppSelector((state) => state.auth.email);
 
@@ -41,17 +37,6 @@ const TutorSignup = () => {
             className='mt-8 mb-10 justify-self-center'>
             Sign up
           </Typography>
-          {data && data.errors && (
-            <ul className='mt-0'>
-              {data.errors.map((error, i) => (
-                <li
-                  key={i}
-                  className='text-red-500'>
-                  {error}
-                </li>
-              ))}
-            </ul>
-          )}
           <Box className='w-[410px] justify-self-center'>
             <GeneralSignupInfo userData={undefined} />
           </Box>
@@ -140,11 +125,20 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ status: 'Registration Successful' });
   } catch (e) {
     if (e instanceof AxiosError) {
-      if (e.response?.status == 403) {
+      if (e.response?.status == 451) {
         throw json({
           message: "Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.",
-          status: 403,
-        })
+          status: 451,
+        });
+      }
+      else if (e.response?.status == 401) {
+        return json({ errors: e.response?.data || 'Missing one of the following: profile picture, about me, subjects, schedule'});
+      }
+      else {
+        throw json({
+          message: e.response?.data,
+          status: e.response?.status,
+        });
       }
     }
   }
