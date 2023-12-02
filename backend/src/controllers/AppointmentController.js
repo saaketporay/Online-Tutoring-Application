@@ -61,6 +61,22 @@ const appointmentController = {
       return res.status(500).send(err);
     }
   },
+
+  deleteByApptId: async (req, res) => {
+    const token = req.headers.authorization;
+    const decodedToken = jwtUtil.decodeToken(token);
+    try {
+      const appointments = await Appointment.getByStudentId(decodedToken.id);
+      const { appt_id } = req.params;
+      if (appointments.find((appt) => appt.appt_id == appt_id)) {
+        await Appointment.deleteByApptId(appt_id);
+      } else {
+        return res.status(401).send("Unauthorized user")
+      }
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
 };
 
 module.exports = appointmentController;

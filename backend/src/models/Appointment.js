@@ -90,6 +90,17 @@ const Appointment = {
       throw err;
     }
   },
+  deleteByApptId: async (appt_id) => {
+    try {
+      await AppointmentModel.destroy({
+        where: {
+          appointment_id: appt_id,
+        },
+      });
+    } catch (err) {
+      throw err;
+    }
+  },
 };
 
 module.exports = Appointment;
