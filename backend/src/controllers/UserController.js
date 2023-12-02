@@ -34,11 +34,12 @@ const getUserInfo = async (req, res) => {
     }
 
     let appointments;
+    let tutor;
     if (user.user_type === 'student') {
       appointments = await Appointment.getByStudentId(student_Id);
       return res.status(200).json({ user, appointments });
     } else if (user.user_type == 'tutor') {
-      const tutor = await getTutorByID(user.user_id);
+      tutor = await getTutorByID(user.user_id);
       appointments = await Appointment.getByTutorId(tutor.tutor_id);
     }
     let past_appointments = 0;
@@ -56,7 +57,7 @@ const getUserInfo = async (req, res) => {
     if (user.user_type === 'student') {
       return res.status(200).json({ user, appointments });
     } else if (user.user_type === 'tutor') {
-      return res.status(200).json({ user, appointments, tutor_id });
+      return res.status(200).json({ user, appointments, tutor });
     }
   } catch (err) {
     console.error(err);
