@@ -140,7 +140,7 @@ export const action: ActionFunction = async ({ request }) => {
     return json({ status: 'Registration Successful' });
   } catch (e) {
     if (e instanceof AxiosError) {
-      if (e.response?.status == 403) {
+      if (e.response?.status == 451) {
         throw json({
           message: "Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.",
           status: 403,
