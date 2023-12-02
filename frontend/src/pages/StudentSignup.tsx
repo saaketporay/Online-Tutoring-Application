@@ -10,36 +10,20 @@ import { ThemeProvider } from "@emotion/react";
 import type { ActionFunction } from "react-router-dom";
 import { json } from "react-router-dom";
 import { axiosInstance } from "../utils/axios";
-import React, { useState } from "react";
 import MultifactorAuth from "../components/MultifactorAuth";
+import { store } from "../redux/store";
+import { setEmail } from "../redux/authSlice";
+import { setShowModal } from "../redux/modalSlice";
+import { useAppSelector } from "../redux/hooks";
 
 const StudentSignup = () => {
-  const [showTOTPModal, setShowTOTPModal] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const userInfo = Object.fromEntries(formData.entries()) as Record<
-      string,
-      string
-    >;
-    setUserEmail(userInfo.email); // Store the email for TOTP verification
-
-    const axios = axiosInstance();
-    const response = await axios.post("/user/register", userInfo);
-    if (response.status === 200) {
-      setShowTOTPModal(true); // Show TOTP modal for verification
-    } else {
-      // Handle registration error
-      console.error("Registration failed:", response.data);
-    }
-  };
+  const showTOTPModal = useAppSelector((state) => state.modal.showModal);
+  const userEmail = useAppSelector((state) => state.auth.email);
 
   return (
     <>
       {!showTOTPModal && (
-        <Form method="post" onSubmit={handleSubmit}>
+        <Form method="post">
           <Box className="grid justify-center bg-[#191919]">
             <Typography variant="h4" className="mt-12 mb-6 justify-self-center">
               Sign up
@@ -109,6 +93,9 @@ export const userSignupAction: ActionFunction = async ({ request }) => {
       status: response.status,
     });
   }
+
+  store.dispatch(setEmail(studentInfo.email as string));
+  store.dispatch(setShowModal(true));
 
   // The response of this action is handled by the frontend
   // The frontend will show the TOTP modal based on this response
