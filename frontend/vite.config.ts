@@ -16,4 +16,4 @@ export default defineConfig({
         plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'] // Needed to have unique IDs for SVG files, else icons will overwrite each other
       }
     })],
-})
+});
