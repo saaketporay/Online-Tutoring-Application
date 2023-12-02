@@ -22,6 +22,7 @@ import { store } from "../redux/store";
 import { setEmail } from "../redux/authSlice";
 import { useAppSelector } from "../redux/hooks";
 import { setShowModal } from "../redux/modalSlice";
+import { AxiosError } from "axios";
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
@@ -110,15 +111,21 @@ export const emailSigninAction: ActionFunction = async ({ request }) => {
     return json({ error: "Email address must have the '@' symbol." });
   }
   const instance = axiosInstance();
-  const response = await instance.post('/user/login', userInfo);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
+  try {
+    await instance.post('/user/login', userInfo);
+    store.dispatch(setEmail(userInfo.email as string));
+    store.dispatch(setShowModal(true));
+    return json({ status: 'Login initiated'})
+  } catch (err) {
+    if (err instanceof AxiosError) {
+      throw json({
+        message: err.response?.data,
+        status: err.response?.status,
+      });
+    } else {
+      throw json({
+        message: "Unknown error occurred",
+      });
+    }
   }
-  store.dispatch(setEmail(userInfo.email as string));
-  store.dispatch(setShowModal(true));
-
-  return json({ status: 'Login initiated'})
 };
