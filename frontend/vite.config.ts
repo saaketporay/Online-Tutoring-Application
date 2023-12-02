@@ -4,6 +4,11 @@ import svgr from 'vite-plugin-svgr'
 
 // https://vitejs.dev/config/
 export default defineConfig({
+  server: {
+    host: true, // Needed for docker
+    port: 80, // Customizable
+    strictPort: true, // So the port from container correctly matches with the frontend
+  },
   plugins: [react(),
     svgr({
       exportAsDefault: true, // 'import { ReactComponent as Logo }...' can now be turned to 'import Logo...'
@@ -11,4 +16,4 @@ export default defineConfig({
         plugins: ['@svgr/plugin-svgo', '@svgr/plugin-jsx'] // Needed to have unique IDs for SVG files, else icons will overwrite each other
       }
     })],
-})
+});
