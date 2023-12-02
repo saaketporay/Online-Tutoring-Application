@@ -131,6 +131,9 @@ export const action: ActionFunction = async ({ request }) => {
           status: 451,
         });
       }
+      else if (e.response?.status == 401) {
+        return json({ errors: e.response?.data || 'Missing one of the following: profile picture, about me, subjects, schedule'});
+      }
       else {
         throw json({
           message: e.response?.data,
