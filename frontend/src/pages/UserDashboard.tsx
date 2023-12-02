@@ -205,12 +205,6 @@ export const dashboardLoader: LoaderFunction = async () => {
     );
     if (store.getState().auth.user_type == 'student') {
       const favoritesResponse = await instance.get('/favorite/get');
-      if (favoritesResponse.status != 200) {
-        throw json({
-          ...favoritesResponse.data,
-          status: favoritesResponse.data,
-        });
-      }
       userData.favorite_tutors = favoritesResponse.data;
     } else {
       userData.tutor = userResponse.data.tutor;
@@ -222,7 +216,16 @@ export const dashboardLoader: LoaderFunction = async () => {
         store.dispatch(setExpiration(''));
         store.dispatch(setToken(''));
         return redirect('/');
-      } else {
+      } 
+      else if (e.response?.status == 404) {
+        store.dispatch(setExpiration(''));
+        store.dispatch(setToken(''));
+        throw json({
+          message: e.message,
+          status: e.response?.status,
+        });
+      }
+      else {
         throw json({
           message: e.message,
           status: e.response?.status,
