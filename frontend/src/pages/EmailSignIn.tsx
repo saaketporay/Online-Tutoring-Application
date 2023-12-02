@@ -1,10 +1,14 @@
-import React, { useState } from "react";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Link from "@mui/material/Link";
-import { Link as RouterLink, Form, useActionData } from "react-router-dom";
+import { 
+  Link as RouterLink,
+  Form, useActionData,
+  ActionFunction,
+  json,
+} from "react-router-dom";
 import { ThemeProvider } from "@emotion/react";
 import { createTheme } from "@mui/material";
 import {
@@ -14,6 +18,10 @@ import {
 } from "../utils/theme";
 import { axiosInstance } from "../utils/axios";
 import MultifactorAuth from "../components/MultifactorAuth";
+import { store } from "../redux/store";
+import { setEmail } from "../redux/authSlice";
+import { useAppSelector } from "../redux/hooks";
+import { setShowModal } from "../redux/modalSlice";
 
 const theme = createTheme(textFieldTheme, checkboxTheme, squareButtonTheme);
 
@@ -23,44 +31,14 @@ type authError = {
 
 const EmailSignin = () => {
   const data = useActionData() as authError;
-  const [show2FAModal, setShow2FAModal] = useState(false);
-  const [userEmail, setUserEmail] = useState("");
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    const userInfo = Object.fromEntries(formData.entries());
-    // Ensure the email is a string before setting the state
-    const emailValue = userInfo.email;
-
-    if (typeof emailValue === "string" && !emailValue.includes("@")) {
-      // Update your state or UI to show the email format error
-      return; // Stop further processing
-    }
-
-    if (typeof emailValue === "string") {
-      setUserEmail(emailValue);
-    }
-
-    try {
-      const axios = axiosInstance();
-      const response = await axios.post("/user/login", userInfo);
-      if (response.status === 200) {
-        setShow2FAModal(true); // Show TOTP modal for further verification
-      } else {
-        // Handle failed login attempt
-        console.error("Login failed:", response.data);
-      }
-    } catch (error) {
-      console.error("Error during login:", error);
-    }
-  };
+  const show2FAModal = useAppSelector((state) => state.modal.showModal)
+  const userEmail = useAppSelector((state) => state.auth.email);
 
   return (
     <>
-      {!show2FAModal && 
+      {!show2FAModal &&
         <Box className="grid justify-center bg-[#191919]">
-          <Form className="grid" method="post" onSubmit={handleSubmit}>
+          <Form className="grid" method="post" >
             <Typography
               variant="h4"
               className="mt-24 mb-12 justify-self-center"
@@ -124,3 +102,23 @@ const EmailSignin = () => {
 };
 
 export default EmailSignin;
+
+export const emailSigninAction: ActionFunction = async ({ request }) => {
+  const data = await request.formData();
+  const userInfo = Object.fromEntries(data);
+  if (!userInfo.email.toString().includes('@')) {
+    return json({ error: "Email address must have the '@' symbol." });
+  }
+  const instance = axiosInstance();
+  const response = await instance.post('/user/login', userInfo);
+  if (response.status != 200) {
+    throw json({
+      ...response.data,
+      status: response.status,
+    });
+  }
+  store.dispatch(setEmail(userInfo.email as string));
+  store.dispatch(setShowModal(true));
+
+  return json({ status: 'Login initiated'})
+};
