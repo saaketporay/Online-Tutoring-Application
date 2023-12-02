@@ -118,10 +118,16 @@ export const emailSigninAction: ActionFunction = async ({ request }) => {
     return json({ status: 'Login initiated'})
   } catch (err) {
     if (err instanceof AxiosError) {
-      throw json({
-        message: err.response?.data,
-        status: err.response?.status,
-      });
+      if (err.response?.status == 400) {
+        return json({
+          error: err.response?.data,
+        });
+      } else {
+        throw json({
+          message: err.response?.data,
+          status: err.response?.status,
+        });
+      }
     } else {
       throw json({
         message: "Unknown error occurred",
