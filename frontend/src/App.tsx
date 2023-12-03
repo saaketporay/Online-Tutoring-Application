@@ -8,9 +8,8 @@ import AppLayout from './components/AppLayout';
 import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
-import EmailSignIn, { authAction } from './pages/EmailSignIn';
-import MultifactorAuth from './components/MultifactorAuth';
-import StudentSignup, { userSignupAction } from './pages/StudentSignup';
+import EmailSignIn, { emailSigninAction } from './pages/EmailSignIn';
+import StudentSignup from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
   action as tutorSignupAction,
@@ -32,13 +31,13 @@ import EditTutorProfile, {
 } from './pages/EditTutorProfile';
 import Search, { loader as searchLoader } from './pages/Search';
 import FavoriteTutorModal, {
-  favoriteTutorAction,
+  favoriteTutorAction, favoriteTutorLoader,
 } from './components/FavoriteTutorModal';
 import { useAppSelector } from './redux/hooks';
 import ProtectedRoute from './components/ProtectedRoute';
 
 const App = () => {
-  const user_type = useAppSelector((state) => state.auth.user_type)
+  const user_type = useAppSelector((state) => state.auth.user_type);
 
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -46,57 +45,40 @@ const App = () => {
         path='/'
         element={<AppLayout />}
         errorElement={<ErrorPage />}
-        id='root'
-      >
-        <Route 
-          index={true}  
-          element={
-            <ProtectedRoute
-              isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
-              <Home />
-            </ProtectedRoute>
-          } 
-        />
-        <Route 
-          path='signin' 
-          element={
-            <ProtectedRoute
-              isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
-              <EmailSignIn />
-            </ProtectedRoute>
-          } 
-          action={authAction} 
-        />
+        id='root'>
         <Route
-          path='verify'
-          id='mfa-auth'
+          index={true}
           element={
-            <ProtectedRoute 
+            <ProtectedRoute
               isAllowed={user_type == ''}
-              redirectTo='/dashboard'
-            >
-              <MultifactorAuth />
+              redirectTo='/dashboard'>
+              <Home />
             </ProtectedRoute>
           }
         />
-        <Route 
+        <Route
+          path='signin'
+          element={
+            <ProtectedRoute
+              isAllowed={user_type === ''}
+              redirectTo='/dashboard'>
+              <EmailSignIn />
+            </ProtectedRoute>
+          }
+          action={emailSigninAction}
+        />
+        <Route
           path='signup'
           element={
-            <ProtectedRoute 
-              isAllowed={ user_type == '' }
+            <ProtectedRoute
+              isAllowed={user_type == ''}
               redirectTo='/dashboard'
               children={null}
             />
-          }
-        >
+          }>
           <Route
             path='student'
             element={<StudentSignup />}
-            action={userSignupAction}
           />
           <Route
             path='tutor'
@@ -110,8 +92,7 @@ const App = () => {
           element={
             <ProtectedRoute
               isAllowed={user_type == 'tutor'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <EditTutorProfile />
             </ProtectedRoute>
           }
@@ -124,59 +105,63 @@ const App = () => {
           element={
             <ProtectedRoute
               isAllowed={user_type == 'student' || user_type == 'tutor'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <UserDashboard />
             </ProtectedRoute>
           }
-          loader={dashboardLoader}
-        >
+          loader={dashboardLoader}>
           <Route
             path='edit-profile'
             element={
               <ProtectedRoute
                 isAllowed={user_type == 'student'}
-                redirectTo='/'
-              >
+                redirectTo='/'>
                 <StudentEditProfileModal />
               </ProtectedRoute>
             }
             action={studentEditProfileAction}
           />
-          <Route 
-            path='favorite/:tutorId'
-            element={
-              <ProtectedRoute
-                isAllowed={user_type == 'student'}
-                redirectTo='/'
-              >
-                <FavoriteTutorModal />
-              </ProtectedRoute>
-            }
-            action={favoriteTutorAction}
-          />
           <Route
-            path='delete-appt/:apptId'
-            element={<DeleteAppointmentModal />}
-            action={deleteAppointmentAction}
-          />
+            path='favorite'
+          >
+            <Route
+              path=':tutorId'
+              element={
+                <ProtectedRoute
+                  isAllowed={user_type == 'student'}
+                  redirectTo='/'>
+                  <FavoriteTutorModal />
+                </ProtectedRoute>
+              }
+              loader={favoriteTutorLoader}
+              action={favoriteTutorAction}
+            />
+          </Route>
+          <Route
+            path='appt'
+          >
+            <Route
+              path='delete/:apptId'
+              element={<DeleteAppointmentModal />}
+              action={deleteAppointmentAction}
+            />
+          </Route>
         </Route>
         <Route
           path='new-appt'
           element={
             <ProtectedRoute
               isAllowed={user_type == 'student'}
-              redirectTo='/'
-            >
+              redirectTo='/'>
               <MeetingScheduler />
             </ProtectedRoute>
           }
           loader={meetingSchedulerLoader}
           action={meetingSchedulerAction}
         />
-        <Route 
-          path='success' 
-          element={<FormSuccess />} 
+        <Route
+          path='success'
+          element={<FormSuccess />}
         />
         <Route
           path='search'

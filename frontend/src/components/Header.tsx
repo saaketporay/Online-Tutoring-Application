@@ -6,18 +6,15 @@ import SvgIcon from '@mui/material/SvgIcon';
 import {
   Link as RouterLink,
   NavLink,
-  NavLinkProps,
-  useNavigate,
 } from 'react-router-dom';
 import Link from '@mui/material/Link';
-import { Button, Stack } from '@mui/material';
+import { Stack } from '@mui/material';
 import { useAppSelector, useAppDispatch } from '../redux/hooks';
 import { logout } from '../redux/authSlice';
 
 function Header() {
   const token = useAppSelector((state) => state.auth.token);
   const dispatch = useAppDispatch();
-  const navigate = useNavigate();
 
   return (
     <>
@@ -62,23 +59,24 @@ function Header() {
                   isActive
                     ? 'text-yellow-300 no-underline mr-6 hover:underline'
                     : 'text-slate-100 no-underline mr-6 hover:underline'
-                }>
+                }
+              >
                 Sign in
               </NavLink>
             ) : (
-              <Button
+              <NavLink
                 onClick={() => {
                   dispatch(logout());
-                  navigate('/');
                 }}
-                sx={{
-                  textTransform: 'none',
-                  color: '#F4F4F4',
-                  fontSize: '16px',
-                }}
-                disableRipple>
+                to='/'
+                className={({ isActive }) =>
+                  isActive
+                    ? 'text-yellow-300 no-underline mr-6 hover:underline'
+                    : 'text-slate-100 no-underline mr-6 hover:underline'
+                }
+              >
                 Logout
-              </Button>
+              </NavLink>
             )}
           </div>
         </Toolbar>

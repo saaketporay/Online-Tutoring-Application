@@ -43,28 +43,53 @@ const getOptionEquality = (
   value: { label: string }
 ) => option.label === value.label;
 
-export interface AvailableCourseType {
+export interface Subject {
   subject_id: number;
   subject_name: string;
 }
 
-interface TutorSignupInfoProps {
-  subjects: AvailableCourseType[];
+export interface FormattedSubject {
+  label: string;
+  subject_id: number;
 }
 
-const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
-  const availableCourses = subjects.map((course) => ({
+export interface TutorInfo {
+  first_name: string;
+  last_name: string;
+  email: string;
+  aboutMe: string;
+  selectedSubjects: Subject[];
+  pfp: string;
+}
+
+const TutorSignupInfo = ({
+  subjects,
+  tutorInfo,
+}: {
+  subjects: Subject[];
+  tutorInfo: TutorInfo | undefined;
+}) => {
+  const formattedSubjects = subjects.map((course) => ({
     label: course.subject_name,
     subject_id: course.subject_id,
-  })) as { label: string; subject_id: number }[];
+  })) as FormattedSubject[];
+
+  const defaultSelectedSubjects = tutorInfo
+    ? (tutorInfo.selectedSubjects.map((course) => ({
+        label: course.subject_name,
+        subject_id: course.subject_id,
+      })) as FormattedSubject[])
+    : [];
 
   const [aboutMe, setAboutMe] = useState<string>('');
-  const [courses, setCourses] = useState<
-    { label: string; subject_id: number }[]
-  >([]);
+  const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
+    defaultSelectedSubjects
+  );
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
-  const [hrChunks, setHrChunks] = useState<number>(2);
+  const [pfp, setPfp] = useState<string>(
+    tutorInfo ? `${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${tutorInfo.pfp}` : ''
+  );
 
   const marks = [];
   for (let i = 0; i <= 24; i++) {
@@ -78,7 +103,7 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
   }
 
   const timeRangeSliderChangeHandler = (
-    e: Event,
+    _e: Event,
     newValue: number | number[],
     activeThumb: number
   ) => {
@@ -96,18 +121,49 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
   return (
     <ThemeProvider theme={theme}>
       <Stack spacing={6}>
-        <TextField
-          className='my-6'
-          id='tutor-about-me-field'
-          name='about_me'
-          label='About me'
-          multiline
-          rows={3}
-          value={aboutMe}
-          onChange={(e) => {
-            setAboutMe(e.target.value);
-          }}
-        />
+        <Stack spacing={4}>
+          <TextField
+            className='my-6'
+            id='tutor-about-me-field'
+            name='about_me'
+            label='About me'
+            multiline
+            rows={3}
+            value={aboutMe}
+            onChange={(e) => {
+              setAboutMe(e.target.value);
+            }}
+          />
+          <Box className='flex flex-col items-center'>
+            <Button
+              variant='outlined'
+              component='label'
+              className='text-neutral-100 border-neutral-700 rounded-md'>
+              Upload profile picture
+              <input
+                name='profile_picture'
+                type='file'
+                onChange={(e) => {
+                  if (
+                    e &&
+                    e.target &&
+                    e.target.files &&
+                    e.target.files.length === 1
+                  )
+                    setPfp(URL.createObjectURL(e.target.files[0]));
+                }}
+                hidden
+              />
+            </Button>
+            {pfp && (
+              <img
+                src={pfp}
+                alt='Profile picture'
+                className='my-3 w-40 h-full'
+              />
+            )}
+          </Box>
+        </Stack>
         <Box>
           <Typography
             variant='h6'
@@ -117,11 +173,11 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
           </Typography>
           <Autocomplete
             multiple
-            id='tutor-course-select'
-            options={availableCourses}
+            id='tutor-subject-select'
+            options={formattedSubjects}
             disablePortal
-            onChange={(e, v) => {
-              setCourses(v);
+            onChange={(_e, v) => {
+              setSelectedSubjects(v);
             }}
             renderInput={(params) => (
               <TextField
@@ -154,28 +210,11 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
               disableSwap
             />
           </Box>
-          <Box>
-            <Typography>Hourly chunks</Typography>
-            <Slider
-              aria-label='Hourly chunks'
-              name='hourly_chunks'
-              getAriaValueText={(value: number) => value.toString()}
-              value={hrChunks}
-              onChange={(e, v) => {
-                setHrChunks(+v);
-              }}
-              valueLabelDisplay='auto'
-              step={1}
-              min={1}
-              max={6}
-              marks
-            />
-          </Box>
           <ScheduleSelector
             selection={schedule}
             minTime={timeRange[0]}
             maxTime={timeRange[1]}
-            hourlyChunks={hrChunks}
+            hourlyChunks={1}
             startDate={getLastSunday()}
             dateFormat='ddd'
             timeFormat='h:mm a'
@@ -184,8 +223,8 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
         </Stack>
         <input
           hidden
-          name='courses'
-          value={JSON.stringify(courses)}
+          name='subjects'
+          value={JSON.stringify(selectedSubjects)}
         />
         <input
           hidden
@@ -197,7 +236,12 @@ const TutorSignupInfo = ({ subjects }: TutorSignupInfoProps) => {
           color='success'
           size='large'
           className='mx-auto'
-          disabled={!aboutMe || courses.length == 0 || schedule.length == 0}
+          disabled={
+            !aboutMe ||
+            selectedSubjects.length == 0 ||
+            schedule.length == 0 ||
+            pfp.length == 0
+          }
           type='submit'>
           Submit
         </Button>

@@ -1,4 +1,4 @@
-const { User, Tutor, Tutor_Subject, Tutor_Availability } = require('./index'); // Import the User model
+const { User, Tutor, Tutor_Subject, Tutor_Availability, Scheduled_Appointments } = require('./index'); // Import the User model
 
 const getUserByEmail = async (email) => {
   try {
@@ -14,9 +14,30 @@ const getUserByEmail = async (email) => {
   }
 };
 
-const createUser = async (firstname, lastname, email, password, user_type) => {
+const getUserByID = async (user_id) => {
   try {
-    console.log(firstname, lastname, email, password, user_type);
+    const user = await User.findOne({
+      where: {
+        user_id: user_id,
+      },
+    });
+    return user;
+  } catch (err) {
+    console.error('Error in getUserByID:', err);
+    return null;
+  }
+};
+
+const createUser = async (
+  firstname,
+  lastname,
+  email,
+  password,
+  user_type,
+  totp_secret
+) => {
+  console.log('Received TOTP Secret in createUser:', totp_secret);
+  try {
     const existingUser = await getUserByEmail(email);
 
     if (existingUser) {
@@ -30,10 +51,11 @@ const createUser = async (firstname, lastname, email, password, user_type) => {
       email: email,
       hashed_password: password,
       user_type: user_type,
+      totp_secret: totp_secret,
     });
 
     console.log(`New user created with ID: ${newUser.user_id}`);
-    return newUser.user_id;
+    return newUser;
   } catch (err) {
     console.error('Error in createUser:', err);
     return null;
@@ -46,12 +68,9 @@ const createTutor = async (
   profile_picture,
   is_criminal,
   courses,
-  schedule,
-  hourly_chunks
+  schedule
 ) => {
   try {
-    console.log(user_id, about_me, profile_picture, is_criminal);
-
     const newTutor = await Tutor.create({
       user_id,
       about_me,
@@ -73,7 +92,6 @@ const createTutor = async (
       Tutor_Availability.create({
         tutor_id,
         date_time: timeslot,
-        duration: hourly_chunks,
       });
     }
   } catch (err) {
@@ -82,8 +100,68 @@ const createTutor = async (
   }
 };
 
+const getUserSecret = async (email) => {
+  try {
+    const user = await User.findOne({
+      where: { email: email },
+      attributes: ['totp_secret'], // Fetch only the 'totp_secret' field
+    });
+    return user ? user.totp_secret : null;
+  } catch (err) {
+    console.error('Error in getUserSecret:', err);
+    return null;
+  }
+};
+
+const updateTutoringHours = async (user_id, additionalHours) => {
+  try {
+    // Find the user by user_id
+    const user = await User.findOne({
+      where: {
+        user_id: user_id,
+      },
+      include: [Tutor], // Include Tutor model if it exists
+    });
+
+    if (!user) {
+      throw new Error('User does not exist.');
+    }
+
+    let totalAppointments;
+      totalAppointments = await Scheduled_Appointments.count({
+        where: {
+          student_id: user_id,
+        },
+      });
+    
+
+    // Calculate the maximum allowed tutoring hours based on the total appointments
+    const maxAllowedHours = totalAppointments;
+
+
+      // If the user is not a tutor or does not have an associated Tutor record,
+      // update the total_tutoring_hours in the User model directly
+      user.total_tutoring_hours = Math.min(
+        user.total_tutoring_hours + additionalHours,
+        maxAllowedHours
+      );
+      await user.save();
+    
+
+    return user;
+  } catch (error) {
+    console.error('Error updating tutoring hours:', error);
+    return null;
+  }
+};
+
+
+
 module.exports = {
   getUserByEmail,
   createUser,
   createTutor,
+  getUserByID,
+  getUserSecret,
+  updateTutoringHours
 };

@@ -21,7 +21,7 @@ const generateToken = (user) => {
     },
     KEY,
     {
-      expiresIn: '12hr',
+      expiresIn: '24hr',
     }
   );
   return token;

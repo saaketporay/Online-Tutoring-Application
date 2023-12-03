@@ -13,98 +13,18 @@ import {
   useLoaderData,
   useNavigate,
   json,
+  redirect,
 } from 'react-router-dom';
 import { createTheme } from '@mui/material';
 import FavoriteTutorList from '../components/FavoriteTutorList';
 import AppointmentList from '../components/AppointmentList';
-import UserInfo from '../components/UserCardContent';
+import UserCardContent from '../components/UserCardContent';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
-import { setShowModal } from "../redux/modalSlice";
+import { setShowModal } from '../redux/modalSlice';
 import { axiosInstance } from '../utils/axios';
-
-const DUMMY_STUDENT_INFO = {
-  first_name: "John",
-  last_name: "Smith",
-  email: "johnsmith@gmail.com",
-  total_meeting_time: "32 h",
-  user_type: "student",
-  user_id: "qwer",
-  appointments: [
-    {
-      student_name: "John Smith",
-      tutor_name: "James Smith",
-      course: 'CS 2305',
-      day: 'Monday',
-      time: '11:15 am - 12:15 pm',
-      appointment_id: '1',
-    },
-    {
-      student_name: "John Smith",
-      tutor_name: 'Maria Garcia',
-      course: 'CS 2336',
-      day: 'Thursday',
-      time: '3 pm - 4 pm',
-      appointment_id: '2',
-    },
-  ],
-  favorite_tutors: [
-    {
-      tutor_name: "James Smith",
-      tutor_id: '1',
-    },
-    {
-      tutor_name: "Maria Garcia",
-      tutor_id: '2',
-    },
-    {
-      tutor_name: "Anurag Nagar",
-      tutor_id: '3',
-    },
-    {
-      tutor_name: "John Cole",
-      tutor_id: '4',
-    },
-    {
-      tutor_name: "Deepak Kumar",
-      tutor_id: '5',
-    },
-    {
-      tutor_name: "James Wilson",
-      tutor_id: '6',
-    },
-    {
-      tutor_name: "James Franco",
-      tutor_id: '7',
-    },
-    {
-      tutor_name: "Vince Gilligan",
-      tutor_id: '8',
-    },
-    {
-      tutor_name: "Johnathan Carpenter",
-      tutor_id: '9',
-    },
-  ],
-};
-
-const DUMMY_TUTOR_INFO = {
-  first_name: "James",
-  last_name: "Smith",
-  email: "jamesmith@outlook.com",
-  total_meeting_time: "16 h",
-  user_type: "tutor",
-  user_id: "asdf",
-  appointments: [
-    {
-      student_name: "John Smith",
-      tutor_name: "James Smith",
-      course: 'CS 2305',
-      day: 'Monday',
-      time: '11:15 am - 12:15 pm',
-      id: '1'
-    },
-  ],
-};
+import { store } from '../redux/store';
+import { AxiosError } from 'axios';
+import { setExpiration, setToken } from '../redux/authSlice';
 
 const theme = createTheme(cardTheme, textFieldTheme, {
   components: {
@@ -113,35 +33,75 @@ const theme = createTheme(cardTheme, textFieldTheme, {
         root: {
           width: '325px',
           '&.Mui-focused .MuiOutlinedInput-notchedOutline': {
-            borderColor: "#404040",
+            borderColor: '#404040',
           },
-        }
-      }
-    }
-  }
+        },
+      },
+    },
+  },
 });
 
-type userProps = {
-  first_name: string,
-  last_name: string,
-  total_meeting_time: string,
-  user_type: string,
-  appointments: {
-    student_name: string,
-    tutor_name: string,
-    course: string,
-    day: string,
-    time: string,
-    appointment_id: string,
-  }[],
-  favorite_tutors: {
-    tutor_name: string,
-    tutor_id: string,
-  }[] | undefined,
+export type appointmentType = {
+  User: {
+    first_name: string;
+    last_name: string;
+    email: string;
+  };
+  Tutor: {
+    User: {
+      first_name: string;
+      last_name: string;
+      email: string;
+    };
+    about_me: string;
+    profile_picture: string;
+    tutor_id: number;
+  };
+  date_time: string;
+  duration: number;
+  meeting_title: string;
+  meeting_desc: string;
+  appointment_id: number;
+};
+
+export type favoriteTutorsType = [
+  {
+    Tutor: {
+      User: {
+        first_name: string;
+        last_name: string;
+        email: string;
+      };
+      about_me: string;
+      profile_picture: string;
+      tutor_id: number;
+    };
+  }
+];
+
+export type userType = {
+  first_name: string;
+  last_name: string;
+  email: string;
+  total_tutoring_hours: number;
+  user_type: 'student' | 'tutor' | undefined;
+};
+
+export type tutorType = {
+  profile_picture: string | undefined;
+  about_me: string;
+};
+
+export type userProps = {
+  user: userType;
+  tutor: tutorType | undefined;
+  appointments: appointmentType[];
+  favorite_tutors: favoriteTutorsType;
 };
 
 const UserDashboard = () => {
   const userInfo = useLoaderData() as userProps;
+  const { user, tutor, appointments, favorite_tutors } = userInfo;
   const dispatch = useAppDispatch();
   const user_type = useAppSelector((state) => state.auth.user_type);
   const navigate = useNavigate();
@@ -150,84 +110,80 @@ const UserDashboard = () => {
     dispatch(setShowModal(false));
     navigate('/dashboard');
   };
-
-  const {
-    first_name,
-    last_name,
-    total_meeting_time,
-    appointments,
-    favorite_tutors,
-  } = DUMMY_STUDENT_INFO;
-
   return (
     <>
-      <Box className="grid justify-items-center bg-[#191919]">
+      <Box className='grid justify-center bg-[#191919]'>
         <ThemeProvider theme={roundButtonTheme}>
-          <Outlet context={handleCloseModal} />
-          {user_type != "tutor" ?
+          <Outlet
+            context={{
+              handleCloseModal,
+              userInfo,
+            }}
+          />
+          {user_type != 'tutor' ? (
             <Button
               to='/new-appt'
               component={RouterLink}
-              className='my-8 py-3 px-16'
+              className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#B45309',
-                "&:hover": {
-                  backgroundColor: '#B45309'
-                }
-              }}
-            >
-              <Typography className="font-bold">
+                '&:hover': {
+                  backgroundColor: '#B45309',
+                },
+              }}>
+              <Typography className='font-bold '>
                 Schedule appointment
               </Typography>
             </Button>
-            :
+          ) : (
             <Button
-              className='my-8 py-3 px-28'
+              className='my-8 py-3 mx-96'
               sx={{
                 backgroundColor: '#BE185D',
-                "&:hover": {
-                  backgroundColor: '#BE185D'
-                }
-              }}
-            >
+                '&:hover': {
+                  backgroundColor: '#BE185D',
+                },
+              }}>
               <Link
-                to="/edit-tutor-profile"
+                to='/edit-tutor-profile'
                 component={RouterLink}
-                className="no-underline"
-                color="#F4F4F4"
-              >
-                <Typography className="font-bold">
-                  Edit Profile
-                </Typography>
+                className='no-underline'
+                color='#F4F4F4'>
+                <Typography className='font-bold'>Edit Profile</Typography>
               </Link>
             </Button>
-          }
-          </ThemeProvider>
-          <ThemeProvider theme={theme}>
-          <Stack direction={'row'} spacing={3}>
+          )}
+        </ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <Stack
+            direction={'row'}
+            spacing={3}>
             <Card
               sx={{
                 width: 250,
-                height: 600
-              }}
-            >
-              <UserInfo
-                first_name={first_name}
-                last_name={last_name}
-                total_meeting_time={total_meeting_time}
+                height: 600,
+              }}>
+              <UserCardContent
+                first_name={user.first_name}
+                last_name={user.last_name}
+                total_tutoring_hours={user.total_tutoring_hours}
+                profile_picture={tutor?.profile_picture}
               />
             </Card>
             <Card
               className='justify-self-stretch'
               sx={{
                 width: 800,
-                height: 600
-              }}
-            >
-              {user_type == "student" && 
-                (<FavoriteTutorList favorite_tutors={favorite_tutors} />)
-              }
-              <AppointmentList appointments={appointments} />
+                height: 600,
+                overflow: 'auto',
+              }}>
+              {user_type == 'student' && (
+                <FavoriteTutorList favorite_tutors={favorite_tutors} />
+              )}
+              <AppointmentList
+                appointments={appointments}
+                favorite_tutors={favorite_tutors}
+              />
             </Card>
           </Stack>
         </ThemeProvider>
@@ -239,31 +195,44 @@ const UserDashboard = () => {
 export default UserDashboard;
 
 export const dashboardLoader: LoaderFunction = async () => {
-  const userInfo: Record<string, any> = {};
+  const userData: Record<string, any> = {};
   const instance = axiosInstance();
-  // const userResponse = await instance.get('user/get');
-  // if (userResponse.status != 200) {
-  //   throw json({
-  //     ...userResponse.data,
-  //     status: userResponse.data,
-  //   });
-  // }
-  // userInfo.userInfo = userResponse.data;
-  const appointmentsResponse = await instance.get('/appointments/get');
-  if (appointmentsResponse.status != 200) {
-    throw json({
-      ...appointmentsResponse.data,
-      status: appointmentsResponse.data,
-    });
+  try {
+    const userResponse = await instance.get('/user/info');
+    userData.user = userResponse.data.user;
+    userData.appointments = userResponse.data.appointments.filter(
+      (appt: appointmentType) => new Date() <= new Date(appt.date_time)
+    );
+    if (store.getState().auth.user_type == 'student') {
+      const favoritesResponse = await instance.get('/favorite/get');
+      userData.favorite_tutors = favoritesResponse.data;
+    } else {
+      userData.tutor = userResponse.data.tutor;
+    }
+    return userData;
+  } catch (e) {
+    if (e instanceof AxiosError) {
+      if (e.response?.status == 401) {
+        store.dispatch(setExpiration(''));
+        store.dispatch(setToken(''));
+        return redirect('/');
+      } 
+      else if (e.response?.status == 404) {
+        store.dispatch(setExpiration(''));
+        store.dispatch(setToken(''));
+        throw json({
+          message: e.message,
+          status: e.response?.status,
+        });
+      }
+      else {
+        throw json({
+          message: e.message,
+          status: e.response?.status,
+        });
+      }
+    } else {
+      return redirect('/');
+    }
   }
-  userInfo.appointments = appointmentsResponse.data;
-  const favoritesResponse = await instance.get('/favorite/get');
-  if (favoritesResponse.status != 200) {
-    throw json({
-      ...favoritesResponse.data,
-      status: favoritesResponse.data,
-    });
-  }
-  userInfo.favorite_tutors = favoritesResponse.data;
-  return appointmentsResponse.data;
 };

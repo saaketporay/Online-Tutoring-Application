@@ -1,4 +1,4 @@
-const { Favorite : FavoriteModel } = require('./index')
+const { Favorite : FavoriteModel, Tutor, User } = require('./index')
 
 const Favorite = {
 
@@ -7,7 +7,7 @@ const Favorite = {
         try {
             const newFavorite = await FavoriteModel.create({
                 student_id,
-                tutor_id
+                tutor_id,
             });
             console.log(newFavorite);
             return newFavorite;
@@ -22,7 +22,14 @@ const Favorite = {
             const favorites = await FavoriteModel.findAll({
                 where: {
                     student_id: student_id
-                }
+                },
+                include: {
+                    model: Tutor,
+                    include: {
+                        model: User,
+                        attributes: ['first_name', 'last_name', 'email'],
+                    },
+                },
             });
             return favorites;
         } catch (err) {
@@ -35,8 +42,8 @@ const Favorite = {
             const removedFavorite = await FavoriteModel.destroy({
                 where: {
                     student_id: student_id,
-                    tutor_id: tutor_id
-                }
+                    tutor_id: tutor_id,
+                },
             });
             console.log(removedFavorite)
             return removedFavorite;
