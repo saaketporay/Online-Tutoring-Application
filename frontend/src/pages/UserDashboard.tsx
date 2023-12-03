@@ -143,10 +143,11 @@ const UserDashboard = () => {
                 '&:hover': {
                   backgroundColor: '#BE185D',
                 },
-              }}>
+              }}
+              to='/edit-tutor-profile'
+              component={RouterLink}
+            >
               <Link
-                to='/edit-tutor-profile'
-                component={RouterLink}
                 className='no-underline'
                 color='#F4F4F4'>
                 <Typography className='font-bold'>Edit Profile</Typography>
