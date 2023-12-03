@@ -88,3 +88,10 @@ export const getReadableTime = (time: string) => {
 
   return readable_time;
 };
+
+export const getDaysFromToday = (date: Date) => {
+  const today = new Date();
+  const oneDay = 24 * 60 * 60 * 1000 // hours * minutes * seconds * milliseconds
+  const difference = Math.round(Math.abs((+date - +today) / oneDay));
+  return difference;
+}

@@ -96,7 +96,7 @@ const TutorSignupInfo = ({
     tutorInfo ? [0, 24] : [9, 17]
   );
   const [pfp, setPfp] = useState<string>(
-    tutorInfo ? `http://localhost:3000/uploads/${tutorInfo.pfp}` : ''
+    tutorInfo ? `${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${tutorInfo.pfp}` : ''
   );
 
   const marks = [];
