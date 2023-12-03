@@ -68,10 +68,18 @@ const appointmentController = {
     try {
       const appointments = await Appointment.getByStudentId(decodedToken.id);
       const { appt_id } = req.params;
-      if (appointments.find((appt) => appt.appt_id == appt_id)) {
+      const appt = appointments.find((appt) => appt.appointment_id == appt_id);
+      if (!appt) {
+        return res.status(401).send("User is not authorized to delete appointment or appointment does not exist");
+      }
+      const today = new Date();
+      const oneDay = 24 * 60 * 60 * 1000; // hours * minutes * seconds * milliseconds
+      const difference = Math.round(Math.abs((appt.date_time - today) / oneDay));
+      if (difference > 1) {
         await Appointment.deleteByApptId(appt_id);
+        return res.status(200).send("Appointment successfully deleted");
       } else {
-        return res.status(401).send("User is not authorized to delete appointment or appointment does not exist")
+        return res.status(403).send("Appointment cannot be cancelled 24 hours before the arranged date.");
       }
     } catch (err) {
       return res.status(500).send(err);

@@ -11,7 +11,7 @@ import DeleteIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { NavLink, Form } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal, setAppointmentId } from "../redux/modalSlice";
-import { getReadableDateTime } from '../utils/datetime';
+import { getDaysFromToday, getReadableDateTime } from '../utils/datetime';
 import { appointmentType, favoriteTutorsType } from '../pages/UserDashboard';
 
 const AppointmentList = (
@@ -117,29 +117,31 @@ const AppointmentList = (
                       }
                     </>
                   }
-                  <Button
-                    component={NavLink}
-                    to={`appt/delete/${appt.appointment_id}`}
-                    onClick={() => {
-                      dispatch(setAppointmentId(appt.appointment_id));
-                      dispatch(setShowModal(true));
-                    }}
-                    sx={{
-                      "&:hover": {
-                        backgroundColor: 'transparent'
-                      }
-                    }}
-                    disableRipple
-                  >
-                    <SvgIcon
-                      viewBox='0 0 45 45'
-                      sx={{
-                        fontSize: 45
+                  {getDaysFromToday(new Date(appt.date_time)) > 1 &&
+                    <Button
+                      component={NavLink}
+                      to={`appt/delete/${appt.appointment_id}`}
+                      onClick={() => {
+                        dispatch(setAppointmentId(appt.appointment_id));
+                        dispatch(setShowModal(true));
                       }}
+                      sx={{
+                        "&:hover": {
+                          backgroundColor: 'transparent'
+                        }
+                      }}
+                      disableRipple
                     >
-                      <DeleteIcon />
-                    </SvgIcon>
-                  </Button>
+                      <SvgIcon
+                        viewBox='0 0 45 45'
+                        sx={{
+                          fontSize: 45
+                        }}
+                      >
+                        <DeleteIcon />
+                      </SvgIcon>
+                    </Button>
+                  }
                 </Card>
               )
             })}

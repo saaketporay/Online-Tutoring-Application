@@ -15,6 +15,7 @@ import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { clearAppointmentId } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
 import { AxiosError } from 'axios';
+import { store } from '../redux/store';
 
 const DeleteAppointmentModal = () => {
   const { handleCloseModal } = useOutletContext() as any;
@@ -59,21 +60,13 @@ const DeleteAppointmentModal = () => {
 export default DeleteAppointmentModal;
 
 export const deleteAppointmentAction: ActionFunction = async ({ params }) => {
+  store.dispatch(clearAppointmentId());
   const { apptId } = params
-  const instance = axiosInstance();
-  const dispatch = useAppDispatch();
   try {
-    const response = await instance.delete(`/appointment/delete/${apptId}`);
-    if (response.status != 200) {
-      throw json({
-        ...response.data,
-        "status": response.status
-      });
-    }
-    dispatch(clearAppointmentId());
+    const instance = axiosInstance();
+    await instance.delete(`/appointments/delete/${apptId}`);
     return redirect("/dashboard");
   } catch (err) {
-    dispatch(clearAppointmentId());
     if (err instanceof AxiosError) {
       throw json({
         message: err.response?.data,
