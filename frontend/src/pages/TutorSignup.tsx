@@ -97,6 +97,8 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
+  const schedule = JSON.parse(tutorInfo.schedule) as string;
+
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
   ).map(({ label, subject_id }) => ({ subject_name: label, subject_id }));
@@ -106,6 +108,7 @@ export const action: ActionFunction = async ({ request }) => {
     user_type: 'tutor',
     profile_picture: response.data.filename,
     subjects,
+    schedule,
   };
 
   instance = axiosInstance();
