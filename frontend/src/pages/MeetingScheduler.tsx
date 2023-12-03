@@ -72,10 +72,14 @@ const checkSameDay = (d1: Date, d2: Date) =>
   d1.getMonth() === d2.getMonth() &&
   d1.getDate() === d2.getDate();
 
-const checkSameTimeslot = (d1: Date, d2: Date) =>
-  checkSameDay(d1, d2) &&
-  d1.getHours() === d2.getHours() &&
-  d1.getMinutes() === d2.getMinutes();
+const checkSameTimeslot = (d1: Date, d2: Date) => {
+  console.log(d1, d2);
+  return (
+    checkSameDay(d1, d2) &&
+    d1.getHours() === d2.getHours() &&
+    d1.getMinutes() === d2.getMinutes()
+  );
+};
 
 const MeetingScheduler = () => {
   const data = useLoaderData() as Response;
@@ -197,7 +201,8 @@ const MeetingScheduler = () => {
     ) {
       const date = new Date(selectedDate);
       const t = value.split(/[^0-9]/);
-      date.setHours(+t[0] - 1);
+      const u = value.split(/[^a-z]/).filter((x) => x);
+      date.setHours(+t[0] + (u[0] === 'pm' ? 11 : +t[0] === 12 ? -12 : 0));
       date.setMinutes(+t[1]);
 
       setMeetingInfo(
@@ -207,6 +212,8 @@ const MeetingScheduler = () => {
       );
     }
   };
+
+  console.log(meetingInfo);
 
   return (
     <Form
