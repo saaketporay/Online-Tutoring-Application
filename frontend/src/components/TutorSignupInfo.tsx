@@ -96,7 +96,11 @@ const TutorSignupInfo = ({
     tutorInfo ? [0, 24] : [9, 17]
   );
   const [pfp, setPfp] = useState<string>(
-    tutorInfo ? `${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${tutorInfo.pfp}` : ''
+    tutorInfo
+      ? `${import.meta.env.VITE_BACKEND_BASE_URL as string}/uploads/${
+          tutorInfo.pfp
+        }`
+      : ''
   );
 
   const marks = [];
@@ -251,10 +255,11 @@ const TutorSignupInfo = ({
           size='large'
           className='mx-auto'
           disabled={
-            !aboutMe ||
-            selectedSubjects.length == 0 ||
-            schedule.length == 0 ||
-            pfp.length == 0
+            !tutorInfo &&
+            (!aboutMe ||
+              selectedSubjects.length == 0 ||
+              schedule.length == 0 ||
+              pfp.length == 0)
           }
           type='submit'>
           Submit

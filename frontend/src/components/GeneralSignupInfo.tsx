@@ -1,37 +1,43 @@
-import TextField from "@mui/material/TextField";
-import { ThemeProvider } from "@emotion/react";
+import TextField from '@mui/material/TextField';
+import { ThemeProvider } from '@emotion/react';
 import { squareButtonTheme, textFieldTheme } from '../utils/theme';
 import { createTheme } from '@mui/material';
-import { useActionData } from "react-router-dom";
-import { userType } from "../pages/UserDashboard";
+import { useActionData } from 'react-router-dom';
+import { userType } from '../pages/UserDashboard';
 
 const theme = createTheme(textFieldTheme, squareButtonTheme);
 
 export type signupError = {
-  errors: string[],
+  errors: string[];
 };
 
-const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
+const GeneralSignupInfo = ({
+  userData,
+}: {
+  userData: userType | undefined;
+}) => {
   const data = useActionData() as signupError;
-  
+
   return (
     <>
       <ThemeProvider theme={theme}>
-        {data && data.errors && 
+        {data && data.errors && (
           <>
             <ul className='mt-0'>
               {data.errors.map((error, i) => {
                 return (
-                  <li key={i} className='text-red-500'>
+                  <li
+                    key={i}
+                    className='text-red-500'>
                     {error}
                   </li>
-                )
+                );
               })}
             </ul>
           </>
-        }
+        )}
         <TextField
-          required
+          required={!userData}
           id='first_name'
           name='first_name'
           defaultValue={userData?.first_name}
@@ -41,7 +47,7 @@ const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
           className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
-          required
+          required={!userData}
           id='last_name'
           name='last_name'
           defaultValue={userData?.last_name}
@@ -51,7 +57,7 @@ const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
           className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
-          required
+          required={!userData}
           id='email'
           name='email'
           defaultValue={userData?.email}
@@ -61,7 +67,7 @@ const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
           className='w-[410px] mb-10 justify-self-center'
         />
         <TextField
-          required
+          required={!userData}
           id='password'
           name='password'
           label='Required'
@@ -71,7 +77,7 @@ const GeneralSignupInfo = ({ userData }: { userData: userType | undefined}) => {
         />
       </ThemeProvider>
     </>
-  )
-}
+  );
+};
 
 export default GeneralSignupInfo;
