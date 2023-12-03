@@ -12,7 +12,11 @@ const getTutorByID = async (user_id) => {
       where: {
         user_id: user_id,
       },
-      include: [{ model: User }, { model: Subject }],
+      include: [
+        { model: User },
+        { model: Subject },
+        { model: Tutor_Availability },
+      ],
     });
     return user;
   } catch (err) {

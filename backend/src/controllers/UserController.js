@@ -6,7 +6,7 @@ const {
   createTutor,
   getUserByID,
   getUserSecret,
-  updateTutoringHours
+  updateTutoringHours,
 } = require('../models/User');
 const { getTutorByID } = require('../models/Tutor');
 const Appointment = require('../models/Appointment');
@@ -73,14 +73,24 @@ const getTutorInfo = async (req, res) => {
     const tutorInfo = await getTutorByID(user_Id);
     console.log('tutorInfo', tutorInfo);
 
+    const schedule = tutorInfo.Tutor_Availabilities.map((timeslot) =>
+      timeslot.date_time.toISOString()
+    );
+    const sunday = new Date(schedule[0]);
+    sunday.setDate(sunday.getDate() - sunday.getDay());
+
     const data = {
       first_name: tutorInfo.User.first_name,
       last_name: tutorInfo.User.last_name,
       email: tutorInfo.User.email,
-      aboutMe: tutorInfo.aboutMe,
-      selectedSubjects: tutorInfo.Subjects,
+      about_me: tutorInfo.about_me,
+      selected_subjects: tutorInfo.Subjects,
       pfp: tutorInfo.profile_picture,
+      schedule,
+      sunday,
     };
+
+    console.log('data', data);
 
     return res.status(200).json(data);
   } catch (err) {
@@ -314,8 +324,6 @@ const edit = async (req, res) => {
     }
   }
 };
-
-
 
 module.exports = {
   login,

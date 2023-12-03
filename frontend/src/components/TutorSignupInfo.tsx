@@ -57,9 +57,11 @@ export interface TutorInfo {
   first_name: string;
   last_name: string;
   email: string;
-  aboutMe: string;
-  selectedSubjects: Subject[];
+  about_me: string;
+  selected_subjects: Subject[];
   pfp: string;
+  schedule: Date[];
+  sunday: Date;
 }
 
 const TutorSignupInfo = ({
@@ -75,18 +77,24 @@ const TutorSignupInfo = ({
   })) as FormattedSubject[];
 
   const defaultSelectedSubjects = tutorInfo
-    ? (tutorInfo.selectedSubjects.map((course) => ({
+    ? (tutorInfo.selected_subjects.map((course) => ({
         label: course.subject_name,
         subject_id: course.subject_id,
       })) as FormattedSubject[])
     : [];
 
-  const [aboutMe, setAboutMe] = useState<string>('');
+  const [aboutMe, setAboutMe] = useState<string>(
+    tutorInfo ? tutorInfo.about_me : ''
+  );
   const [selectedSubjects, setSelectedSubjects] = useState<FormattedSubject[]>(
     defaultSelectedSubjects
   );
-  const [schedule, setSchedule] = useState<Array<Date>>([]);
-  const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
+  const [schedule, setSchedule] = useState<Array<Date>>(
+    tutorInfo ? tutorInfo.schedule : []
+  );
+  const [timeRange, setTimeRange] = useState<[number, number]>(
+    tutorInfo ? [0, 24] : [9, 17]
+  );
   const [pfp, setPfp] = useState<string>(
     tutorInfo ? `http://localhost:3000/uploads/${tutorInfo.pfp}` : ''
   );
@@ -176,8 +184,14 @@ const TutorSignupInfo = ({
             id='tutor-subject-select'
             options={formattedSubjects}
             disablePortal
-            onChange={(_e, v) => {
-              setSelectedSubjects(v);
+            value={selectedSubjects}
+            onChange={(_e, v: Partial<FormattedSubject>[]) => {
+              for (const value of v) {
+                value.subject_id = subjects.find(
+                  (subject) => subject.subject_name === value.label
+                )!.subject_id;
+              }
+              setSelectedSubjects(v as FormattedSubject[]);
             }}
             renderInput={(params) => (
               <TextField
@@ -215,7 +229,7 @@ const TutorSignupInfo = ({
             minTime={timeRange[0]}
             maxTime={timeRange[1]}
             hourlyChunks={1}
-            startDate={getLastSunday()}
+            startDate={tutorInfo ? tutorInfo.sunday : getLastSunday()}
             dateFormat='ddd'
             timeFormat='h:mm a'
             onChange={setSchedule}

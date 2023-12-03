@@ -8,9 +8,7 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { axiosInstance } from '../utils/axios';
-import {
-  setEmail,
-} from '../redux/authSlice';
+import { setEmail } from '../redux/authSlice';
 import GeneralSignupInfo from '../components/GeneralSignupInfo';
 import TutorSignupInfo from '../components/TutorSignupInfo';
 import { Subject, FormattedSubject } from '../components/TutorSignupInfo';
@@ -41,7 +39,10 @@ const TutorSignup = () => {
             <GeneralSignupInfo userData={undefined} />
           </Box>
           <Box className='w-[500px] justify-self-center'>
-            <TutorSignupInfo subjects={subjects} tutorInfo={undefined} />
+            <TutorSignupInfo
+              subjects={subjects}
+              tutorInfo={undefined}
+            />
           </Box>
         </Form>
       )}
@@ -105,36 +106,38 @@ export const action: ActionFunction = async ({ request }) => {
     user_type: 'tutor',
     profile_picture: response.data.filename,
     subjects,
-    hourly_chunks: 60 / +tutorInfo.hourly_chunks,
   };
 
   instance = axiosInstance();
   try {
     response = await instance.post('/user/register', modifiedTutorInfo);
-    
+
     if (response.status != 200) {
       return json({
         ...response.data,
         status: response.status,
       });
     }
-    
+
     store.dispatch(setEmail(email as string));
     store.dispatch(setShowModal(true));
-    
+
     return json({ status: 'Registration Successful' });
   } catch (e) {
     if (e instanceof AxiosError) {
       if (e.response?.status == 451) {
         throw json({
-          message: "Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.",
+          message:
+            'Our database has indicated that your credentials match those of a criminal. You are not allowed to register on our website.',
           status: 451,
         });
-      }
-      else if (e.response?.status == 401) {
-        return json({ errors: e.response?.data || 'Missing one of the following: profile picture, about me, subjects, schedule'});
-      }
-      else {
+      } else if (e.response?.status == 401) {
+        return json({
+          errors:
+            e.response?.data ||
+            'Missing one of the following: profile picture, about me, subjects, schedule',
+        });
+      } else {
         throw json({
           message: e.response?.data,
           status: e.response?.status,
