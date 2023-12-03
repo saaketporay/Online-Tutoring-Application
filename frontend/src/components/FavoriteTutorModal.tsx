@@ -64,7 +64,7 @@ const FavoriteTutorModal = () => {
                   height: 75,
                   width: 75
                 }}
-                src={`http://localhost:3000/uploads/${tutor!.Tutor.profile_picture}`}
+                src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${tutor!.Tutor.profile_picture}`}
               />
               <Stack
                 direction={'column'}

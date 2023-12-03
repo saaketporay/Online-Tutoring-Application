@@ -180,7 +180,7 @@ const Search = () => {
                         width: 75,
                       }}
                       className='max-w-[100px] h-auto mx-3'
-                      src={`http://localhost:3000/uploads/${val.profile_picture}`}
+                      src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${val.profile_picture}`}
                       alt={`${key}'s profile picture`}
                     />
                     <Stack spacing={2}>
@@ -201,7 +201,7 @@ const Search = () => {
               className='flex items-center justify-evenly'>
               <img
                 className='max-w-[100px] h-auto rounded-full'
-                src={`http://localhost:3000/uploads/${selectedTutorInfo.profile_picture}`}
+                src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${selectedTutorInfo.profile_picture}`}
                 alt={`${selectedTutor}'s profile picture`}
               />
               <Stack spacing={2}>

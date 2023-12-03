@@ -88,7 +88,7 @@ const TutorSignupInfo = ({
   const [schedule, setSchedule] = useState<Array<Date>>([]);
   const [timeRange, setTimeRange] = useState<[number, number]>([9, 17]);
   const [pfp, setPfp] = useState<string>(
-    tutorInfo ? `http://localhost:3000/uploads/${tutorInfo.pfp}` : ''
+    tutorInfo ? `${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${tutorInfo.pfp}` : ''
   );
 
   const marks = [];
