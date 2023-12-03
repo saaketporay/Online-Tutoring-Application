@@ -48,7 +48,7 @@ const AppointmentList = (
                           width: 50,
                         }}
                         className='my-auto mr-3'
-                        src={`http://localhost:3000/uploads/${appt.Tutor.profile_picture}`}
+                        src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${appt.Tutor.profile_picture}`}
                       />
                     </>
                   }
