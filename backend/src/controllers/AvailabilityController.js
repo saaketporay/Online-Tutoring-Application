@@ -8,7 +8,14 @@ const AvailabilityController = {
 
     try {
       const availability = await Availability.getAllTimesByTutorId(tutor_Id);
-      console.log(availability);
+      console.log(
+        availability.map((timeslot) => {
+          const date_time = new Date(timeslot.date_time);
+          date_time.setSeconds(0);
+          date_time.setMilliseconds(0);
+          return date_time.toISOString();
+        })
+      );
       return res.status(200).json(availability);
     } catch (error) {
       console.error(error);
@@ -113,19 +120,26 @@ const AvailabilityController = {
               cur_timeslot.setDate(cur_timeslot.getDate() + timeslot.getDay());
               cur_timeslot.setHours(timeslot.getHours());
               cur_timeslot.setMinutes(timeslot.getMinutes());
-              possibly_available_appts.push(cur_timeslot.toISOString());
+              cur_timeslot.setSeconds(0);
+              cur_timeslot.setMilliseconds(0);
+              possibly_available_appts.push(cur_timeslot.getTime());
             }
             cur_sunday.setDate(cur_sunday.getDate() + 7);
           }
 
           const scheduled_appts = (
             await Appointment.getAllApptsByTutorId(tutor.tutor_id)
-          ).map((timeslot) => timeslot.date_time.toISOString());
+          ).map((timeslot) => {
+            const date_time = new Date(timeslot.date_time);
+            date_time.setSeconds(0);
+            date_time.setMilliseconds(0);
+            return date_time.getTime();
+          });
 
           const available_appts = Array.from(
             setMinus(possibly_available_appts, scheduled_appts)
           ).map((date_time) => ({
-            date_time,
+            date_time: new Date(date_time).toISOString(),
             tutor_id: tutor.tutor_id,
             subject_id: subject.subject_id,
           }));

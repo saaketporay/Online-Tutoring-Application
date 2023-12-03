@@ -107,8 +107,8 @@ const MeetingScheduler = () => {
     selectedCourse && selectedTutor && selectedTutor in data[selectedCourse]
       ? new Set(
           data[selectedCourse][selectedTutor].map((timeslot) => {
-            const t = timeslot.date_time.split(/\D+/).map((str) => +str);
-            return `${t[0]}-${t[1] - 1}-${t[2]}`;
+            const t = new Date(timeslot.date_time);
+            return `${t.getFullYear()}-${t.getMonth()}-${t.getDate()}`;
           })
         )
       : new Set();
@@ -119,14 +119,9 @@ const MeetingScheduler = () => {
     selectedTutor in data[selectedCourse] &&
     selectedDate
       ? data[selectedCourse][selectedTutor]
-          .filter((timeslot) => {
-            const t = timeslot.date_time.split(/\D+/).map((str) => +str);
-            const m = new Date(
-              Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5])
-            );
-            const date = new Date(selectedDate);
-            return checkSameDay(m, date);
-          })
+          .filter((timeslot) =>
+            checkSameDay(new Date(timeslot.date_time), new Date(selectedDate))
+          )
           .map((timeslot) => ({
             label: timeslot.readable_time,
           }))
@@ -210,10 +205,10 @@ const MeetingScheduler = () => {
           checkSameTimeslot(new Date(timeslot.date_time), date)
         )!
       );
+
+      console.log(meetingInfo);
     }
   };
-
-  console.log(meetingInfo);
 
   return (
     <Form
@@ -368,11 +363,7 @@ export const loader: LoaderFunction = async () => {
       // For every timeslot
       for (let i = 0; i < timeslotsArr.length; i++) {
         const timeslot = data[subjectName][tutorName][i];
-
-        // const readable_date_time = getReadableDateTime(timeslot.date_time);
         const readable_time = getReadableTime(timeslot.date_time);
-
-        // timeslot.readable_date_time = readable_date_time;
         timeslot.readable_time = readable_time;
       }
     }

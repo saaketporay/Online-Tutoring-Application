@@ -64,26 +64,22 @@ export const getReadableDateTime = (dateTime: string) => {
 
 // Convert SQL's TIME data type to a JS Date object to a readable time format assuming 1 hour appts: 1:19am - 2:12am
 export const getReadableTime = (time: string) => {
-  const t = time.split(/\D+/).map((str) => +str);
-  // Create a new Date object based on the year, month, day, etc, values from t
-  let m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
+  const m = new Date(time);
   let hour = m.getHours();
-  let modifiedHour =
-    hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
+  let modifiedHour = hour === 0 ? 12 : hour <= 12 ? hour : hour - 12;
   let minutes = m.getMinutes();
   let modifiedMinutes = minutes === 0 ? '00' : minutes;
-  let am = hour < 11;
+  let am = hour < 12;
   const readable_start_time = `${modifiedHour}:${modifiedMinutes}${
     am ? 'am' : 'pm'
   }`;
 
-  m = new Date(Date.UTC(t[0], t[1] - 1, t[2], t[3], t[4], t[5]));
-  m.setTime(m.getTime() + 60 * 60 * 1000);
+  m.setHours(m.getHours() + 1);
   hour = m.getHours();
-  modifiedHour = hour === 0 || hour === 11 ? 12 : hour < 11 ? hour : hour - 11;
+  modifiedHour = hour === 0 ? 12 : hour <= 12 ? hour : hour - 12;
   minutes = m.getMinutes();
   modifiedMinutes = minutes === 0 ? '00' : minutes;
-  am = hour < 11;
+  am = hour < 12;
   const readable_end_time = `${modifiedHour}:${modifiedMinutes}${
     am ? 'am' : 'pm'
   }`;
