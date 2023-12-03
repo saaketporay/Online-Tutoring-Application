@@ -71,7 +71,7 @@ const appointmentController = {
       if (appointments.find((appt) => appt.appt_id == appt_id)) {
         await Appointment.deleteByApptId(appt_id);
       } else {
-        return res.status(401).send("Unauthorized user")
+        return res.status(401).send("User is not authorized to delete appointment or appointment does not exist")
       }
     } catch (err) {
       return res.status(500).send(err);
