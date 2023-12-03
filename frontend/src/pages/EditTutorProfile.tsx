@@ -95,17 +95,17 @@ export const loader: LoaderFunction = async () => {
 export const action: ActionFunction = async ({ request }) => {
   const tutorInfo = Object.fromEntries(await request.formData());
 
-  let instance = axiosInstance(true);
-  let response = await instance.post('/upload/profile-picture', {
-    profile_picture: tutorInfo.profile_picture,
-  });
+  // let instance = axiosInstance(true);
+  // let response = await instance.post('/upload/profile-picture', {
+  //   profile_picture: tutorInfo.profile_picture,
+  // });
 
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      status: response.status,
-    });
-  }
+  // if (response.status != 200) {
+  //   throw json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
 
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
@@ -114,24 +114,26 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    profile_picture: response.data.filename,
+    // profile_picture: response.data.filename,
     subjects,
   };
 
-  instance = axiosInstance();
-  response = await instance.post('/user/edit', modifiedTutorInfo);
+  console.log('modified tutor info', modifiedTutorInfo);
 
-  if (response.status != 200) {
-    return json({
-      ...response.data,
-      status: response.status,
-    });
-  }
+  // instance = axiosInstance();
+  // response = await instance.post('/user/edit', modifiedTutorInfo);
 
-  store.dispatch(setEmail(email as string));
-  store.dispatch(setShowModal(true));
+  // if (response.status != 200) {
+  //   return json({
+  //     ...response.data,
+  //     status: response.status,
+  //   });
+  // }
 
-  return json({ status: 'Successfully Updated Profile' });
+  // store.dispatch(setEmail(email as string));
+  // store.dispatch(setShowModal(true));
+
+  return redirect('/dashboard');
 };
 
 export default EditTutorProfile;
