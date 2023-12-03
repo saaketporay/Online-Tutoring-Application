@@ -29,7 +29,8 @@ const EditTutorProfile = () => {
   return (
     <Form
       method='post'
-      className='grid justify-center bg-[#191919] py-20'>
+      className='grid justify-center bg-[#191919] py-20'
+      encType='multipart/form-data'>
       <Typography
         variant='h4'
         className='mb-16 justify-self-center'>
@@ -95,17 +96,24 @@ export const loader: LoaderFunction = async () => {
 export const action: ActionFunction = async ({ request }) => {
   const tutorInfo = Object.fromEntries(await request.formData());
 
-  // let instance = axiosInstance(true);
-  // let response = await instance.post('/upload/profile-picture', {
-  //   profile_picture: tutorInfo.profile_picture,
-  // });
+  let instance;
+  let response;
 
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
+  // if (tutorInfo.profile_picture) {
+  //   instance = axiosInstance(true);
+  //   response = await instance.post('/upload/profile-picture', {
+  //     profile_picture: tutorInfo.profile_picture,
   //   });
+
+  //   if (response.status != 200) {
+  //     throw json({
+  //       ...response.data,
+  //       status: response.status,
+  //     });
+  //   }
   // }
+
+  const schedule = JSON.parse(tutorInfo.schedule as string) as Date[];
 
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
@@ -114,24 +122,20 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    // profile_picture: response.data.filename,
+    profile_picture: response ? (response.data.filename as string) : null,
     subjects,
+    schedule,
   };
 
-  console.log('modified tutor info', modifiedTutorInfo);
+  instance = axiosInstance();
+  response = await instance.patch('/user/edit', modifiedTutorInfo);
 
-  // instance = axiosInstance();
-  // response = await instance.post('/user/edit', modifiedTutorInfo);
-
-  // if (response.status != 200) {
-  //   return json({
-  //     ...response.data,
-  //     status: response.status,
-  //   });
-  // }
-
-  // store.dispatch(setEmail(email as string));
-  // store.dispatch(setShowModal(true));
+  if (response.status != 200) {
+    return json({
+      ...response.data,
+      status: response.status,
+    });
+  }
 
   return redirect('/dashboard');
 };
