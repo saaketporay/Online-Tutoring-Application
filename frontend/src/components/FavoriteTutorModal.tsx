@@ -53,58 +53,59 @@ const FavoriteTutorModal = () => {
         aria-describedby="favorite-tutor-description"
       >
         <Box sx={modalStyle}>
-          <Form method="post">
-            <Stack direction={'column'} spacing={2}>
+          <Stack direction={'column'} spacing={2}>
+            <Stack
+              direction={'row'}
+              useFlexGap
+            >
+              <Avatar
+                variant='square'
+                sx={{
+                  height: 75,
+                  width: 75
+                }}
+                src={`http://localhost:3000/uploads/${tutor!.Tutor.profile_picture}`}
+              />
               <Stack
-                direction={'row'}
-                useFlexGap
+                direction={'column'}
               >
-                <Avatar
-                  variant='square'
+                <Typography
+                  variant='h6'
                   sx={{
-                    height: 75,
-                    width: 75
+                    marginLeft: '20px',
                   }}
-                />
-                <Stack
-                  direction={'column'}
                 >
-                  <Typography
-                    variant='h6'
-                    sx={{
-                      marginLeft: '20px',
-                    }}
-                  >
-                    {tutor?.Tutor.User.first_name} {tutor?.Tutor.User.last_name}
-                  </Typography>
-                  <Typography
-                    variant='h6'
-                    sx={{
-                      marginLeft: '20px',
-                    }}
-                  >
-                    {tutor?.Tutor.User.email}
-                  </Typography>
-                </Stack>
+                  {tutor?.Tutor.User.first_name} {tutor?.Tutor.User.last_name}
+                </Typography>
+                <Typography
+                  variant='h6'
+                  sx={{
+                    marginLeft: '20px',
+                  }}
+                >
+                  {tutor?.Tutor.User.email}
+                </Typography>
               </Stack>
-              {subjects && subjects.length > 0 ?
-                <>
-                  <Typography
-                    variant='h6'
-                  >
-                    Subjects:
-                  </Typography>
-                  {subjects.join(', ')}
-                </>
+            </Stack>
+            {subjects && subjects.length > 0 ?
+              <>
+                <Typography
+                  variant='h6'
+                >
+                  Subjects:
+                </Typography>
+                {subjects.join(', ')}
+              </>
               :
-                <>
-                  <Typography
-                    variant='h6'
-                  >
-                    Tutor has no subjects...
-                  </Typography>
-                </>
-              }
+              <>
+                <Typography
+                  variant='h6'
+                >
+                  Tutor has no subjects...
+                </Typography>
+              </>
+            }
+            <Form method="DELETE">
               <Button
                 type='submit'
                 variant='outlined'
@@ -112,8 +113,8 @@ const FavoriteTutorModal = () => {
               >
                 Remove tutor from favorite's list
               </Button>
-            </Stack>
-          </Form>
+            </Form>
+          </Stack>
         </Box>
       </Modal>
     </>
