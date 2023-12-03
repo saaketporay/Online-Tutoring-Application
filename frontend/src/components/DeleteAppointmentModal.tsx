@@ -5,7 +5,6 @@ import Stack from '@mui/material/Stack'
 import Modal from '@mui/material/Modal';
 import {
   Form,
-  // useActionData,
   useOutletContext,
   json,
   redirect,
@@ -15,6 +14,7 @@ import { modalStyle } from '../utils/theme';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { clearAppointmentId } from "../redux/modalSlice";
 import { axiosInstance } from '../utils/axios';
+import { AxiosError } from 'axios';
 
 const DeleteAppointmentModal = () => {
   const { handleCloseModal } = useOutletContext() as any;
@@ -61,14 +61,24 @@ export default DeleteAppointmentModal;
 export const deleteAppointmentAction: ActionFunction = async ({ params }) => {
   const { apptId } = params
   const instance = axiosInstance();
-  const response = await instance.delete(`/appointment/delete/${apptId}`);
-  if (response.status != 200) {
-    throw json({
-      ...response.data,
-      "status": response.status
-    });
-  }
   const dispatch = useAppDispatch();
-  dispatch(clearAppointmentId());
+  try {
+    const response = await instance.delete(`/appointment/delete/${apptId}`);
+    if (response.status != 200) {
+      throw json({
+        ...response.data,
+        "status": response.status
+      });
+    }
+    dispatch(clearAppointmentId());
     return redirect("/dashboard");
+  } catch (err) {
+    dispatch(clearAppointmentId());
+    if (err instanceof AxiosError) {
+      throw json({
+        message: err.response?.data,
+        status: err.response?.status,
+      });
+    }
+  }
 };
