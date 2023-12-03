@@ -9,7 +9,7 @@ import Home from './pages/Home';
 import ErrorPage from './pages/ErrorPage';
 import FormSuccess from './pages/FormSuccess';
 import EmailSignIn, { emailSigninAction } from './pages/EmailSignIn';
-import StudentSignup from './pages/StudentSignup';
+import StudentSignup, { userSignupAction } from './pages/StudentSignup';
 import TutorSignup, {
   loader as tutorSignupLoader,
   action as tutorSignupAction,
@@ -79,6 +79,7 @@ const App = () => {
           <Route
             path='student'
             element={<StudentSignup />}
+            action={userSignupAction}
           />
           <Route
             path='tutor'
