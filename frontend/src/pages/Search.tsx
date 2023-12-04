@@ -130,7 +130,7 @@ const Search = () => {
         </Typography>
         <Autocomplete
           id='instructor-search-subject'
-          className='w-[500px] mb-20'
+          className='w-[500px] mb-20 mx-auto'
           options={formattedSubjects}
           disablePortal
           onChange={subjectSelectChangeHandler}
@@ -147,7 +147,7 @@ const Search = () => {
         />
         <Autocomplete
           id='instructor-search-name'
-          className='w-[500px] mb-20'
+          className='w-[500px] mb-20 mx-auto'
           options={formattedTutors}
           value={selectedTutor ? { label: selectedTutor } : null}
           disablePortal
@@ -180,7 +180,9 @@ const Search = () => {
                         width: 75,
                       }}
                       className='max-w-[100px] h-auto mx-3'
-                      src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${val.profile_picture}`}
+                      src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${
+                        val.profile_picture
+                      }`}
                       alt={`${key}'s profile picture`}
                     />
                     <Stack spacing={2}>
@@ -201,7 +203,9 @@ const Search = () => {
               className='flex items-center justify-evenly'>
               <img
                 className='max-w-[100px] h-auto rounded-full'
-                src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${selectedTutorInfo.profile_picture}`}
+                src={`${import.meta.env.VITE_BACKEND_BASE_URL}/uploads/${
+                  selectedTutorInfo.profile_picture
+                }`}
                 alt={`${selectedTutor}'s profile picture`}
               />
               <Stack spacing={2}>
