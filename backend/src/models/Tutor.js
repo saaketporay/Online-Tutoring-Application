@@ -25,6 +25,28 @@ const getTutorByID = async (user_id) => {
   }
 };
 
+const getTutorDetailsByTutorId = async (tutor_id) => {
+  try {
+    const tutor = await Tutor.findOne({
+      where: { tutor_id: tutor_id },
+      include: [{ model: User }],
+    });
+
+    if (tutor && tutor.User) {
+      const fullName = `${tutor.User.first_name} ${tutor.User.last_name}`;
+      return {
+        email: tutor.User.email, // Tutor's email
+        fullName: fullName       // Tutor's full name
+      };
+    } else {
+      throw new Error("Tutor not found or Tutor does not have associated User");
+    }
+  } catch (err) {
+    console.error('Error in getTutorDetailsByTutorId:', err);
+    return null;
+  }
+};
+
 const updateTutor = async (
   user_id,
   about_me,
@@ -73,5 +95,6 @@ const updateTutor = async (
 
 module.exports = {
   getTutorByID,
+  getTutorDetailsByTutorId, 
   updateTutor,
 };
