@@ -57,7 +57,7 @@ export type appointmentType = {
     profile_picture: string;
     tutor_id: number;
   };
-  date_time: string;
+  date_time: Date;
   duration: number;
   meeting_title: string;
   meeting_desc: string;
@@ -201,9 +201,15 @@ export const dashboardLoader: LoaderFunction = async () => {
   try {
     const userResponse = await instance.get('/user/info');
     userData.user = userResponse.data.user;
-    userData.appointments = userResponse.data.appointments.filter(
-      (appt: appointmentType) => new Date() <= new Date(appt.date_time)
+    userData.appointments = userResponse.data.appointments;
+    console.log(userData.appointments);
+    userData.appointments.map(
+      (appt: appointmentType) => {
+        appt.date_time = new Date(appt.date_time);
+        console.log(appt.date_time);
+      }
     );
+    console.log(userData);
     if (store.getState().auth.user_type == 'student') {
       const favoritesResponse = await instance.get('/favorite/get');
       userData.favorite_tutors = favoritesResponse.data;
