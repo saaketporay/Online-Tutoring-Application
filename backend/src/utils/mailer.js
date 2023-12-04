@@ -24,7 +24,7 @@ const sendEmail = async (email, subject, text) => {
   let mailOptions = {
     from: process.env.MFA_EMAIL,
     to: email,
-    subject: `${subject} - ${formattedDateTime}`,
+    subject: `${subject}`,
     text: text,
   };
 
