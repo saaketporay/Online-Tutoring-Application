@@ -53,7 +53,7 @@ const appointmentEmail = async (studentEmail, tutorEmail, subject, text) => {
       from: process.env.MFA_EMAIL,
       to: studentEmail,
       cc: tutorEmail, // Add the tutor's email as CC
-      subject: `${subject} - ${formattedDateTime}`,
+      subject: `${subject}`,
       text: text,
   };
 
