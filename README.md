@@ -1,5 +1,6 @@
 # Online-Tutoring-Application
 A web application built with a frontend using Vite, React-TS, and Tailwind CSS, and a backend using Node.js and Express.
+
 Online Tutoring Application Manual: https://docs.google.com/document/d/18vnUUjCJ4HGWJHpQj2tQufEScNDzqMJWEJ5Fabllz1E/
 
 ## Table of Contents
