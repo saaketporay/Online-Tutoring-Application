@@ -1,4 +1,10 @@
-const { User, Tutor, Tutor_Subject, Tutor_Availability, Scheduled_Appointments } = require('./index'); // Import the User model
+const {
+  User,
+  Tutor,
+  Tutor_Subject,
+  Tutor_Availability,
+  Scheduled_Appointments,
+} = require('./index'); // Import the User model
 
 const getUserByEmail = async (email) => {
   try {
@@ -128,25 +134,22 @@ const updateTutoringHours = async (user_id, additionalHours) => {
     }
 
     let totalAppointments;
-      totalAppointments = await Scheduled_Appointments.count({
-        where: {
-          student_id: user_id,
-        },
-      });
-    
+    totalAppointments = await Scheduled_Appointments.count({
+      where: {
+        student_id: user_id,
+      },
+    });
 
     // Calculate the maximum allowed tutoring hours based on the total appointments
     const maxAllowedHours = totalAppointments;
 
-
-      // If the user is not a tutor or does not have an associated Tutor record,
-      // update the total_tutoring_hours in the User model directly
-      user.total_tutoring_hours = Math.min(
-        user.total_tutoring_hours + additionalHours,
-        maxAllowedHours
-      );
-      await user.save();
-    
+    // If the user is not a tutor or does not have an associated Tutor record,
+    // update the total_tutoring_hours in the User model directly
+    user.total_tutoring_hours = Math.min(
+      user.total_tutoring_hours + additionalHours,
+      maxAllowedHours
+    );
+    await user.save();
 
     return user;
   } catch (error) {
@@ -155,7 +158,35 @@ const updateTutoringHours = async (user_id, additionalHours) => {
   }
 };
 
+const updateUser = async (
+  user_id,
+  first_name,
+  last_name,
+  email,
+  hashedPassword
+) => {
+  try {
+    const user = await User.findOne({ where: { user_id } });
 
+    if (first_name.length > 0) {
+      user.first_name = first_name;
+    }
+    if (last_name.length > 0) {
+      user.last_name = last_name;
+    }
+    if (email.length > 0) {
+      user.email = email;
+    }
+    if (hashedPassword.length > 0) {
+      user.password = hashedPassword;
+    }
+
+    user.save();
+  } catch (err) {
+    console.error('Error in updateUser:', err);
+    return null;
+  }
+};
 
 module.exports = {
   getUserByEmail,
@@ -163,5 +194,6 @@ module.exports = {
   createTutor,
   getUserByID,
   getUserSecret,
-  updateTutoringHours
+  updateTutoringHours,
+  updateUser,
 };

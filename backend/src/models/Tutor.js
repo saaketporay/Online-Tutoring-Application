@@ -12,7 +12,11 @@ const getTutorByID = async (user_id) => {
       where: {
         user_id: user_id,
       },
-      include: [{ model: User }, { model: Subject }],
+      include: [
+        { model: User },
+        { model: Subject },
+        { model: Tutor_Availability },
+      ],
     });
     return user;
   } catch (err) {
@@ -21,6 +25,76 @@ const getTutorByID = async (user_id) => {
   }
 };
 
+const getTutorDetailsByTutorId = async (tutor_id) => {
+  try {
+    const tutor = await Tutor.findOne({
+      where: { tutor_id: tutor_id },
+      include: [{ model: User }],
+    });
+
+    if (tutor && tutor.User) {
+      const fullName = `${tutor.User.first_name} ${tutor.User.last_name}`;
+      return {
+        email: tutor.User.email, // Tutor's email
+        fullName: fullName       // Tutor's full name
+      };
+    } else {
+      throw new Error("Tutor not found or Tutor does not have associated User");
+    }
+  } catch (err) {
+    console.error('Error in getTutorDetailsByTutorId:', err);
+    return null;
+  }
+};
+
+const updateTutor = async (
+  user_id,
+  about_me,
+  profile_picture,
+  subjects,
+  schedule
+) => {
+  try {
+    const tutor = await Tutor.findOne({ where: { user_id } });
+    const tutor_id = tutor.tutor_id;
+
+    if (about_me.length > 0) {
+      tutor.about_me = about_me;
+    }
+    if (profile_picture) {
+      tutor.profile_picture = profile_picture;
+    }
+
+    tutor.save();
+
+    if (subjects.length > 0) {
+      await Tutor_Subject.destroy({ where: { tutor_id } });
+
+      for (subject of subjects) {
+        Tutor_Subject.create({
+          tutor_id,
+          subject_id: subject.subject_id,
+        });
+      }
+    }
+    if (schedule.length > 0) {
+      await Tutor_Availability.destroy({ where: { tutor_id } });
+
+      for (timeslot of schedule) {
+        Tutor_Availability.create({
+          tutor_id,
+          date_time: timeslot,
+        });
+      }
+    }
+  } catch (err) {
+    console.error('Error in updateTutor:', err);
+    return null;
+  }
+};
+
 module.exports = {
   getTutorByID,
+  getTutorDetailsByTutorId, 
+  updateTutor,
 };

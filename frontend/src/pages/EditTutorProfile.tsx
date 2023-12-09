@@ -10,9 +10,7 @@ import {
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import { axiosInstance } from '../utils/axios';
-import GeneralSignupInfo, {
-  // signupError,
-} from '../components/GeneralSignupInfo';
+import GeneralSignupInfo from '../components/GeneralSignupInfo'; // signupError,
 import TutorSignupInfo, {
   Subject,
   FormattedSubject,
@@ -31,7 +29,8 @@ const EditTutorProfile = () => {
   return (
     <Form
       method='post'
-      className='grid justify-center bg-[#191919] py-20'>
+      className='grid justify-center bg-[#191919] py-20'
+      encType='multipart/form-data'>
       <Typography
         variant='h4'
         className='mb-16 justify-self-center'>
@@ -77,6 +76,12 @@ export const loader: LoaderFunction = async () => {
     });
   }
 
+  response.data.schedule = response.data.schedule.map(
+    (timeslot) => new Date(timeslot)
+  );
+
+  response.data.sunday = new Date(response.data.sunday);
+
   data.tutorInfo = response.data as TutorInfo;
 
   data.userData = {
@@ -91,35 +96,24 @@ export const loader: LoaderFunction = async () => {
 export const action: ActionFunction = async ({ request }) => {
   const tutorInfo = Object.fromEntries(await request.formData());
 
-  const errors = [];
-  const { email, password } = tutorInfo;
-  if (!email.toString().includes('@')) {
-    errors.push('Email address is invalid.');
-  }
-  if (password.toString().length < 9) {
-    errors.push('Password must have at least 8 characters.');
-  }
-  if (password.toString().search(/[`~!@#%&-=_,.<>;]/g) === -1) {
-    errors.push(
-      'Password must contain one of the following special characters: `~!@#%&-=_,.<>;'
-    );
-  }
-  console.log('errors:', errors);
-  if (errors.length > 0) {
-    return json({ errors: errors });
-  }
+  let instance;
+  let response;
 
-  // let instance = axiosInstance(true);
-  // let response = await instance.post('/upload/profile-picture', {
-  //   profile_picture: tutorInfo.profile_picture,
-  // });
-
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
+  // if (tutorInfo.profile_picture) {
+  //   instance = axiosInstance(true);
+  //   response = await instance.post('/upload/profile-picture', {
+  //     profile_picture: tutorInfo.profile_picture,
   //   });
+
+  //   if (response.status != 200) {
+  //     throw json({
+  //       ...response.data,
+  //       status: response.status,
+  //     });
+  //   }
   // }
+
+  const schedule = JSON.parse(tutorInfo.schedule as string) as Date[];
 
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]
@@ -128,20 +122,20 @@ export const action: ActionFunction = async ({ request }) => {
   const modifiedTutorInfo = {
     ...tutorInfo,
     user_type: 'tutor',
-    // profile_picture: response.data.filename,
+    profile_picture: response ? (response.data.filename as string) : null,
     subjects,
+    schedule,
   };
-  console.log(modifiedTutorInfo);
 
-  // instance = axiosInstance();
-  // response = await instance.patch('/user/edit', modifiedTutorInfo);
+  instance = axiosInstance();
+  response = await instance.patch('/user/edit', modifiedTutorInfo);
 
-  // if (response.status != 200) {
-  //   throw json({
-  //     ...response.data,
-  //     status: response.status,
-  //   });
-  // }
+  if (response.status != 200) {
+    return json({
+      ...response.data,
+      status: response.status,
+    });
+  }
 
   return redirect('/dashboard');
 };

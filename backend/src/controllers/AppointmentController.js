@@ -1,26 +1,17 @@
 const Appointment = require('../models/Appointment');
 const jwtUtil = require('../utils/jwtUtil');
 const { getUserByID } = require('../models/User');
-const { getTutorByID } = require('../models/Tutor');
+const { getTutorByID, getTutorDetailsByTutorId} = require('../models/Tutor');
+const { sendAppointmentEmail } = require('../utils/appointmentEmail');
 
 const appointmentController = {
   createAppointment: async (req, res) => {
     const token = req.headers.authorization;
     const decodedToken = jwtUtil.decodeToken(token);
     
-    const { tutor_id, date_time, duration, meeting_title, meeting_desc } =
-      req.body;
-
-    console.log(
-      token,
-      tutor_id,
-      date_time,
-      duration,
-      meeting_title,
-      meeting_desc
-    );
-
+    const { tutor_id, date_time, duration, meeting_title, meeting_desc } = req.body;
     const student_Id = decodedToken.id;
+    const studentEmail = decodedToken.email;
 
     try {
       const appointment_id = await Appointment.create(
@@ -32,8 +23,23 @@ const appointmentController = {
         meeting_desc
       );
       console.log(appointment_id);
+
+      const student = await getUserByID(student_Id);
+      const tutorDetails = await getTutorDetailsByTutorId(tutor_id);
+      // Send the email after creating the appointment
+      await sendAppointmentEmail(
+        studentEmail,
+        `${student.first_name} ${student.last_name}`,
+        tutorDetails.fullName,
+        date_time,
+        meeting_title,
+        meeting_desc,
+        tutorDetails.email,
+      );
+
       return res.status(200).json(appointment_id);
     } catch (err) {
+      console.error(err);
       return res.status(500).send('Internal Server Error');
     }
   },

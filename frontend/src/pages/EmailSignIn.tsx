@@ -74,7 +74,7 @@ const EmailSignin = () => {
                 SIGN IN
               </Button>
               <div className="flex justify-between">
-                <Link
+                {/* <Link
                   to="/password-reset"
                   component={RouterLink}
                   className="mt-2"
@@ -82,7 +82,7 @@ const EmailSignin = () => {
                   fontSize={14}
                 >
                   Forgot Password?
-                </Link>
+                </Link> */}
                 <Link
                   to="/signup"
                   component={RouterLink}

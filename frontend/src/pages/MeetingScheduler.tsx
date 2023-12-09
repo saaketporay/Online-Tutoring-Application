@@ -72,14 +72,10 @@ const checkSameDay = (d1: Date, d2: Date) =>
   d1.getMonth() === d2.getMonth() &&
   d1.getDate() === d2.getDate();
 
-const checkSameTimeslot = (d1: Date, d2: Date) => {
-  console.log(d1, d2);
-  return (
-    checkSameDay(d1, d2) &&
-    d1.getHours() === d2.getHours() &&
-    d1.getMinutes() === d2.getMinutes()
-  );
-};
+const checkSameTimeslot = (d1: Date, d2: Date) =>
+  checkSameDay(d1, d2) &&
+  d1.getHours() === d2.getHours() &&
+  d1.getMinutes() === d2.getMinutes();
 
 const MeetingScheduler = () => {
   const data = useLoaderData() as Response;
@@ -197,7 +193,10 @@ const MeetingScheduler = () => {
       const date = new Date(selectedDate);
       const t = value.split(/[^0-9]/);
       const u = value.split(/[^a-z]/).filter((x) => x);
-      date.setHours(+t[0] + (u[0] === 'pm' ? 11 : +t[0] === 12 ? -12 : 0));
+      date.setHours(
+        +t[0] +
+          (u[0] === 'pm' ? (+t[0] === 12 ? 0 : 12) : +t[0] === 12 ? -12 : 0)
+      );
       date.setMinutes(+t[1]);
 
       setMeetingInfo(
@@ -205,8 +204,6 @@ const MeetingScheduler = () => {
           checkSameTimeslot(new Date(timeslot.date_time), date)
         )!
       );
-
-      console.log(meetingInfo);
     }
   };
 
@@ -392,6 +389,8 @@ export const action: ActionFunction = async ({ request }) => {
     meeting_title: userInfo.meeting_title,
     meeting_desc: userInfo.meeting_desc,
   };
+
+  console.log('payload', payload);
 
   const instance = axiosInstance();
   const response = await instance.post('/appointments/create', payload);

@@ -61,7 +61,7 @@ const AppointmentList = (
                         `${appt.User.first_name} ${appt.User.last_name}, ${appt.User.email}`}
                     </Typography>
                     <Typography variant='body1'>
-                      {getReadableDateTime(appt.date_time)}
+                      {appt.date_time.toLocaleString()}
                     </Typography>
                   </Stack>
                   {user_type == 'student' &&
