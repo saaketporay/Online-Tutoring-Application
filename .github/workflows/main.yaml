@@ -1,8 +1,12 @@
-name: Deploy to AWS EC2
+name: CI/CD Pipeline for AWS EC2 deployment
 
 on:
   push:
-    branches: ["main"]
+    branches:
+      - "main"
+  pull_request:
+    branches:
+      - "main"
 
 jobs:
   get-ip:
@@ -34,7 +38,7 @@ jobs:
         run: echo "ip=$(curl ifconfig.me)" >> "$GITHUB_OUTPUT"
       - name: Build
         run: docker-compose build
-      - name: Print config
-        run: docker-compose config
       - name: Run
         run: docker-compose -f compose.yaml up -d
+      - name: Remove unused images
+        run: docker-compose prune -af
