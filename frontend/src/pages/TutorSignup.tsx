@@ -97,7 +97,7 @@ export const action: ActionFunction = async ({ request }) => {
     });
   }
 
-  const schedule = JSON.parse(tutorInfo.schedule) as Date[];
+  const schedule = JSON.parse(tutorInfo.schedule as string) as Date[];
 
   const subjects = (
     JSON.parse(tutorInfo.subjects as string) as FormattedSubject[]

@@ -7,7 +7,7 @@ import Typography from '@mui/material/Typography';
 import { useRouteError, isRouteErrorResponse } from 'react-router-dom';
 
 function ErrorPage() {
-  const error = useRouteError();
+  const error = useRouteError() as any;
   let status;
   let errorMessage;
   let errorTitle;
