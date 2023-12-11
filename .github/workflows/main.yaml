@@ -35,8 +35,6 @@ jobs:
         uses: actions/checkout@v4
       - name: Build
         run: docker-compose build
-      - name: Config log
-        run: docker-compose config
       - name: Run
         run: docker-compose -f docker-compose.yaml up -d
       - name: Remove unused images
