@@ -10,7 +10,7 @@ import {
   // useActionData,
   // useLoaderData,
   useOutletContext,
-  // json,
+  json,
   redirect,
 } from 'react-router-dom';
 import { modalStyle } from '../utils/theme';
