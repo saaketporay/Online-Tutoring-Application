@@ -36,6 +36,6 @@ jobs:
       - name: Debugging purposes
         run: ls && pwd
       - name: Run
-        run: docker-compose -f docker-compose.yaml up --build -d
+        run: docker compose -f docker-compose.yaml up --build -d
       - name: Remove unused images
         run: docker image prune -af
