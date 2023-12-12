@@ -77,7 +77,7 @@ export const loader: LoaderFunction = async () => {
   }
 
   response.data.schedule = response.data.schedule.map(
-    (timeslot) => new Date(timeslot)
+    (timeslot: string | number | Date) => new Date(timeslot)
   );
 
   response.data.sunday = new Date(response.data.sunday);
@@ -99,19 +99,19 @@ export const action: ActionFunction = async ({ request }) => {
   let instance;
   let response;
 
-  // if (tutorInfo.profile_picture) {
-  //   instance = axiosInstance(true);
-  //   response = await instance.post('/upload/profile-picture', {
-  //     profile_picture: tutorInfo.profile_picture,
-  //   });
+  if (tutorInfo.profile_picture) {
+    instance = axiosInstance(true);
+    response = await instance.post('/upload/profile-picture', {
+      profile_picture: tutorInfo.profile_picture,
+    });
 
-  //   if (response.status != 200) {
-  //     throw json({
-  //       ...response.data,
-  //       status: response.status,
-  //     });
-  //   }
-  // }
+    if (response.status != 200) {
+      throw json({
+        ...response.data,
+        status: response.status,
+      });
+    }
+  }
 
   const schedule = JSON.parse(tutorInfo.schedule as string) as Date[];
 

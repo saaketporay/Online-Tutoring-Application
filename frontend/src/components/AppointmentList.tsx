@@ -11,7 +11,7 @@ import DeleteIcon from '../assets/icons/Delete-Appointment-Icon.svg';
 import { NavLink, Form } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../redux/hooks';
 import { setShowModal, setAppointmentId } from "../redux/modalSlice";
-import { getDaysFromToday, getReadableDateTime } from '../utils/datetime';
+import { getDaysFromToday } from '../utils/datetime';
 import { appointmentType, favoriteTutorsType } from '../pages/UserDashboard';
 
 const AppointmentList = (
