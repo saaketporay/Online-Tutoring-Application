@@ -3,7 +3,7 @@ services:
     build:
       context: frontend # navigates from current directory to /frontend
     environment:
-      - VITE_BACKEND_BASE_URL=$BACKEND_BASE_URL
+      - VITE_BACKEND_BASE_URL
     ports:
       - "80:80" # mapping port 80 on host to port 80 on container
     depends_on:
