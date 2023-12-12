@@ -33,9 +33,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Build
-        run: docker-compose build
       - name: Run
-        run: docker-compose -f docker-compose.yaml up -d
+        run: docker-compose -f docker-compose.yaml up --build -d
       - name: Remove unused images
         run: docker image prune -af
